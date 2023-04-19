@@ -9,7 +9,7 @@ export const Navbar = () => {
   return (
     <div className="sm:p-6 lg:p-8 lg:w-40 lg:fixed lg:top-0 lg:bottom-0 lg:left-0">
       <div className="bg-semi-dark flex lg:flex-col justify-between p-4 lg:p-7 items-center sm:rounded-xl lg:rounded-[20px] h-full">
-        <Link href="/blog/hello-world" className="relative w-6 h-6 sm:w-8 sm:h-8">
+        <Link href="/" className="relative w-6 h-6 sm:w-8 sm:h-8">
           <Image src="./images/logo.svg" alt="site logo" fill/>
         </Link>
 
@@ -36,7 +36,7 @@ export const Navbar = () => {
             </NavbarLink>
           </li>
           <li>
-            <NavbarLink href="/about">
+            <NavbarLink href="/bookmarks">
               <path
                 d="M15.387 0c.202 0 .396.04.581.119.291.115.522.295.694.542.172.247.258.52.258.82V18.52c0 .3-.086.572-.258.82a1.49 1.49 0 0 1-.694.541 1.49 1.49 0 0 1-.581.106c-.423 0-.79-.141-1.098-.423L8.46 13.959l-5.83 5.605c-.317.29-.682.436-1.097.436-.202 0-.396-.04-.581-.119a1.49 1.49 0 0 1-.694-.542A1.402 1.402 0 0 1 0 18.52V1.482c0-.3.086-.573.258-.82A1.49 1.49 0 0 1 .952.119C1.137.039 1.33 0 1.533 0h13.854Z"
               />
@@ -49,7 +49,7 @@ export const Navbar = () => {
               {sessionData ? (
                 <Image src={sessionData?.user?.image ?? "./images/avatar.svg"} alt={sessionData?.user?.name ?? "user name"} fill />
               ) : (
-                <Image src="./images/avatar.svg" alt="profile avatar" fill />
+                <Image src="./images/avatar.svg" alt="profile avatar" fill className="p-0.5"/>
               )}
             </div>
         </button>
