@@ -48,13 +48,15 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String     @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    comments      Comment[]
+    bookmarks     Bookmark[]
 }
 
 model VerificationToken {
@@ -63,4 +65,28 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Bookmark {
+    id      String @id @default(cuid())
+    movieId Int
+    userId  String
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+}
+
+model Movie {
+    id        Int        @unique
+    comments  Comment[]
+    bookmarks Bookmark[]
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    movieId   Int
+    userId    String
+    text      String   @db.Text
+    createdAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
 }
