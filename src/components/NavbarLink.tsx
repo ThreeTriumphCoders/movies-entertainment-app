@@ -1,5 +1,5 @@
 import Link from "next/link";
-import NavbarIcon from "./NavbarIcon";
+import { SvgIcon } from "./SvgIcon";
 
 type Props = {
   href: string;
@@ -8,8 +8,8 @@ type Props = {
 
 export const NavbarLink: React.FC<Props> = (props) => (
   <Link href={props.href} className="block p-2">
-    <NavbarIcon>
+    <SvgIcon>
       {props.children}
-    </NavbarIcon>
+    </SvgIcon>
   </Link>
 );
