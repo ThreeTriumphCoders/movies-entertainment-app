@@ -55,7 +55,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    comments      Comment[]
+    reviews       Review[]
     bookmarks     Bookmark[]
 }
 
@@ -77,14 +77,15 @@ model Bookmark {
 
 model Movie {
     id        Int        @unique
-    comments  Comment[]
+    reviews   Review[]
     bookmarks Bookmark[]
 }
 
-model Comment {
+model Review {
     id        String   @id @default(cuid())
     movieId   Int
     userId    String
+    rating    Int
     text      String   @db.Text
     createdAt DateTime @default(now())
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
