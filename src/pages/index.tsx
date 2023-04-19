@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       <main className="flex min-h-screen flex-col items-center justify-center bg-dark font-body text-light">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <h1 className="font-display text-2xl font-medium">
-            <span className="text-primary">Entertainment</span> App
+            Movies<span className="text-primary">Entertainment</span> App
           </h1>
           <div className="flex flex-col items-center gap-2">
             <p className="text-2xl">
