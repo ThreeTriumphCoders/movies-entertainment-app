@@ -4,6 +4,7 @@ import { MoviesList } from "~/components/MoviesList";
 
 import { Navbar } from "~/components/Navbar";
 import { Searchbar } from "~/components/Searchbar";
+import { TrendingList } from "~/components/TrendingList";
 
 const Home: NextPage = () => {
   return (
@@ -16,6 +17,7 @@ const Home: NextPage = () => {
       <main className="min-h-screen bg-dark font-body text-light lg:pl-40">
         <Navbar />
         <Searchbar />
+        <TrendingList />
         <MoviesList />
       </main>
     </>
