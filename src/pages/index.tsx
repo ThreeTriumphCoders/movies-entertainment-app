@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { MovieCard } from "~/components/MovieCard";
 
 import { Navbar } from "~/components/Navbar";
 import { Searchbar } from "~/components/Searchbar";
