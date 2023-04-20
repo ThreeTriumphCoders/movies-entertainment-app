@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { MovieCard } from "~/components/MovieCard";
 
 import { Navbar } from "~/components/Navbar";
 import { Searchbar } from "~/components/Searchbar";
@@ -13,8 +14,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-h-screen bg-dark font-body text-light lg:pl-40">
-        <Navbar />
-        <Searchbar />
+        {/* <Navbar />
+        <Searchbar /> */}
+        <MovieCard />
       </main>
     </>
   );
