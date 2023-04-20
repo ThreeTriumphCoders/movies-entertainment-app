@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import { SvgIcon } from './SvgIcon';
 import Link from 'next/link';
-import { type FC, useState } from 'react';
-import classNames from 'classnames';
+import { type FC } from 'react';
 import { Loader } from './Loader';
 
 const getIconByCategory = (category: Category) => {
