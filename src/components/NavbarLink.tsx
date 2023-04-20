@@ -6,10 +6,12 @@ type Props = {
   children: React.ReactNode;
 }
 
-export const NavbarLink: React.FC<Props> = (props) => (
-  <Link href={props.href} className="block p-2">
-    <SvgIcon>
-      {props.children}
-    </SvgIcon>
-  </Link>
-);
+export const NavbarLink: React.FC<Props> = (props) => {
+  return (
+    <Link href={props.href} className="block p-2">
+      <SvgIcon>
+        {props.children}
+      </SvgIcon>
+    </Link>
+  );
+}
