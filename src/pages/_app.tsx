@@ -6,6 +6,7 @@ import { Outfit } from "next/font/google";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import { Layout } from "~/components/Layout";
 
 const outfitBody = Outfit({
   weight: ["300"],
@@ -27,10 +28,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component
-        className={`${outfitBody.variable} ${outfitHeading.variable}`}
-        {...pageProps}
-      />
+      <Layout>
+        <Component
+          className={`${outfitBody.variable} ${outfitHeading.variable}`}
+          {...pageProps}
+        />
+      </Layout>
     </SessionProvider>
   );
 };

@@ -183,8 +183,10 @@ export const MovieCard: FC<Props> = ({
         <p>E</p> {/* age rating */}
       </div>
 
-      <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
-        <Link href={`/${movieId}`}>{title}</Link>
+      <h3 className='text-sm sm:text-lg leading-[18px] sm:leading-6 font-medium'>
+        <Link href={`/movie/${movieId}`}>
+          {title}
+        </Link>
       </h3>
     </div>
   );
