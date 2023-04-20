@@ -24,7 +24,7 @@ const testReviews: Review[] = [
 export const ReviewsSection = () => {
   return (
     <section>
-      <h2 className='text-2xl text-light mb-8'>
+      <h2 className='sm:text-2xl text-lg text-light mb-5 sm:mb-8'>
         Reviews
       </h2>
 

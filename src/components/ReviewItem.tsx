@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from 'react';
 import classNames from 'classnames';
 import { type Review } from '@prisma/client';
@@ -20,19 +21,15 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
   const { rating, text, createdAt } = review;
   
   return (
-    <section className='flex items-center gap-5'>
-      <Image 
-        src={avatar}
-        alt="avatar"
-        width="40"
-        height="40"
-        className='border border-light rounded-full'
-      />
-      <article className='bg-semi-dark w-1/3 rounded-lg px-6 py-5 relative'>
-        <p className='font-light text-sm text-light'>
+    <section className='flex items-center gap-2.5 sm:gap-5'>
+      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-full border-light border overflow-hidden relative">
+        <Image src={avatar} alt="profile avatar" fill/>
+      </div>
+      <article className='bg-semi-dark w-2/5 lg:w-1/3 rounded-lg px-3.5 py-4 sm:px-6 sm:py-5 relative'>
+        <p className='font-light text-xs sm:text-sm text-light'>
           {text}
         </p>
-        <div className='flex items-center gap-2 absolute right-2 bottom-1'>
+        <div className='flex items-center gap-1 sm:gap-2 absolute right-2 bottom-1'>
           <div className='flex items-center gap-1'>
             <div 
               className={classNames(
@@ -44,11 +41,11 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
                 },
               )}
             />
-            <p className='font-light text-sm text-light'>
+            <p className='font-light text-xs sm:text-sm text-light'>
               {`${rating}/10`}
             </p>
           </div>
-          <p className='font-light text-sm text-light opacity-50'>
+          <p className='font-light text-xs sm:text-sm text-light opacity-50'>
             {getReviewTime(createdAt)}
           </p>
         </div>
