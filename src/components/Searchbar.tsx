@@ -1,6 +1,13 @@
+import { type ChangeEvent, useState } from "react";
 import { SvgIcon } from "./SvgIcon";
 
 export const Searchbar = () => {
+  const [query, setQuery] = useState('');
+
+  const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+  }
+
   return (
     <label 
       className="
@@ -20,6 +27,8 @@ export const Searchbar = () => {
       <input 
         type="text"
         placeholder="Search for movies or TV series" 
+        value={query}
+        onChange={handleChangeQuery}
         className="
           caret-primary 
           bg-dark 
