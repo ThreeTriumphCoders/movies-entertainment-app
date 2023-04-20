@@ -1,30 +1,35 @@
 import { env } from "~/env.mjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { get } from "./fetchers";
-import { type MoviesAPIResponseType } from "~/types/MoviesAPIResponse";
+import { type MoviesAPIResponseType } from "~/types/responses";
 import { type MovieType } from "~/types/Movie";
 
-export const useGetPopularMovies = (): MovieType[] => {
+export const useGetPopularMovies = (): [
+  MovieType[],
+  (page: number) => Promise<void>
+] => {
   const [data, setData] = useState<MovieType[]>([]);
+  const pageNumber = useRef(0);
 
-  const getData = async () => {
+  const getData = async (page: number) => {
     try {
       const { results } = await get<MoviesAPIResponseType>(
-        `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/popular?${env.NEXT_PUBLIC_TMDB_API_KEY}`
+        `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/popular?${env.NEXT_PUBLIC_TMDB_API_KEY}&page=${page}`
       );
 
-      console.log(results);
-      setData(results);
+      if (pageNumber.current !== page) {
+        setData((prev) => [...prev, ...results]);
+
+        pageNumber.current += 1;
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    getData().catch(console.log);
+    getData(1).catch(console.log);
   }, []);
 
-  console.log('returned!')
-  console.log(data)
-  return data;
+  return [data, getData];
 };
