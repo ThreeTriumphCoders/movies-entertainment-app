@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import NavbarIcon from './NavbarIcon';
+import { SvgIcon } from './SvgIcon';
 import Link from 'next/link';
 import { type FC, useState } from 'react';
 
@@ -84,11 +84,11 @@ export const MovieCard: FC<Props> = ({
                 className='bg-light bg-opacity-25 rounded-full flex p-2 pr-6 w-fit gap-5 text-lg cursor-pointer' 
                 onClick={() => setVideoPlaying(true)}
               >
-                <NavbarIcon className='fill-light h-[30px] w-[30px]' viewBox='0 0 30 30'>
+                <SvgIcon className='fill-light h-[30px] w-[30px]' viewBox='0 0 30 30'>
                   <path
                     d="M0 15C0 6.713 6.713 0 15 0c8.288 0 15 6.713 15 15 0 8.288-6.712 15-15 15-8.287 0-15-6.712-15-15Zm21-.5L12 8v13l9-6.5Z"
                   />
-                </NavbarIcon>
+                </SvgIcon>
 
                 <p>Play</p>
               </div>
@@ -104,7 +104,7 @@ export const MovieCard: FC<Props> = ({
                 w-8 h-8
               '
             >
-              <NavbarIcon 
+              <SvgIcon 
                 className='
                   fill-none active:fill-light
                   stroke-light hover:stroke-dark
@@ -117,7 +117,7 @@ export const MovieCard: FC<Props> = ({
                 <path
                   d="m10.711.771.01.004.01.005c.068.027.108.06.14.107.032.048.046.09.046.15v11.927a.243.243 0 0 1-.046.15.282.282 0 0 1-.14.106l-.007.004-.008.003a.29.29 0 0 1-.107.014.326.326 0 0 1-.24-.091L6.356 9.235l-.524-.512-.524.512-4.011 3.915a.327.327 0 0 1-.24.1.244.244 0 0 1-.103-.021l-.01-.004-.01-.005a.281.281 0 0 1-.139-.107.244.244 0 0 1-.046-.15V1.037c0-.058.014-.101.046-.15A.281.281 0 0 1 .935.78l.01-.005.01-.004A.245.245 0 0 1 1.057.75h9.552c.038 0 .07.007.102.021Z"
                 />
-              </NavbarIcon>
+              </SvgIcon>
             </div>
           </>
         )}
@@ -129,9 +129,9 @@ export const MovieCard: FC<Props> = ({
         {separator}
 
         <div className='flex gap-1 items-center'>
-          <NavbarIcon className='fill-light h-2.5 w-2.5'>
+          <SvgIcon className='fill-light h-2.5 w-2.5'>
             {getIconByCategory(category)}
-          </NavbarIcon>
+          </SvgIcon>
 
 
           <p>{category}</p>
