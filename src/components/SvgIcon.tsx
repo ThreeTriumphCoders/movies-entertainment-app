@@ -1,7 +1,7 @@
 import * as React from "react"
 import type { SVGProps } from "react"
 
-const NavbarIcon = (props: SVGProps<SVGSVGElement>) => (
+export const SvgIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
@@ -12,5 +12,4 @@ const NavbarIcon = (props: SVGProps<SVGSVGElement>) => (
   >
     {props.children}
   </svg>
-)
-export default NavbarIcon;
+);
