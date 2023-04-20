@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
-import { type FC } from "react";
+import { useEffect, type FC, useState } from "react";
 import { Loader } from "./Loader";
 import fallbackImage from "../../public/images/fallbackImage.png";
+import { getTrailerKey } from "~/utils/helpers";
 
 const getIconByCategory = (category: Category) => {
   switch (category) {
@@ -32,7 +33,6 @@ export enum Category {
 
 type Props = {
   movieId: number;
-  videoCode?: string;
   imagePath: string;
   title: string;
   releaseDate: string;
@@ -43,15 +43,31 @@ type Props = {
 
 export const MovieCard: FC<Props> = ({
   movieId = 0,
-  videoCode = "O-b2VfmmbyA",
   imagePath = "/jL6B8mm9TR8vmh9VtgEg0GC7jPy.jpg",
-  title = "Best movie ever",
-  releaseDate = "2016-11-29",
+  title = "No movie title",
+  releaseDate = "No release date",
   category = Category.MOVIE,
   playingId,
   onPlayingChange,
 }) => {
   const isPlaying = playingId === movieId;
+  const [error, setError] = useState(false);
+  const [trailerKey, setTrailerKey] = useState<string>("");
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const key = await getTrailerKey(movieId);
+
+        setTrailerKey(key);
+      } catch (err) {
+        setError(true);
+        setTrailerKey("");
+      }
+    };
+
+    getData().catch(console.log);
+  }, []);
 
   return (
     <div className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]">
@@ -79,19 +95,25 @@ export const MovieCard: FC<Props> = ({
               opacity-0 transition-opacity hover:opacity-100
             "
           >
-            <div
-              className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg"
-              onClick={() => onPlayingChange(movieId)}
-            >
-              <SvgIcon
-                className="h-[30px] w-[30px] fill-light"
-                viewBox="0 0 30 30"
+            {!error ? (
+              <div
+                className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg"
+                onClick={() => onPlayingChange(movieId)}
               >
-                <path d="M0 15C0 6.713 6.713 0 15 0c8.288 0 15 6.713 15 15 0 8.288-6.712 15-15 15-8.287 0-15-6.712-15-15Zm21-.5L12 8v13l9-6.5Z" />
-              </SvgIcon>
+                <SvgIcon
+                  className="h-[30px] w-[30px] fill-light"
+                  viewBox="0 0 30 30"
+                >
+                  <path d="M0 15C0 6.713 6.713 0 15 0c8.288 0 15 6.713 15 15 0 8.288-6.712 15-15 15-8.287 0-15-6.712-15-15Zm21-.5L12 8v13l9-6.5Z" />
+                </SvgIcon>
 
-              <p>Play</p>
-            </div>
+                <p>Play</p>
+              </div>
+            ) : (
+              <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 py-2 px-4 text-lg">
+                <p className="text-medium">No trailer</p>
+              </div>
+            )}
           </div>
 
           <div
@@ -122,13 +144,17 @@ export const MovieCard: FC<Props> = ({
             <div className="absolute top-0 w-full max-w-full pt-[56.25%]">
               <Loader />
 
-              <iframe
-                className="absolute left-0 top-0 h-full w-full"
-                src={`https://www.youtube.com/embed/${videoCode}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
+              {!error ? (
+                <iframe
+                  className="absolute left-0 top-0 h-full w-full"
+                  src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              ) : (
+                <div>{"No trailer :("}</div>
+              )}
             </div>
           )}
         </>

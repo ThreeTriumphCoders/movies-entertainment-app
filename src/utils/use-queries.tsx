@@ -1,6 +1,6 @@
 import { env } from "~/env.mjs";
 import { useState, useEffect, useRef } from "react";
-import { get } from "./fetchers";
+import { get } from "./helpers";
 import { type MoviesAPIResponseType } from "~/types/responses";
 import { type MovieType } from "~/types/Movie";
 
