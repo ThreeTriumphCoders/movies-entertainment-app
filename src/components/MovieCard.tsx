@@ -43,7 +43,7 @@ type Props = {
 
 export const MovieCard: FC<Props> = ({
   movieId = 0,
-  imagePath = "/jL6B8mm9TR8vmh9VtgEg0GC7jPy.jpg",
+  imagePath,
   title = "No movie title",
   releaseDate = "No release date",
   category = Category.MOVIE,
@@ -52,7 +52,7 @@ export const MovieCard: FC<Props> = ({
 }) => {
   const isPlaying = playingId === movieId;
   const [error, setError] = useState(false);
-  const [trailerKey, setTrailerKey] = useState<string>("");
+  const [trailerKey, setTrailerKey] = useState("");
   const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>(
     []
   );
