@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { MovieCard } from "~/components/MovieCard";
+import { MoviesList } from "~/components/MoviesList";
 
 import { Navbar } from "~/components/Navbar";
 import { Searchbar } from "~/components/Searchbar";
@@ -16,6 +16,7 @@ const Home: NextPage = () => {
       <main className="min-h-screen bg-dark font-body text-light lg:pl-40">
         <Navbar />
         <Searchbar />
+        <MoviesList />
       </main>
     </>
   );
