@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { TrendingCard } from "./TrendingCard"
+import { type IconName } from "~/utils/getIconByName";
 
 const mockMovies = [
   {
@@ -92,11 +93,6 @@ const mockMovies = [
   },
 ]
 
-export enum Category {
-  MOVIE = 'Movie',
-  TV = 'TV Serie',
-}
-
 export const TrendingList = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -112,7 +108,7 @@ export const TrendingList = () => {
         clientWidth = 0,
       } = scrollRef.current as HTMLDivElement;
 
-      const isEnd = scrollLeft === scrollWidth - clientWidth;
+      const isEnd = Math.round(scrollLeft) === Math.round(scrollWidth - clientWidth);
 
       if (isEnd) {
         scrollRef.current?.scrollTo({left: 0, behavior:'smooth'})
@@ -129,7 +125,7 @@ export const TrendingList = () => {
   }, [scrollRef])
 
   return (
-    <div className="px-4 sm:px-6 lg:pl-0 lg:pr-8 mb-6">
+    <div className="lg:pl-0 lg:pr-8 mb-6">
       <h2 className="text-xl mb-6 sm:text-[32px] lg:mb-10">
         Trending
       </h2>
@@ -157,7 +153,7 @@ export const TrendingList = () => {
               imagePath={imagePath}
               title={title}
               releaseDate={releaseDate}
-              category={category as Category}
+              category={category as IconName}
             />
           )
         })}

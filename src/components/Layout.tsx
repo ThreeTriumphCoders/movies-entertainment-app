@@ -8,7 +8,12 @@ type Props = {
 
 export const Layout: React.FC<Props> = ({ children }) => {
   return (
-    <main className="min-h-screen bg-dark font-body text-light lg:pl-40">
+    <main 
+      className="
+        min-h-screen bg-dark font-body text-light lg:pl-40
+        px-4 sm:px-6 py-16 sm:pt-[116px] lg:pt-0
+      "
+    >
       <Navbar />
       <Searchbar />
       {children}

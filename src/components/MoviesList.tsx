@@ -1,6 +1,7 @@
 import { useState, type FC } from "react";
-import { MovieCard, Category } from "./MovieCard";
+import { MovieCard } from "./MovieCard";
 import { type MovieType } from "~/types/Movie";
+import { IconName } from "~/utils/getIconByName";
 
 type Props = {
   movies: MovieType[];
@@ -14,7 +15,7 @@ export const MoviesList: FC<Props> = ({
   const [playingId, setPlayingId] = useState(0);
 
   return (
-    <div className="px-4 pb-8 sm:px-6 lg:pl-0  lg:pr-8 ">
+    <div className="pb-8 lg:pr-8 ">
       <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
 
       <div
@@ -34,7 +35,7 @@ export const MoviesList: FC<Props> = ({
                   releaseDate={movie.release_date}
                   imagePath={movie.backdrop_path || ""}
                   playingId={playingId}
-                  category={Category.MOVIE}
+                  category={IconName.MOVIE}
                   onPlayingChange={setPlayingId}
                 />
               );
