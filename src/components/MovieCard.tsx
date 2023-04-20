@@ -2,6 +2,8 @@ import Image from 'next/image';
 import { SvgIcon } from './SvgIcon';
 import Link from 'next/link';
 import { type FC, useState } from 'react';
+import classNames from 'classnames';
+import { Loader } from './Loader';
 
 const getIconByCategory = (category: Category) => {
   switch (category) {
@@ -25,7 +27,7 @@ const getIconByCategory = (category: Category) => {
 
 const separator = <p className='-translate-y-1/4 select-none font-semibold opacity-60'>.</p>;
 
-enum Category {
+export enum Category {
   MOVIE = 'Movie',
   TV = 'TV Serie',
 }
@@ -37,6 +39,8 @@ type Props = {
   title?: string;
   releaseDate?: string;
   category?: Category;
+  playingId: string;
+  onPlayingChange: (id: string) => void;
 }
 
 export const MovieCard: FC<Props> = ({
@@ -46,81 +50,85 @@ export const MovieCard: FC<Props> = ({
   title = 'Best movie ever',
   releaseDate = '2016-11-29',
   category = Category.MOVIE,
+  playingId,
+  onPlayingChange,
 }) => {
-  const [isVideoPlaying, setVideoPlaying] = useState(false); // it will be in list state, cause only one video at once should play
+  const isPlaying = playingId === movieCode;
 
   return (
-    <div className='w-[164px] sm:w-[220px] lg:w-[280px]'>
-      <div className='relative h-[110px] sm:h-[140px] lg:h-[174px] rounded-lg overflow-hidden mb-2'>
-        {isVideoPlaying ? (
-          <div className='max-w-full pt-[67%] sm:pt-[64%] lg:pt-[62%] relative w-full'>
-            <iframe 
-              className="absolute top-0 left-0 w-full h-full"
-              src={`https://www.youtube.com/embed/${videoCode}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              allowFullScreen
-            />
-          </div>
-        ): (
-          <>
-            <Image
-              className='object-cover'
-              alt='movie image'
-              onClick={() => setVideoPlaying(true)}
-              fill
-              src={`https://www.themoviedb.org/t/p/original${imagePath}`}
-            />
+    <div className='min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]'>
+      <div className='relative pt-[56.25%] rounded-lg overflow-hidden mb-2'>
+        <>
+          <Image
+            className='object-cover'
+            alt='movie image'
+            onClick={() => onPlayingChange(movieCode)}
+            fill
+            src={`https://www.themoviedb.org/t/p/original${imagePath}`}
+          />
 
-            <div
-              className='
-                opacity-0 hover:opacity-100 transition-opacity
-                bg-dark bg-opacity-50 
-                absolute top-0 bottom-0 left-0 right-0
-                flex items-center justify-center
-              '
-            >
-              <div 
-                className='bg-light bg-opacity-25 rounded-full flex p-2 pr-6 w-fit gap-5 text-lg cursor-pointer' 
-                onClick={() => setVideoPlaying(true)}
-              >
-                <SvgIcon className='fill-light h-[30px] w-[30px]' viewBox='0 0 30 30'>
-                  <path
-                    d="M0 15C0 6.713 6.713 0 15 0c8.288 0 15 6.713 15 15 0 8.288-6.712 15-15 15-8.287 0-15-6.712-15-15Zm21-.5L12 8v13l9-6.5Z"
-                  />
-                </SvgIcon>
-
-                <p>Play</p>
-              </div>
-            </div>
-
+          <div
+            className='
+              opacity-0 hover:opacity-100 transition-opacity
+              bg-dark bg-opacity-50 
+              absolute top-0 bottom-0 left-0 right-0
+              flex items-center justify-center
+            '
+          >
             <div 
-              className='
-                absolute top-2 right-2 sm:top-4 sm:right-4
-                bg-dark hover:bg-light
-                bg-opacity-50 hover: opacity-100
-                rounded-full transition
-                flex items-center justify-center 
-                w-8 h-8
-              '
+              className='bg-light bg-opacity-25 rounded-full flex p-2 pr-6 w-fit gap-5 text-lg cursor-pointer' 
+              onClick={() => onPlayingChange(movieCode)}
             >
-              <SvgIcon 
-                className='
-                  fill-none active:fill-light
-                  stroke-light hover:stroke-dark
-                  stroke-[1.5]
-                  h-[32px] w-[32px]
-                  cursor-pointer
-                ' 
-                viewBox='-9 -8 30 30'
-              >
+              <SvgIcon className='fill-light h-[30px] w-[30px]' viewBox='0 0 30 30'>
                 <path
-                  d="m10.711.771.01.004.01.005c.068.027.108.06.14.107.032.048.046.09.046.15v11.927a.243.243 0 0 1-.046.15.282.282 0 0 1-.14.106l-.007.004-.008.003a.29.29 0 0 1-.107.014.326.326 0 0 1-.24-.091L6.356 9.235l-.524-.512-.524.512-4.011 3.915a.327.327 0 0 1-.24.1.244.244 0 0 1-.103-.021l-.01-.004-.01-.005a.281.281 0 0 1-.139-.107.244.244 0 0 1-.046-.15V1.037c0-.058.014-.101.046-.15A.281.281 0 0 1 .935.78l.01-.005.01-.004A.245.245 0 0 1 1.057.75h9.552c.038 0 .07.007.102.021Z"
+                  d="M0 15C0 6.713 6.713 0 15 0c8.288 0 15 6.713 15 15 0 8.288-6.712 15-15 15-8.287 0-15-6.712-15-15Zm21-.5L12 8v13l9-6.5Z"
                 />
               </SvgIcon>
+
+              <p>Play</p>
             </div>
-          </>
-        )}
+          </div>
+
+          <div 
+            className='
+              absolute top-2 right-2 sm:top-4 sm:right-4
+              bg-dark hover:bg-light
+              bg-opacity-50 hover: opacity-100
+              rounded-full transition
+              flex items-center justify-center 
+              w-8 h-8
+            '
+          >
+            <SvgIcon 
+              className='
+                fill-none active:fill-light
+                stroke-light hover:stroke-dark
+                stroke-[1.5]
+                h-[32px] w-[32px]
+                cursor-pointer
+              ' 
+              viewBox='-9 -8 30 30'
+            >
+              <path
+                d="m10.711.771.01.004.01.005c.068.027.108.06.14.107.032.048.046.09.046.15v11.927a.243.243 0 0 1-.046.15.282.282 0 0 1-.14.106l-.007.004-.008.003a.29.29 0 0 1-.107.014.326.326 0 0 1-.24-.091L6.356 9.235l-.524-.512-.524.512-4.011 3.915a.327.327 0 0 1-.24.1.244.244 0 0 1-.103-.021l-.01-.004-.01-.005a.281.281 0 0 1-.139-.107.244.244 0 0 1-.046-.15V1.037c0-.058.014-.101.046-.15A.281.281 0 0 1 .935.78l.01-.005.01-.004A.245.245 0 0 1 1.057.75h9.552c.038 0 .07.007.102.021Z"
+              />
+            </SvgIcon>
+          </div>
+
+          {isPlaying && (
+            <div className='max-w-full pt-[56.25%] absolute top-0 w-full'>
+              <Loader />
+
+              <iframe
+                className="absolute top-0 left-0 w-full h-full"
+                src={`https://www.youtube.com/embed/${videoCode}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen
+              />
+            </div>
+          )}
+        </>
       </div>
 
       <div className='flex gap-1.5 text-light opacity-75 font-light text-[11px] sm:text-[13px] leading-[14px] sm:leading-4 mb-1'>
