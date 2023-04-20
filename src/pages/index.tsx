@@ -14,9 +14,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-h-screen bg-dark font-body text-light lg:pl-40">
-        {/* <Navbar />
-        <Searchbar /> */}
-        <MovieCard />
+        <Navbar />
+        <Searchbar />
       </main>
     </>
   );
