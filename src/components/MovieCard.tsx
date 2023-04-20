@@ -61,8 +61,8 @@ export const MovieCard: FC<Props> = ({
         setCurrentImageIndex((index) =>
           index === additionalImagePaths.length - 1 ? 0 : index + 1
         );
-      }, Math.random() * 10000)
-    }, 20000);
+      }, Math.random() * 5000)
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, [additionalImagePaths.length]);
