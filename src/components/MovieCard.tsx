@@ -36,10 +36,7 @@ export const MovieCard: FC<Props> = ({
   const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>(
     []
   );
-
-  /**
-   * TODO: change card images on hover using additionalImagePaths
-   */
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const getData = async () => {
@@ -58,26 +55,41 @@ export const MovieCard: FC<Props> = ({
     getData().catch(console.log);
   }, []);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimeout(() => {
+        setCurrentImageIndex((index) =>
+          index === additionalImagePaths.length - 1 ? 0 : index + 1
+        );
+      }, Math.random() * 10000)
+    }, 20000);
+
+    return () => clearInterval(intervalId);
+  }, [additionalImagePaths.length]);
+
   return (
     <div className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]">
-      <div className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
+      <div id="image-container" className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
         <>
           <div className="top-[1px] bottom-[1px] right-[1px] left-[1px] absolute bg-semi-dark animate-pulse"/>
 
           {!isPlaying && (
-            <Image
-              className="object-cover"
-              alt="movie image"
-              onClick={() => onPlayingChange(movieId)}
-              fill
-              priority
-              src={
-                imagePath
-                  ? `https://www.themoviedb.org/t/p/original${imagePath}`
-                  : fallbackImage
-              }
-              sizes="(max-width: 640px) 50vw, 33vw"
-            />
+            additionalImagePaths.map((path, index) => (
+              <Image
+                key={path}
+                className={`object-cover ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'} transition-all`}
+                alt="movie image"
+                onClick={() => onPlayingChange(movieId)}
+                fill
+                priority
+                src={
+                  imagePath
+                    ? `https://www.themoviedb.org/t/p/original${path}`
+                    : fallbackImage
+                }
+                sizes="(max-width: 640px) 50vw, 33vw"
+              />
+            ))
           )}
 
           <div
