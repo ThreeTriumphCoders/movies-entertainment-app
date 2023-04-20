@@ -35,6 +35,12 @@ const config = {
         port: '',
         pathname: '/a/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.themoviedb.org',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
