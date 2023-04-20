@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, type FC, useState } from "react";
 import { Loader } from "./Loader";
 import fallbackImage from "../../public/images/fallbackImage.png";
-import { getTrailerKey } from "~/utils/helpers";
+import { getMovieImages, getTrailerKey } from "~/utils/helpers";
 
 const getIconByCategory = (category: Category) => {
   switch (category) {
@@ -53,12 +53,21 @@ export const MovieCard: FC<Props> = ({
   const isPlaying = playingId === movieId;
   const [error, setError] = useState(false);
   const [trailerKey, setTrailerKey] = useState<string>("");
+  const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>(
+    []
+  );
+
+  /**
+   * TODO: change card images on hover using additionalImagePaths
+   */
 
   useEffect(() => {
     const getData = async () => {
       try {
         const key = await getTrailerKey(movieId);
+        const imagesPaths = await getMovieImages(movieId);
 
+        setAdditionalImagePaths(imagesPaths);
         setTrailerKey(key);
       } catch (err) {
         setError(true);
@@ -110,7 +119,7 @@ export const MovieCard: FC<Props> = ({
                 <p>Play</p>
               </div>
             ) : (
-              <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 py-2 px-4 text-lg">
+              <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">
                 <p className="text-medium">No trailer</p>
               </div>
             )}
