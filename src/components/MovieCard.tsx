@@ -150,7 +150,7 @@ export const MovieCard: FC<Props> = ({
       </div>
 
       <h3 className='text-sm sm:text-lg leading-[18px] sm:leading-6 font-medium'>
-        <Link href={`/${movieCode}`}>
+        <Link href={`/movie/${movieCode}`}>
           {title}
         </Link>
       </h3>

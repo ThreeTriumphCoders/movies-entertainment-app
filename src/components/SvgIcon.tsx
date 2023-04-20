@@ -7,7 +7,6 @@ export const SvgIcon = (props: SVGProps<SVGSVGElement>) => (
     viewBox="0 0 20 20"
     fillRule="evenodd"
     clipRule="evenodd"
-    className="fill-grey hover:fill-primary transition h-4 w-4 sm:h-5 sm:w-5"
     {...props}
   >
     {props.children}
