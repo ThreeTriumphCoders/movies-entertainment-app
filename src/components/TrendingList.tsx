@@ -108,7 +108,7 @@ export const TrendingList = () => {
         clientWidth = 0,
       } = scrollRef.current as HTMLDivElement;
 
-      const isEnd = scrollLeft === scrollWidth - clientWidth;
+      const isEnd = Math.round(scrollLeft) === Math.round(scrollWidth - clientWidth);
 
       if (isEnd) {
         scrollRef.current?.scrollTo({left: 0, behavior:'smooth'})
