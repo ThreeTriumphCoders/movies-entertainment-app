@@ -5,8 +5,8 @@ import { type FC } from "react";
 import { IconName, getIconByName } from "~/utils/getIconByName";
 
 type Props = {
-  movieCode?: string;
-  imagePath?: string;
+  movieId: number;
+  imagePath: string;
   title?: string;
   releaseDate?: string;
   category?: IconName;
@@ -15,10 +15,10 @@ type Props = {
 const separator = <p className='-translate-y-1/4 select-none font-semibold opacity-60'>.</p>;
 
 export const TrendingCard: FC<Props> = ({
-  movieCode: movieId = '',
-  imagePath = '/jL6B8mm9TR8vmh9VtgEg0GC7jPy.jpg',
-  title = 'Best movie ever',
-  releaseDate = '2016-11-29',
+  movieId,
+  imagePath,
+  title = 'No movie title',
+  releaseDate = 'No release date',
   category = IconName.MOVIE,
 }) => {
   return (
@@ -29,6 +29,8 @@ export const TrendingCard: FC<Props> = ({
             className='object-cover hover:scale-110 duration-1000'
             alt='movie image'
             fill
+            priority
+            sizes="(max-width: 640px) 50vw, 33vw"
             src={`https://www.themoviedb.org/t/p/original${imagePath}`}
           />
 
@@ -56,7 +58,7 @@ export const TrendingCard: FC<Props> = ({
             </SvgIcon>
           </div>
 
-          <div className="absolute bottom-4 left-4">
+          <div className="absolute bottom-2 left-2 p-2 bg-dark bg-opacity-50 rounded-md">
             <div className='flex gap-1.5 text-light opacity-75 font-light text-[11px] sm:text-[13px] leading-[14px] sm:leading-4 mb-1'>
               <p>{releaseDate.slice(0, 4)}</p>
 

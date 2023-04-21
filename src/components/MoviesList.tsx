@@ -1,7 +1,8 @@
 import { useState, type FC } from "react";
 import { MovieCard } from "./MovieCard";
 import { type MovieType } from "~/types/Movie";
-import { IconName } from "~/utils/getIconByName";
+import { type IconName } from "~/utils/getIconByName";
+import { getCategoryNameFromAPIName } from "~/utils/functions";
 
 type Props = {
   movies: MovieType[];
@@ -27,15 +28,27 @@ export const MoviesList: FC<Props> = ({
         {movies.length > 3 && (
           <>
             {movies.map((movie) => {
+              const {
+                id,
+                backdrop_path,
+                title,
+                name,
+                release_date,
+                first_air_date,
+                media_type,
+              } = movie;
+
+              const category = getCategoryNameFromAPIName(media_type || '');
+
               return (
                 <MovieCard
-                  key={movie.id}
-                  movieId={movie.id}
-                  title={movie.title}
-                  releaseDate={movie.release_date}
-                  imagePath={movie.backdrop_path || ""}
+                  key={id}
+                  movieId={id}
+                  imagePath={backdrop_path || ''}
+                  title={title || name}
+                  releaseDate={release_date || first_air_date}
+                  category={category as IconName}
                   playingId={playingId}
-                  category={IconName.MOVIE}
                   onPlayingChange={setPlayingId}
                 />
               );

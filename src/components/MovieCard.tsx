@@ -11,8 +11,8 @@ import classNames from "classnames";
 type Props = {
   movieId: number;
   imagePath: string;
-  title: string;
-  releaseDate: string;
+  title?: string;
+  releaseDate?: string;
   category: IconName;
   playingId: number;
   onPlayingChange: (id: number) => void;
@@ -108,12 +108,12 @@ export const MovieCard: FC<Props> = ({
                 onClick={() => onPlayingChange(movieId)}
                 fill
                 priority
+                sizes="(max-width: 640px) 50vw, 33vw"
                 src={
                   imagePath
                     ? `https://www.themoviedb.org/t/p/original${path}`
                     : fallbackImage
                 }
-                sizes="(max-width: 640px) 50vw, 33vw"
               />
             ))
           )}
