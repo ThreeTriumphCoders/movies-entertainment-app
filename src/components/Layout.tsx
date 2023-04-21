@@ -16,7 +16,9 @@ export const Layout: React.FC<Props> = ({ children }) => {
     >
       <Navbar />
       <Searchbar />
-      {children}
+      <div className="px-4 sm:px-6 pb-10">
+        {children}
+      </div>
     </main>
   );
 }

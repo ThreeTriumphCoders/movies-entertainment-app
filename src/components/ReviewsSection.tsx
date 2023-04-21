@@ -4,7 +4,7 @@ import { ReviewList } from './ReviewList';
 
 const testReviews: Review[] = [
   {
-    id: 'fagiusoudik',
+    id: 'fagiik',
     movieId: 1,
     userId: 'fyuidhdocjdsbud',
     rating: 8,

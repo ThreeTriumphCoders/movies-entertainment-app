@@ -25,7 +25,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-full border-light border overflow-hidden relative">
         <Image src={avatar} alt="profile avatar" fill/>
       </div>
-      <article className='bg-semi-dark w-2/5 lg:w-1/3 rounded-lg px-3.5 py-4 sm:px-6 sm:py-5 relative'>
+      <article className='bg-semi-dark w-4/5 sm:w-2/3 lg:w-3/4 rounded-lg px-3.5 py-4 sm:px-6 sm:py-5 relative'>
         <p className='font-light text-xs sm:text-sm text-light'>
           {text}
         </p>

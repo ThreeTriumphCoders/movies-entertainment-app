@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Link from "next/link";
 import Image from 'next/image';
 import { NavbarLink } from "./NavbarLink";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { IconName, getIconByName } from "~/utils/getIconByName";
 import { SvgIcon } from "./SvgIcon";
+import avatar from '../../public/images/avatar.svg';
 
 export const Navbar = () => {
   const { data: sessionData } = useSession();
@@ -55,9 +57,9 @@ export const Navbar = () => {
         <button onClick={sessionData ? () => void signOut() : () => void signIn()}>
             <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-primary rounded-full border-light border relative overflow-hidden">
               {sessionData ? (
-                <Image src={sessionData?.user?.image ?? "./images/avatar.svg"} alt={sessionData?.user?.name ?? "user name"} fill />
+                <Image src={sessionData?.user?.image ?? avatar} alt={sessionData?.user?.name ?? "user name"} fill />
               ) : (
-                <Image src="./images/avatar.svg" alt="profile avatar" fill className="p-0.5"/>
+                <Image src={avatar} alt="profile avatar" fill className="p-0.5"/>
               )}
             </div>
         </button>
