@@ -1,6 +1,5 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "~/server/api/routers/user";
-import { movieRouter } from "~/server/api/routers/movie";
 import { bookmarkRouter } from "~/server/api/routers/bookmark";
 import { reviewRouter } from "~/server/api/routers/review";
 /**
@@ -10,7 +9,6 @@ import { reviewRouter } from "~/server/api/routers/review";
  */
 export const appRouter = createTRPCRouter({
   user: userRouter,
-  movie: movieRouter,
   bookmark: bookmarkRouter,
   review: reviewRouter,
 });
