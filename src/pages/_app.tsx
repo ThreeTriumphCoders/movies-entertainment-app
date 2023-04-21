@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import { Layout } from "~/components/Layout";
+import { BookmarksContextProvider } from "~/contexts/useBookmarks";
 
 const outfitBody = Outfit({
   weight: ["300"],
@@ -28,12 +29,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Layout>
-        <Component
-          className={`${outfitBody.variable} ${outfitHeading.variable}`}
-          {...pageProps}
-        />
-      </Layout>
+      <BookmarksContextProvider>
+        <Layout>
+          <Component
+            className={`${outfitBody.variable} ${outfitHeading.variable}`}
+            {...pageProps}
+          />
+        </Layout>
+      </BookmarksContextProvider>
     </SessionProvider>
   );
 };

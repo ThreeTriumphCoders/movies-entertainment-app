@@ -5,6 +5,10 @@ import { useEffect, type FC, useState } from "react";
 import { Loader } from "./Loader";
 import fallbackImage from "../../public/images/fallbackImage.png";
 import { getMovieImages, getTrailerKey } from "~/utils/helpers";
+import classNames from "classnames";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useBookmarksContext } from "~/contexts/useBookmarks";
 
 const getIconByCategory = (category: Category) => {
   switch (category) {
@@ -50,16 +54,27 @@ export const MovieCard: FC<Props> = ({
   playingId,
   onPlayingChange,
 }) => {
-  const isPlaying = playingId === movieId;
+  const { data: sessionData } = useSession();
+  const router = useRouter();
   const [error, setError] = useState(false);
   const [trailerKey, setTrailerKey] = useState("");
-  const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>(
-    []
-  );
+  const [
+    additionalImagePaths,
+    setAdditionalImagePaths,
+  ] = useState<string[]>([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const isPlaying = playingId === movieId;
+  const {
+    bookmarksIds,
+    addToBookmarks,
+    deleteFromBookmarks,
+  } = useBookmarksContext();
 
-  /**
-   * TODO: change card images on hover using additionalImagePaths
-   */
+  useEffect(() => {
+    if (sessionData?.user) {
+      setIsBookmarked(bookmarksIds.includes(movieId));
+    }
+  }, [bookmarksIds]);
 
   useEffect(() => {
     const getData = async () => {
@@ -77,6 +92,28 @@ export const MovieCard: FC<Props> = ({
 
     getData().catch(console.log);
   }, []);
+
+  const handleAddToBookmarks = () => {
+    addToBookmarks(movieId);
+  };
+
+  const handleDeleteFromBookmarks = () => {
+    deleteFromBookmarks(movieId);
+  };
+
+  const handleBookmarkClick = () => {
+    if (sessionData?.user) {
+      if (isBookmarked) {
+        handleDeleteFromBookmarks();
+        setIsBookmarked(false);
+      } else {
+        handleAddToBookmarks();
+        setIsBookmarked(true);
+      }
+    } else {
+      void router.push("/signin");
+    }
+  };
 
   return (
     <div className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]">
@@ -135,18 +172,20 @@ export const MovieCard: FC<Props> = ({
               sm:right-4 sm:top-4
             "
           >
-            <SvgIcon
-              className="
-                h-[32px] w-[32px]
-                cursor-pointer fill-none
-                stroke-light
-                stroke-[1.5] hover:stroke-dark
-                active:fill-light
-              "
-              viewBox="-9 -8 30 30"
-            >
-              <path d="m10.711.771.01.004.01.005c.068.027.108.06.14.107.032.048.046.09.046.15v11.927a.243.243 0 0 1-.046.15.282.282 0 0 1-.14.106l-.007.004-.008.003a.29.29 0 0 1-.107.014.326.326 0 0 1-.24-.091L6.356 9.235l-.524-.512-.524.512-4.011 3.915a.327.327 0 0 1-.24.1.244.244 0 0 1-.103-.021l-.01-.004-.01-.005a.281.281 0 0 1-.139-.107.244.244 0 0 1-.046-.15V1.037c0-.058.014-.101.046-.15A.281.281 0 0 1 .935.78l.01-.005.01-.004A.245.245 0 0 1 1.057.75h9.552c.038 0 .07.007.102.021Z" />
-            </SvgIcon>
+            <button onClick={handleBookmarkClick}>
+              <SvgIcon
+                className={classNames(
+                  "h-[32px] w-[32px] cursor-pointer fill-none stroke-light stroke-[1.5] hover:stroke-dark active:fill-light",
+                  {
+                    "fill-primary stroke-primary hover:stroke-primary":
+                      isBookmarked,
+                  }
+                )}
+                viewBox="-9 -8 30 30"
+              >
+                <path d="m10.711.771.01.004.01.005c.068.027.108.06.14.107.032.048.046.09.046.15v11.927a.243.243 0 0 1-.046.15.282.282 0 0 1-.14.106l-.007.004-.008.003a.29.29 0 0 1-.107.014.326.326 0 0 1-.24-.091L6.356 9.235l-.524-.512-.524.512-4.011 3.915a.327.327 0 0 1-.24.1.244.244 0 0 1-.103-.021l-.01-.004-.01-.005a.281.281 0 0 1-.139-.107.244.244 0 0 1-.046-.15V1.037c0-.058.014-.101.046-.15A.281.281 0 0 1 .935.78l.01-.005.01-.004A.245.245 0 0 1 1.057.75h9.552c.038 0 .07.007.102.021Z" />
+              </SvgIcon>
+            </button>
           </div>
 
           {isPlaying && (
@@ -183,10 +222,8 @@ export const MovieCard: FC<Props> = ({
         <p>E</p> {/* age rating */}
       </div>
 
-      <h3 className='text-sm sm:text-lg leading-[18px] sm:leading-6 font-medium'>
-        <Link href={`/movie/${movieId}`}>
-          {title}
-        </Link>
+      <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
+        <Link href={`/movie/${movieId}`}>{title}</Link>
       </h3>
     </div>
   );
