@@ -72,13 +72,6 @@ model Bookmark {
     movieId Int
     userId  String
     user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
-}
-
-model Movie {
-    id        Int        @unique
-    reviews   Review[]
-    bookmarks Bookmark[]
 }
 
 model Review {
@@ -89,5 +82,4 @@ model Review {
     text      String   @db.Text
     createdAt DateTime @default(now())
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
 }
