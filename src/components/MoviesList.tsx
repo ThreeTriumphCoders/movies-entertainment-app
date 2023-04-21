@@ -1,9 +1,9 @@
 import { useState, type FC } from "react";
 import { MovieCard, Category } from "./MovieCard";
-import { type MovieType } from "~/types/Movie";
+import { type MoviesType } from "~/types/Movie";
 
 type Props = {
-  movies: MovieType[];
+  movies: MoviesType;
   title?: string;
 }
 
@@ -23,7 +23,7 @@ export const MoviesList: FC<Props> = ({
           sm:gap-x-7 sm:gap-y-6 xl:grid-cols-4 xl:gap-x-10 xl:gap-y-8
         "
       >
-        {movies.length > 3 && (
+        {movies.length > 0 && (
           <>
             {movies.map((movie) => {
               return (

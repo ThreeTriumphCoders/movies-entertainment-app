@@ -4,6 +4,7 @@ import {
   type VideosAPIResponseType,
 } from "~/types/responses";
 import axios from "axios";
+import { MoviesType, type MovieType } from "~/types/Movie";
 
 export const get = async <T>(path: string): Promise<T> => {
   const { data } = await axios.get<T>(path);
@@ -38,4 +39,12 @@ export const getTrailerKey = async (id: number) => {
   );
 
   return trailer ? trailer.key : "";
+};
+
+export const getMovie = async (id: number) => {
+  const data = await get<MovieType>(
+   `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${id}?${env.NEXT_PUBLIC_TMDB_API_KEY}`
+  );
+
+  return data;
 };
