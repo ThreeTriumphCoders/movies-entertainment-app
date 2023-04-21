@@ -1,11 +1,12 @@
 import Image from "next/image";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
-import { useEffect, type FC, useState } from "react";
+import { useEffect, type FC, useState, useRef } from "react";
 import { Loader } from "./Loader";
 import fallbackImage from "../../public/images/fallbackImage.png";
 import { getMovieImages, getTrailerKey } from "~/utils/helpers";
 import { getIconByName, IconName } from "~/utils/getIconByName";
+import classNames from "classnames";
 
 const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
@@ -55,20 +56,50 @@ export const MovieCard: FC<Props> = ({
     getData().catch(console.log);
   }, []);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimeout(() => {
-        setCurrentImageIndex((index) =>
-          index === additionalImagePaths.length - 1 ? 0 : index + 1
-        );
-      }, Math.random() * 5000)
-    }, 10000);
+  const intervalRef = useRef<NodeJS.Timer | null>(null);
+  const timeoutRef = useRef<NodeJS.Timer | null>(null);
 
-    return () => clearInterval(intervalId);
-  }, [additionalImagePaths.length]);
+  const changeCurrentImageIndex = () => {
+    setCurrentImageIndex((index) =>
+      index === additionalImagePaths.length - 1 ? 0 : index + 1
+    );
+  }
+
+  const startSlidesAnimation = () => {
+    timeoutRef.current = setTimeout(() => {
+      changeCurrentImageIndex();
+    }, 1000)
+
+    intervalRef.current = setInterval(() => {
+      changeCurrentImageIndex();
+    }, 5000);
+  }
+
+  const stopSlidesAnimation = () => {
+    clearTimeout(timeoutRef.current as NodeJS.Timer)
+    clearInterval(intervalRef.current as NodeJS.Timer);
+  }
+
+  // useEffect(() => {
+  //   const mindelay = 5000;
+  //   const maxdelay = 20000;
+  //   const delay = Math.floor(Math.random() * (maxdelay - mindelay)) + mindelay;
+
+  //   const intervalId = setInterval(() => {
+  //     setCurrentImageIndex((index) =>
+  //       index === additionalImagePaths.length - 1 ? 0 : index + 1
+  //     );
+  //   }, delay);
+
+  //   return () => clearInterval(intervalId);
+  // }, [additionalImagePaths.length]);
 
   return (
-    <div className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]">
+    <div 
+      className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]"
+      onMouseEnter={startSlidesAnimation}
+      onMouseLeave={stopSlidesAnimation}
+    >
       <div id="image-container" className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
         <>
           <div className="top-[1px] bottom-[1px] right-[1px] left-[1px] absolute bg-semi-dark animate-pulse"/>
@@ -77,7 +108,10 @@ export const MovieCard: FC<Props> = ({
             additionalImagePaths.map((path, index) => (
               <Image
                 key={path}
-                className={`object-cover ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'} transition-all`}
+                className={classNames(
+                  'object-cover, transition-all duration-1000',
+                  { 'opacity-0': index !== currentImageIndex },
+                )}
                 alt="movie image"
                 onClick={() => onPlayingChange(movieId)}
                 fill
