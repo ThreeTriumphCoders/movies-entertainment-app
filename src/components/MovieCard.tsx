@@ -1,15 +1,12 @@
 import Image from "next/image";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
-import { useEffect, type FC, useState } from "react";
+import { useEffect, type FC, useState, useRef } from "react";
 import { Loader } from "./Loader";
 import fallbackImage from "../../public/images/fallbackImage.png";
 import { getMovieImages, getTrailerKey } from "~/utils/helpers";
 import { getIconByName, IconName } from "~/utils/getIconByName";
-
-const separator = (
-  <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
-);
+import classNames from "classnames";
 
 type Props = {
   movieId: number;
@@ -36,10 +33,7 @@ export const MovieCard: FC<Props> = ({
   const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>(
     []
   );
-
-  /**
-   * TODO: change card images on hover using additionalImagePaths
-   */
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const getData = async () => {
@@ -58,26 +52,70 @@ export const MovieCard: FC<Props> = ({
     getData().catch(console.log);
   }, []);
 
+  const intervalRef = useRef<NodeJS.Timer | null>(null);
+
+  const changeCurrentImageIndex = () => {
+    setCurrentImageIndex((index) =>
+      index === additionalImagePaths.length - 1 ? 0 : index + 1
+    );
+  }
+
+  const startSlidesAnimation = () => {
+    setTimeout(() => {
+      changeCurrentImageIndex();
+    }, 500)
+
+    intervalRef.current = setInterval(() => {
+      changeCurrentImageIndex();
+    }, 5000);
+  }
+
+  const stopSlidesAnimation = () => {
+    clearInterval(intervalRef.current as NodeJS.Timer);
+  }
+
   return (
-    <div className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]">
-      <div className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
+    <div 
+      className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]"
+      onMouseEnter={startSlidesAnimation}
+      onMouseLeave={stopSlidesAnimation}
+    >
+      <div id="image-container" className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
         <>
           <div className="top-[1px] bottom-[1px] right-[1px] left-[1px] absolute bg-semi-dark animate-pulse"/>
 
+          {!imagePath && (
+            <div 
+              className="
+                top-[1px] bottom-[1px] right-[1px] left-[1px] absolute 
+                bg-semi-dark text-2xl
+                flex justify-center items-center
+              "
+            >
+              No image
+            </div>
+          )}
+
           {!isPlaying && (
-            <Image
-              className="object-cover"
-              alt="movie image"
-              onClick={() => onPlayingChange(movieId)}
-              fill
-              priority
-              src={
-                imagePath
-                  ? `https://www.themoviedb.org/t/p/original${imagePath}`
-                  : fallbackImage
-              }
-              sizes="(max-width: 640px) 50vw, 33vw"
-            />
+            additionalImagePaths.map((path, index) => (
+              <Image
+                key={path}
+                className={classNames(
+                  'object-cover, transition-all duration-1000',
+                  { 'opacity-0': index !== currentImageIndex },
+                )}
+                alt="movie image"
+                onClick={() => onPlayingChange(movieId)}
+                fill
+                priority
+                src={
+                  imagePath
+                    ? `https://www.themoviedb.org/t/p/original${path}`
+                    : fallbackImage
+                }
+                sizes="(max-width: 640px) 50vw, 33vw"
+              />
+            ))
           )}
 
           <div
@@ -155,7 +193,9 @@ export const MovieCard: FC<Props> = ({
 
       <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
         <p>{releaseDate.slice(0, 4)}</p>
-        {separator}
+
+        <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
+
         <div className="flex items-center gap-1">
           <SvgIcon className="h-2.5 w-2.5 fill-light">
             {getIconByName(category)}
@@ -163,8 +203,6 @@ export const MovieCard: FC<Props> = ({
 
           <p>{category}</p>
         </div>
-        {separator}
-        <p>E</p> {/* age rating */}
       </div>
 
       <h3 className='text-sm sm:text-lg leading-[18px] sm:leading-6 font-medium'>
