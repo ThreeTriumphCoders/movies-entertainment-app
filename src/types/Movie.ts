@@ -20,6 +20,7 @@ export const MovieSchema = z.object({
   adult: z.boolean(),
   video_id: z.string().optional(),
   status: z.string(),
+  runtime: z.number(),
 });
 export const MoviesSchema = z.array(MovieSchema);
 
