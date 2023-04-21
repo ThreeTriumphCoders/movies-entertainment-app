@@ -52,6 +52,10 @@ const MoviePage = () => {
     getMovieFromServer().catch(console.log);
   }, [query]);
 
+  const date = movie?.release_date
+  ? movie.release_date.slice(0, 4)
+  : 'No release date'
+
   return (
     <>
       {movie
@@ -62,7 +66,7 @@ const MoviePage = () => {
             </h1>
 
             <div className="mb-2 sm:mb-4 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
-              <p>{movie.release_date.slice(0, 4)}</p>
+              <p>{date}</p>
               {separator}
               <div className="flex items-center gap-1">
                 <SvgIcon className="h-2.5 w-2.5 fill-light">
