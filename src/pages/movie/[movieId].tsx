@@ -75,7 +75,7 @@ const MoviePage = () => {
 
             <div className="flex flex-col lg:flex-row lg:flex-wrap gap-x-14 gap-y-10 lg:gap-y-0">
               <div className="lg:w-2/3">
-                <div>
+                <div className="mb-8">
                   <div className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
                     <>
                       <Image
@@ -165,7 +165,7 @@ const MoviePage = () => {
                 </div>
               </div>
 
-              <div className="sm:w-4/5 lg:w-1/4 mb-8 lg:min-h-[725px]">
+              <div className="sm:w-4/5 lg:w-1/4 mb-8 lg:mb-0 lg:min-h-[725px]">
                 <h3 className="font-medium text-light text-lg mb-4">
                   Description
                 </h3>
@@ -242,11 +242,9 @@ const MoviePage = () => {
                   {movie.runtime} min.
                 </p>
               </div>
-
-              <div className="w-full xl:-translate-y-56 lg:-translate-y-80 2xl:translate-y-2">
-                <ReviewsSection />
-              </div>
             </div>
+
+            <ReviewsSection />
           </section>
         )
         : <Loader />}
