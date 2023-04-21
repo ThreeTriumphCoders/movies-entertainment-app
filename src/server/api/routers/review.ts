@@ -39,7 +39,7 @@ export const reviewRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.bookmark.delete({
+      return ctx.prisma.review.delete({
         where: {
           id: input.id,
         },
