@@ -129,7 +129,7 @@ export const TrendingList = () => {
   }, [scrollRef])
 
   return (
-    <div className="px-4 sm:px-6 lg:pl-0 lg:pr-8 mb-6">
+    <div className="lg:pl-0 lg:pr-8 mb-6">
       <h2 className="text-xl mb-6 sm:text-[32px] lg:mb-10">
         Trending
       </h2>
