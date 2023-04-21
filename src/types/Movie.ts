@@ -13,10 +13,13 @@ export const MovieSchema = z.object({
   popularity: z.number(),
   original_language: z.string(),
   original_title: z.string(),
-  genre_ids: z.array(z.number()),
+  genres: z.array(z.object({
+    name: z.string(),
+  })),
   video: z.boolean(),
   adult: z.boolean(),
   video_id: z.string().optional(),
+  status: z.string(),
 });
 export const MoviesSchema = z.array(MovieSchema);
 
