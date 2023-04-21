@@ -37,7 +37,7 @@ export const ReviewForm = () => {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           className={classNames(
-            'bg-dark caret-primary outline-none border-b border-b-grey focus:border-b-light placeholder:text-light placeholder:opacity-50 placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-1/2 font-body font-light',
+            'bg-dark caret-primary outline-none border-b border-b-grey focus:border-b-light placeholder:text-light placeholder:opacity-50 placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-4/5 font-body font-light',
             { 'pl-9 sm:pl-14': query }
           )}
           onFocus={() => setIsFocused(true)}
