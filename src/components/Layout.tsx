@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar } from "./Navbar";
 import { Searchbar } from "./Searchbar";
+import { ScrollUpButton } from "./ScrollUpButton";
 
 type Props = {
   children : React.ReactNode,
@@ -19,6 +20,7 @@ export const Layout: React.FC<Props> = ({ children }) => {
       <div className="px-4 sm:px-6 pb-10">
         {children}
       </div>
+      <ScrollUpButton />
     </main>
   );
 }
