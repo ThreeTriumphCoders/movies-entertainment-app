@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Link from "next/link";
 import Image from 'next/image';
 import { NavbarLink } from "./NavbarLink";
 import { signIn, signOut, useSession } from "next-auth/react";
+import avatar from '../../public/images/avatar.svg';
+import logo from '../../public/images/logo.svg';
 
 export const Navbar = () => {
   const { data: sessionData } = useSession();
@@ -10,7 +13,7 @@ export const Navbar = () => {
     <div className="sm:p-6 lg:p-8 lg:w-40 lg:fixed lg:top-0 lg:bottom-0 lg:left-0">
       <div className="bg-semi-dark flex lg:flex-col justify-between p-4 lg:p-7 items-center sm:rounded-xl lg:rounded-[20px] h-full">
         <Link href="/" className="relative w-6 h-6 sm:w-8 sm:h-8">
-          <Image src="./images/logo.svg" alt="site logo" fill/>
+          <Image src={logo} alt="site logo" fill/>
         </Link>
 
         <ul className="flex lg:flex-col gap-2 sm:gap-4 lg:mb-auto lg:mt-16">
@@ -47,9 +50,9 @@ export const Navbar = () => {
         <button onClick={sessionData ? () => void signOut() : () => void signIn()}>
             <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-primary rounded-full border-light border relative overflow-hidden">
               {sessionData ? (
-                <Image src={sessionData?.user?.image ?? "./images/avatar.svg"} alt={sessionData?.user?.name ?? "user name"} fill />
+                <Image src={sessionData?.user?.image ?? avatar} alt={sessionData?.user?.name ?? "user name"} fill />
               ) : (
-                <Image src="./images/avatar.svg" alt="profile avatar" fill className="p-0.5"/>
+                <Image src={avatar} alt="profile avatar" fill className="p-0.5"/>
               )}
             </div>
         </button>
