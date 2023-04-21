@@ -243,7 +243,7 @@ const MoviePage = () => {
                 </p>
               </div>
 
-              <div className="w-full xl:-translate-y-40 lg:-translate-y-96">
+              <div className="w-full xl:-translate-y-56 lg:-translate-y-80 2xl:translate-y-2">
                 <ReviewsSection />
               </div>
             </div>
