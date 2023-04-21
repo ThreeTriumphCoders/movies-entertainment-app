@@ -8,10 +8,6 @@ import { getMovieImages, getTrailerKey } from "~/utils/helpers";
 import { getIconByName, IconName } from "~/utils/getIconByName";
 import classNames from "classnames";
 
-const separator = (
-  <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
-);
-
 type Props = {
   movieId: number;
   imagePath: string;
@@ -57,7 +53,6 @@ export const MovieCard: FC<Props> = ({
   }, []);
 
   const intervalRef = useRef<NodeJS.Timer | null>(null);
-  const timeoutRef = useRef<NodeJS.Timer | null>(null);
 
   const changeCurrentImageIndex = () => {
     setCurrentImageIndex((index) =>
@@ -66,9 +61,9 @@ export const MovieCard: FC<Props> = ({
   }
 
   const startSlidesAnimation = () => {
-    timeoutRef.current = setTimeout(() => {
+    setTimeout(() => {
       changeCurrentImageIndex();
-    }, 1000)
+    }, 500)
 
     intervalRef.current = setInterval(() => {
       changeCurrentImageIndex();
@@ -76,23 +71,8 @@ export const MovieCard: FC<Props> = ({
   }
 
   const stopSlidesAnimation = () => {
-    clearTimeout(timeoutRef.current as NodeJS.Timer)
     clearInterval(intervalRef.current as NodeJS.Timer);
   }
-
-  // useEffect(() => {
-  //   const mindelay = 5000;
-  //   const maxdelay = 20000;
-  //   const delay = Math.floor(Math.random() * (maxdelay - mindelay)) + mindelay;
-
-  //   const intervalId = setInterval(() => {
-  //     setCurrentImageIndex((index) =>
-  //       index === additionalImagePaths.length - 1 ? 0 : index + 1
-  //     );
-  //   }, delay);
-
-  //   return () => clearInterval(intervalId);
-  // }, [additionalImagePaths.length]);
 
   return (
     <div 
@@ -103,6 +83,18 @@ export const MovieCard: FC<Props> = ({
       <div id="image-container" className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
         <>
           <div className="top-[1px] bottom-[1px] right-[1px] left-[1px] absolute bg-semi-dark animate-pulse"/>
+
+          {!imagePath && (
+            <div 
+              className="
+                top-[1px] bottom-[1px] right-[1px] left-[1px] absolute 
+                bg-semi-dark text-2xl
+                flex justify-center items-center
+              "
+            >
+              No image
+            </div>
+          )}
 
           {!isPlaying && (
             additionalImagePaths.map((path, index) => (
@@ -201,7 +193,9 @@ export const MovieCard: FC<Props> = ({
 
       <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
         <p>{releaseDate.slice(0, 4)}</p>
-        {separator}
+
+        <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
+
         <div className="flex items-center gap-1">
           <SvgIcon className="h-2.5 w-2.5 fill-light">
             {getIconByName(category)}
@@ -209,8 +203,6 @@ export const MovieCard: FC<Props> = ({
 
           <p>{category}</p>
         </div>
-        {separator}
-        <p>E</p> {/* age rating */}
       </div>
 
       <h3 className='text-sm sm:text-lg leading-[18px] sm:leading-6 font-medium'>
