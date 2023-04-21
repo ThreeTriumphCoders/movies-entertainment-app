@@ -26,7 +26,7 @@ export const ScrollUpButton = () => {
       className={classNames(
         "fixed bottom-10 right-10 bg-arrow-up w-12 h-12 hover:bg-arrow-hover transition-all",
         {
-          'hidden': !isEnabled, 
+          'scale-0': !isEnabled, 
         }
       )}
       onClick={() => window.scrollTo(0, 0)}
