@@ -1,99 +1,13 @@
 import { useEffect, useRef } from "react";
 import { TrendingCard } from "./TrendingCard"
 import { type IconName } from "~/utils/getIconByName";
+import { useGetTrendings } from "~/utils/use-queries";
+import { getCategoryNameFromAPIName } from "~/utils/functions";
 
-const mockMovies = [
-  {
-    movieCode: '1',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '2',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '3',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '4',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '5',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '6',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '7',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '8',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '9',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '10',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '11',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-]
+const slideTime = 10000;
 
 export const TrendingList = () => {
+  const trendings = useGetTrendings();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -101,7 +15,7 @@ export const TrendingList = () => {
       return;
     }
 
-    const timeout = setInterval(() => {
+    const scroll = () => {
       const {
         scrollLeft = 0,
         scrollWidth = 0,
@@ -116,7 +30,17 @@ export const TrendingList = () => {
       }
       
       scrollRef.current?.scrollBy({ left: clientWidth, behavior: 'smooth' });
-    }, 10000)
+    }
+
+    let timeout = setInterval(scroll, slideTime)
+
+    scrollRef.current.addEventListener('mousedown', () => {
+      clearInterval(timeout);
+    })
+
+    scrollRef.current.addEventListener('mouseup', () => {
+      timeout = setInterval(scroll, slideTime)
+    })
 
     return () => {
       clearInterval(timeout)
@@ -127,7 +51,7 @@ export const TrendingList = () => {
   return (
     <div className="lg:pl-0 lg:pr-8 mb-6">
       <h2 className="text-xl mb-6 sm:text-[32px] lg:mb-10">
-        Trending
+        Trending last week
       </h2>
     
       <div 
@@ -137,22 +61,26 @@ export const TrendingList = () => {
         "
         ref={scrollRef}
       >
-        {mockMovies.map(movie => {
+        {trendings.map(movie => {
           const {
-            movieCode,
-            imagePath,
+            id,
+            backdrop_path,
             title,
-            releaseDate,
-            category,
+            name,
+            release_date,
+            first_air_date,
+            media_type,
           } = movie;
+
+          const category = getCategoryNameFromAPIName(media_type || '');
 
           return (
             <TrendingCard 
-              key={movieCode}
-              movieCode={movieCode}
-              imagePath={imagePath}
-              title={title}
-              releaseDate={releaseDate}
+              key={id}
+              movieId={id}
+              imagePath={backdrop_path || ''}
+              title={title || name}
+              releaseDate={release_date || first_air_date}
               category={category as IconName}
             />
           )

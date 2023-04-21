@@ -2,11 +2,14 @@ import { z } from "zod";
 
 export const MovieSchema = z.object({
   id: z.number(),
-  title: z.string(),
+  media_type: z.string().optional(),
+  title: z.string().optional(),
+  name: z.string().optional(),
   poster_path: z.string(),
-  posterImage: z.string(),
+  // posterImage: z.string(),
   backdrop_path: z.string().nullable(),
-  release_date: z.string(),
+  release_date: z.string().optional(),
+  first_air_date: z.string().optional(),
   overview: z.string(),
   vote_average: z.number(),
   vote_count: z.number(),
@@ -21,6 +24,8 @@ export const MovieSchema = z.object({
   video_id: z.string().optional(),
   status: z.string(),
   runtime: z.number(),
+  origin_country: z.array(z.string()).optional(),
+  // video_id: z.string().optional(),
 });
 export const MoviesSchema = z.array(MovieSchema);
 

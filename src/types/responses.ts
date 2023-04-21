@@ -19,17 +19,14 @@ export const VideosAPIResponse = z.object({
   results: VideosSchema,
 });
 
-
 export const ImageSchema = z.object({
   file_path: z.string(),
 });
 export const ImagesSchema = z.array(ImageSchema);
 
-
 export const ImagesAPIResponse = z.object({
   backdrops: ImagesSchema,
 });
-
 
 export type MoviesAPIResponseType = z.infer<typeof MoviesAPIResponse>;
 export type VideoType = z.infer<typeof VideoSchema>;
