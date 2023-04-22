@@ -35,6 +35,36 @@ export const useGetPopularMovies = (): [
   return [data, getData];
 };
 
+export const useGetPopularSeries = (): [ //todo: Do the function above generic and remove this one
+  MoviesType,
+  (page: number) => Promise<void>
+] => {
+  const [data, setData] = useState<MoviesType>([]);
+  const pageNumber = useRef(0);
+
+  const getData = async (page: number) => {
+    try {
+      const { results } = await get<MoviesAPIResponseType>(
+        `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/tv/popular?${env.NEXT_PUBLIC_TMDB_API_KEY}&page=${page}`
+      );
+
+      if (pageNumber.current !== page) {
+        setData((prev) => [...prev, ...results]);
+
+        pageNumber.current += 1;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getData(1).catch(console.log);
+  }, []);
+
+  return [data, getData];
+};
+
 export const useGetTrendings = (): MoviesType => {
   const [data, setData] = useState<MoviesType>([]);
 
