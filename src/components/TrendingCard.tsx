@@ -5,8 +5,8 @@ import { type FC } from "react";
 import { IconName, getIconByName } from "~/utils/getIconByName";
 
 type Props = {
-  movieId: number;
-  imagePath: string;
+  movieId?: number;
+  imagePath?: string;
   title?: string;
   releaseDate?: string;
   category?: IconName;
@@ -15,12 +15,22 @@ type Props = {
 const separator = <p className='-translate-y-1/4 select-none font-semibold opacity-60'>.</p>;
 
 export const TrendingCard: FC<Props> = ({
-  movieId,
-  imagePath,
-  title = 'No movie title',
-  releaseDate = 'No release date',
-  category = IconName.MOVIE,
+  movieId = '',
+  imagePath = '',
+  title = '',
+  releaseDate = '',
+  category = IconName.NONE,
 }) => {
+  if (!movieId) {
+    return (
+      <div className='min-w-[230px] sm:min-w-[410px] lg:min-w-[470px] snap-start'>
+        <div className='relative pt-[50%] rounded-lg overflow-hidden'>
+          <div className="top-0 bottom-0 right-0 left-0 absolute bg-semi-dark animate-pulse"/>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Link href={`/movie/${movieId}`} className='min-w-[230px] sm:min-w-[410px] lg:min-w-[470px] snap-start'>
       <div className='relative pt-[50%] rounded-lg overflow-hidden'>

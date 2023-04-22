@@ -4,7 +4,6 @@ import { SvgIcon } from "~/components/SvgIcon";
 import { type MovieType } from "~/types/Movie";
 import { getMovie } from "~/utils/helpers";
 import Image from "next/image";
-import fallbackImage from "../../../public/images/fallbackImage.png";
 import { Loader } from "~/components/Loader";
 import { getMovieImages, getTrailerKey } from "~/utils/helpers";
 import { ReviewsSection } from "~/components/ReviewsSection";
@@ -86,11 +85,7 @@ const MoviePage = () => {
                         alt="movie image"
                         onClick={() => setIsPlaying(true)}
                         priority
-                        src={
-                          movie.backdrop_path
-                            ? `https://www.themoviedb.org/t/p/original${movie.backdrop_path}`
-                            : fallbackImage
-                        }
+                        src={`https://www.themoviedb.org/t/p/original${movie.backdrop_path || ''}`} //! do placeholder
                         fill
                       />
 

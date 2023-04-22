@@ -61,30 +61,36 @@ export const TrendingList = () => {
         "
         ref={scrollRef}
       >
-        {trendings.map(movie => {
-          const {
-            id,
-            backdrop_path,
-            title,
-            name,
-            release_date,
-            first_air_date,
-            media_type,
-          } = movie;
-
-          const category = getCategoryNameFromAPIName(media_type || '');
-
-          return (
-            <TrendingCard 
-              key={id}
-              movieId={id}
-              imagePath={backdrop_path || ''}
-              title={title || name}
-              releaseDate={release_date || first_air_date}
-              category={category as IconName}
-            />
-          )
-        })}
+        {trendings.length > 0 ? (
+          trendings.map(movie => {
+            const {
+              id,
+              backdrop_path,
+              title,
+              name,
+              release_date,
+              first_air_date,
+              media_type,
+            } = movie;
+  
+            const category = getCategoryNameFromAPIName(media_type || '');
+  
+            return (
+              <TrendingCard 
+                key={id}
+                movieId={id}
+                imagePath={backdrop_path || ''}
+                title={title || name}
+                releaseDate={release_date || first_air_date}
+                category={category as IconName}
+              />
+            )
+          })
+        ) : (
+          [null, null, null, null, null].map((_, index) => (
+            <TrendingCard key={index}/>
+          ))
+        )}
       </div>
     </div>
   )

@@ -3,7 +3,6 @@ import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useEffect, type FC, useState, useRef } from "react";
 import { Loader } from "./Loader";
-import fallbackImage from "../../public/images/fallbackImage.png";
 import { getMovieImages, getTrailerKey } from "~/utils/helpers";
 import { getIconByName, IconName } from "~/utils/getIconByName";
 import classNames from "classnames";
@@ -111,11 +110,7 @@ export const MovieCard: FC<Props> = ({
                 fill
                 priority
                 sizes="(max-width: 640px) 50vw, 33vw"
-                src={
-                  imagePath
-                    ? `https://www.themoviedb.org/t/p/original${path}`
-                    : fallbackImage
-                }
+                src={`https://www.themoviedb.org/t/p/original${path}`}
               />
             ))
           )}

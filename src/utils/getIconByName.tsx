@@ -1,4 +1,5 @@
 export enum IconName {
+  NONE = '',
   MOVIE = 'Movie',
   TV = 'TV Serie',
   PLAY = 'Play',
@@ -7,6 +8,7 @@ export enum IconName {
   HOME = 'Home',
   LOGO = 'Logo',
   AVATAR = 'Avatar',
+  ARROW_UP = 'Arrow Up',
 }
 
 export const getIconByName = (name: IconName) => {
@@ -64,6 +66,13 @@ export const getIconByName = (name: IconName) => {
       return (
         <path
           d="M12 14.016c2.672 0 8.016 1.313 8.016 3.984v2.016H3.985V18c0-2.672 5.344-3.984 8.016-3.984zM12 12c-2.203 0-3.984-1.781-3.984-3.984S9.797 3.985 12 3.985s3.984 1.828 3.984 4.031S14.203 12 12 12z"
+        />
+      )
+
+    case IconName.ARROW_UP:
+      return (
+        <path
+          d="m10.666 24 2.35 2.35 9.317-9.3v20.283h3.334V17.05l9.3 9.317L37.333 24 24 10.667 10.666 24Z"
         />
       )
 
