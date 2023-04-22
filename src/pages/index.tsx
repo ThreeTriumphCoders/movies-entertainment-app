@@ -1,19 +1,23 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useRef } from "react";
 import { TrendingList } from "~/components/TrendingList";
 import { MoviesList } from "~/components/MoviesList";
-import { useGetPopularMovies } from "~/utils/use-queries";
+import { useGetPopularMovies, useGetPopularSeries } from "~/utils/use-queries";
+import Link from "next/link";
 
 const Home: NextPage = () => {
-  const [popularMovies, getPopularMovies] = useGetPopularMovies();
-  const page = useRef(1);
+  const [popularMovies] = useGetPopularMovies();
+  const [popularSeries] = useGetPopularSeries();
 
-  const loadMoreMovies = async () => {
-    page.current += 1;
-    await getPopularMovies(page.current);
-  };
-
+  const buttonClasses = `
+    flex justify-center w-fit mx-auto
+    rounded-lg transition
+    bg-primary hover:bg-semi-dark 
+    px-5 py-1 lg:px-6 lg:py-2
+    sm:text-xl lg:text-2xl
+    text-dark hover:text-light
+  `;
+  const sectionClasses = "mb-6 sm:mb-10";
   return (
     <>
       <Head>
@@ -22,18 +26,40 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section>
+      <section className={sectionClasses}>
         <TrendingList />
+      </section>
 
-        <MoviesList movies={popularMovies} />
-        <div className="flex justify-center">
-          <button
-            onClick={() => void loadMoreMovies()}
-            className="rounded-lg bg-primary px-8 py-2 text-dark"
-          >
-            Load more
-          </button>
-        </div>
+      <section className={sectionClasses}>
+        <MoviesList 
+          movies={popularMovies.slice(0, 12)} 
+          title = 'Popular movies'
+          category = 'Movie'
+          apiPath = 'movie'
+        />
+
+        <Link 
+          href={'/movies'}
+          className={buttonClasses}
+        >
+          See more movies
+        </Link>
+      </section>
+
+      <section>
+        <MoviesList 
+          movies={popularSeries.slice(0, 12)} 
+          title = 'Popular series'
+          category = 'TV Serie'
+          apiPath = 'tv'
+        />
+
+        <Link 
+          href={'/series'}
+          className={buttonClasses}
+        >
+          See more series
+        </Link>
       </section>
     </>
   );
