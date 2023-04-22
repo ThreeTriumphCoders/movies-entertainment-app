@@ -14,6 +14,7 @@ type Props = {
   title?: string;
   releaseDate?: string;
   category: IconName;
+  apiPath: 'tv' | 'movie';
   playingId: number;
   onPlayingChange: (id: number) => void;
 };
@@ -24,6 +25,7 @@ export const MovieCard: FC<Props> = ({
   title = "No movie title",
   releaseDate = "No release date",
   category = IconName.MOVIE,
+  apiPath,
   playingId,
   onPlayingChange,
 }) => {
@@ -38,8 +40,8 @@ export const MovieCard: FC<Props> = ({
   useEffect(() => {
     const getData = async () => {
       try {
-        const key = await getTrailerKey(movieId);
-        const imagesPaths = await getMovieImages(movieId);
+        const key = await getTrailerKey(movieId, apiPath);
+        const imagesPaths = await getMovieImages(movieId, apiPath);
 
         setAdditionalImagePaths(imagesPaths);
         setTrailerKey(key);
