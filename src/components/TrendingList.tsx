@@ -7,6 +7,7 @@ import { getCategoryNameFromAPIName } from "~/utils/functions";
 export const TrendingList = () => {
   const trendings = useGetTrendings();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const currentRef = scrollRef.current;
 
   useEffect(() => {
     if (!scrollRef.current) {
@@ -54,13 +55,13 @@ export const TrendingList = () => {
 
     return () => {
       clearInterval(slidingInterval)
-      scrollRef.current?.removeEventListener('mousedown', clearSlidingInterval)
-      scrollRef.current?.removeEventListener('mouseup', setSlidingInterval)
-      scrollRef.current?.removeEventListener('touchstart', clearSlidingInterval)
-      scrollRef.current?.removeEventListener('touchend', setSlidingInterval)
+      currentRef?.removeEventListener('mousedown', clearSlidingInterval)
+      currentRef?.removeEventListener('mouseup', setSlidingInterval)
+      currentRef?.removeEventListener('touchstart', clearSlidingInterval)
+      currentRef?.removeEventListener('touchend', setSlidingInterval)
     }
     
-  }, [scrollRef])
+  }, [currentRef])
 
   return (
     <div className="lg:pl-0 lg:pr-8 mb-6">

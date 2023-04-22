@@ -51,7 +51,7 @@ export const MovieCard: FC<Props> = ({
     };
 
     getData().catch(console.log);
-  }, []);
+  }, [movieId, apiPath]);
 
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
