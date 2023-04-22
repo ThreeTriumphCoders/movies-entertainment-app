@@ -28,7 +28,6 @@ const MoviePage = () => {
       if (query.movieId) {
         const movieFromServer = await getMovie(+query.movieId);
         setMovie(movieFromServer);
-        console.log(movieFromServer);
       }
     }
 

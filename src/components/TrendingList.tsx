@@ -4,8 +4,6 @@ import { type IconName } from "~/utils/getIconByName";
 import { useGetTrendings } from "~/utils/use-queries";
 import { getCategoryNameFromAPIName } from "~/utils/functions";
 
-const slideTime = 10000;
-
 export const TrendingList = () => {
   const trendings = useGetTrendings();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -32,18 +30,34 @@ export const TrendingList = () => {
       scrollRef.current?.scrollBy({ left: clientWidth, behavior: 'smooth' });
     }
 
-    let timeout = setInterval(scroll, slideTime)
+    const slideTime = 10000;
+    let slidingInterval = setInterval(scroll, slideTime);
 
-    scrollRef.current.addEventListener('mousedown', () => {
-      clearInterval(timeout);
-    })
+    let timeout: NodeJS.Timer;
 
-    scrollRef.current.addEventListener('mouseup', () => {
-      timeout = setInterval(scroll, slideTime)
-    })
+    const clearSlidingInterval = () => {
+      clearTimeout(timeout);
+      clearInterval(slidingInterval);
+    }
+
+    const setSlidingInterval = () => {
+      timeout = setTimeout(() => {
+        slidingInterval = setInterval(scroll, slideTime);
+      }, slideTime)
+    };
+
+
+    scrollRef.current?.addEventListener('mousedown', clearSlidingInterval);
+    scrollRef.current?.addEventListener('mouseup', setSlidingInterval);
+    scrollRef.current?.addEventListener('touchstart', clearSlidingInterval, { passive: true });
+    scrollRef.current?.addEventListener('touchend', setSlidingInterval, { passive: true });
 
     return () => {
-      clearInterval(timeout)
+      clearInterval(slidingInterval)
+      scrollRef.current?.removeEventListener('mousedown', clearSlidingInterval)
+      scrollRef.current?.removeEventListener('mouseup', setSlidingInterval)
+      scrollRef.current?.removeEventListener('touchstart', clearSlidingInterval)
+      scrollRef.current?.removeEventListener('touchend', setSlidingInterval)
     }
     
   }, [scrollRef])
