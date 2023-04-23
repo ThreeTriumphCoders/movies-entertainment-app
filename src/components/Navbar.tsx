@@ -6,9 +6,11 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { IconName, getIconByName } from "~/utils/getIconByName";
 import { SvgIcon } from "./SvgIcon";
 import avatar from '../../public/images/avatar.svg';
+import { useRouter } from "next/router";
 
 export const Navbar = () => {
   const { data: sessionData } = useSession();
+  const router = useRouter();
   
   return (
     <div 
@@ -54,7 +56,7 @@ export const Navbar = () => {
           )}
         </ul>
 
-        <button onClick={sessionData ? () => void signOut() : () => void signIn()}>
+        <button onClick={sessionData ? () => void signOut() : () => void router.push('/auth/signin')}>
             <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-primary rounded-full border-light border relative overflow-hidden">
               {sessionData ? (
                 <Image src={sessionData?.user?.image ?? avatar} alt={sessionData?.user?.name ?? "user name"} fill />
