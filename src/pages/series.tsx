@@ -1,19 +1,26 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { LoadMoreButton } from "~/components/LoadMoreButton";
 import { MoviesList } from "~/components/MoviesList";
 import { useGetPopularSeries } from "~/utils/use-queries";
 
 const SeriesPage = () => {
   const [popularSeries, getPopularSeries] = useGetPopularSeries();
   const page = useRef(1);
+
+  const [isButtonLoading, setButtonLoading] = useState(false);
   const isLoading = useRef(false);
 
-  const loadMoreSeries = async () => {
-    isLoading.current = true;
-    
+  const loadMoreSeries = () => {
     page.current += 1;
-    await getPopularSeries(page.current);
-
-    isLoading.current = false;
+    isLoading.current = true;
+    setButtonLoading(true);
+    
+    getPopularSeries(page.current)
+      .then(() => {
+        isLoading.current = false;
+        setButtonLoading(false);
+      })
+      .catch(console.error)
   };
 
   useEffect(() => {
@@ -24,7 +31,7 @@ const SeriesPage = () => {
         scrollTop,
       } = document.documentElement;
 
-      const needLoad = scrollHeight - clientHeight - scrollTop < 500;
+      const needLoad = scrollHeight - clientHeight - scrollTop < 1000;
       if (needLoad && !isLoading.current) {
         void loadMoreSeries();
       }
@@ -46,14 +53,10 @@ const SeriesPage = () => {
         apiPath='tv'
       />
 
-      <div className="flex justify-center">
-        <button
-          onClick={() => void loadMoreSeries()}
-          className="rounded-lg bg-primary px-8 py-2 text-dark"
-        >
-          Load more
-        </button>
-      </div>
+      <LoadMoreButton 
+        isLoading={isButtonLoading}
+        onClick={loadMoreSeries}
+      />
     </>
   );
 };
