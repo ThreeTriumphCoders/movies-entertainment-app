@@ -19,7 +19,7 @@ const SignIn = () => {
           <button 
             type="button" 
             className="flex gap-x-5 justify-center items-center border border-grey rounded-lg w-full py-3 hover:bg-primary hover:border-primary hover:text-dark transition-all"
-            onClick={() => void signIn('google', { callbackUrl: '/' })}
+            onClick={() => void signIn('google')}
           >
             <Image src={google} alt="google" width="28" height="28" />
             Login with Google
@@ -28,7 +28,7 @@ const SignIn = () => {
           <button 
             type="button" 
             className="flex gap-x-5 justify-center items-center border border-grey rounded-lg w-full py-3 hover:bg-primary hover:border-primary hover:text-dark transition-all"
-            onClick={() => void signIn('github', { callbackUrl: '/' })}
+            onClick={() => void signIn('github', { callbackUrl: process.env.NEXTAUTH_URL })}
           >
           <Image src={github} alt="google" width="28" height="28" />
             Login with GitHub
