@@ -5,8 +5,6 @@ import github from '../../../public/images/github.svg';
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 
-// void signIn()
-
 const SignIn = () => {
   return (
     <section className="flex justify-center items-center bg-dark h-screen">
@@ -19,7 +17,7 @@ const SignIn = () => {
           <button 
             type="button" 
             className="flex gap-x-5 justify-center items-center border border-grey rounded-lg w-full py-3 hover:bg-primary hover:border-primary hover:text-dark transition-all"
-            onClick={() => void signIn('google', { callbackUrl: '/' })}
+            onClick={() => void signIn('google', { callbackUrl: 'https://movies-entertainment-web-app.vercel.app' })}
           >
             <Image src={google} alt="google" width="28" height="28" />
             Login with Google
@@ -28,7 +26,7 @@ const SignIn = () => {
           <button 
             type="button" 
             className="flex gap-x-5 justify-center items-center border border-grey rounded-lg w-full py-3 hover:bg-primary hover:border-primary hover:text-dark transition-all"
-            onClick={() => void signIn('github', { callbackUrl: '/' })}
+            onClick={() => void signIn('github', { callbackUrl: 'https://movies-entertainment-web-app.vercel.app' })}
           >
           <Image src={github} alt="google" width="28" height="28" />
             Login with GitHub
