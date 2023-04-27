@@ -8,6 +8,8 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { Layout } from "~/components/Layout";
 import { BookmarksContextProvider } from "~/contexts/useBookmarks";
+import { useRouter } from "next/router";
+import { Fragment } from "react";
 
 const outfitBody = Outfit({
   weight: ["300"],
@@ -27,15 +29,18 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const router = useRouter();
+  const LayoutComponent = router.pathname === '/auth/signin' ? Fragment : Layout;
+
   return (
     <SessionProvider session={session}>
       <BookmarksContextProvider>
-        <Layout>
-          <Component
-            className={`${outfitBody.variable} ${outfitHeading.variable}`}
-            {...pageProps}
-          />
-        </Layout>
+        <LayoutComponent>
+        <Component
+          className={`${outfitBody.variable} ${outfitHeading.variable}`}
+          {...pageProps}
+        />
+      </LayoutComponent>
       </BookmarksContextProvider>
     </SessionProvider>
   );
