@@ -29,7 +29,7 @@ const SignIn = () => {
         ? <Loader />
         : (
           <>
-            <SvgIcon className='fill-primary w-8 h-8'>
+            <SvgIcon className='fill-primary w-8 h-8' viewBox='0 0 32 32'>
               {getIconByName(IconName.LOGO)};
             </SvgIcon>
 
