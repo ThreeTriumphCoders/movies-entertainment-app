@@ -46,8 +46,4 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 };
 
-MyApp.getInitialProps = async ({ req }: NextPageContext): Promise<Props> => {
-  return {};
-};
-
 export default api.withTRPC(MyApp);

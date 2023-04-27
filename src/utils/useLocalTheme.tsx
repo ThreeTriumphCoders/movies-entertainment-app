@@ -23,7 +23,7 @@ export const useLocalTheme = (): [ThemeType, SetTheme] => {
     }
   }
 
-  const [theme, setTheme] = useState<ThemeType>(getTheme());
+  const [theme, setTheme] = useState<ThemeType>(initialTheme);
 
   const saveTheme = (value: ThemeType) => {
     setTheme(value);
