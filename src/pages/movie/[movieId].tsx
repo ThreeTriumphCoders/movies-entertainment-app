@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { SvgIcon } from "~/components/SvgIcon";
 import { type MovieType } from "~/types/Movie";
 import { getMovie } from "~/utils/helpers";
-import Image from "next/image";
 import { Loader } from "~/components/Loader";
 import { getMovieImages, getTrailerKey } from "~/utils/helpers";
 import { ReviewsSection } from "~/components/ReviewsSection";
 import classNames from "classnames";
+import { MovieSlider } from "~/components/MovieSlider";
+import { IconName, getIconByName } from "~/utils/getIconByName";
 
 const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
@@ -15,12 +16,10 @@ const separator = (
 
 const MoviePage = () => {
   const [movie, setMovie] = useState<MovieType | null>(null)
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(false); //! handle this error
   const [trailerKey, setTrailerKey] = useState("");
-  const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>(
-    []
-  );
+  const [isPlayerOpened, setPlayerOpened] = useState(false);
+  const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>([]);
   const { query } = useRouter();
 
   useEffect(() => {
@@ -76,97 +75,66 @@ const MoviePage = () => {
             </div>
 
             <div className="grid lg:grid-cols-3 lg:grid-rows-2 gap-x-12">
-              <div className="lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-                <div className="mb-8">
-                  <div className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
-                    <>
-                      <Image
-                        alt="movie image"
-                        onClick={() => setIsPlaying(true)}
-                        priority
-                        src={`https://www.themoviedb.org/t/p/original${movie.backdrop_path || ''}`} //! do placeholder
-                        fill
-                      />
-
-                      <div
-                        className="
-                          absolute bottom-0 left-0
-                          right-0 top-0 
-                          flex items-center justify-center bg-dark bg-opacity-50
-                          opacity-0 transition-opacity hover:opacity-100
-                        "
-                      >
-                        {!error ? (
-                          <div
-                            className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg"
-                            onClick={() => setIsPlaying(true)}
-                          >
-                            <SvgIcon
-                              className="h-[30px] w-[30px] fill-light"
-                              viewBox="0 0 30 30"
-                            >
-                              <path d="M0 15C0 6.713 6.713 0 15 0c8.288 0 15 6.713 15 15 0 8.288-6.712 15-15 15-8.287 0-15-6.712-15-15Zm21-.5L12 8v13l9-6.5Z" />
-                            </SvgIcon>
-
-                            <p>Play</p>
-                          </div>
-                        ) : (
-                          <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">
-                            <p className="text-medium">No trailer</p>
-                          </div>
-                        )}
-                      </div>
-
-                      <div
-                        className="
-                          hover: absolute right-2 top-2 flex
-                          h-8 w-8
-                          items-center justify-center rounded-full
-                          bg-dark bg-opacity-50
-                          opacity-100 transition hover:bg-light 
-                          sm:right-4 sm:top-4
-                        "
-                      >
-                        <SvgIcon
-                          className="
-                            h-[32px] w-[32px]
-                            cursor-pointer fill-none
-                            stroke-light
-                            stroke-[1.5] hover:stroke-dark
-                            active:fill-light
-                          "
-                          viewBox="-9 -8 30 30"
-                        >
-                          <path d="m10.711.771.01.004.01.005c.068.027.108.06.14.107.032.048.046.09.046.15v11.927a.243.243 0 0 1-.046.15.282.282 0 0 1-.14.106l-.007.004-.008.003a.29.29 0 0 1-.107.014.326.326 0 0 1-.24-.091L6.356 9.235l-.524-.512-.524.512-4.011 3.915a.327.327 0 0 1-.24.1.244.244 0 0 1-.103-.021l-.01-.004-.01-.005a.281.281 0 0 1-.139-.107.244.244 0 0 1-.046-.15V1.037c0-.058.014-.101.046-.15A.281.281 0 0 1 .935.78l.01-.005.01-.004A.245.245 0 0 1 1.057.75h9.552c.038 0 .07.007.102.021Z" />
-                        </SvgIcon>
-                      </div>
-
-                      {isPlaying && (
-                        <div className="absolute top-0 w-full max-w-full pt-[56.25%]">
-                          <Loader />
-
-                          {!error ? (
-                            <iframe
-                              className="absolute left-0 top-0 h-full w-full"
-                              src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
-                              title="YouTube video player"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                            />
-                          ) : (
-                            <div>{"No trailer :("}</div>
-                          )}
-                        </div>
-                      )}
-                    </>
+              <div className="lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2 overflow-hidden mb-8 relative">
+                {additionalImagePaths ? (
+                  <MovieSlider imagesPaths={...additionalImagePaths} />
+                ) : (
+                  <div 
+                    className="
+                      top-[1px] bottom-[1px] right-[1px] left-[1px]
+                      bg-semi-dark text-2xl
+                      flex justify-center items-center
+                    "
+                  >
+                    No image
                   </div>
-                </div>
+                )}
+
+                
               </div>
 
               <div className="lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3 mb-10 lg:mb-0 max-w-2xl">
+                <div className="flex justify-between items-center mb-8">
+                  <button
+                    className="
+                      flex
+                    bg-primary py-3 px-5 text-xl rounded-lg
+                    hover:bg-semi-dark hover:text-light transition
+                    " //! maybe do it like wathc trailer button with text "add to bookmarks" or "in bookmarks"
+                  >
+                    {/* <SvgIcon
+                      className="
+                        h-[32px] w-[32px]
+                        cursor-pointer fill-none
+                        stroke-dark
+                        stroke-[1.5] hover:stroke-dark
+                        active:fill-light
+                      "
+                      viewBox="-10 -9 38 38"
+                    >
+                      {getIconByName(IconName.BOOKMARK)}
+                    </SvgIcon> */}
+
+                    Add to bookmarks
+                  </button>
+
+                  {trailerKey && (
+                    <button 
+                      className="
+                        bg-primary py-3 px-5 text-xl rounded-lg
+                        hover:bg-semi-dark hover:text-light transition
+                      "
+                      onClick={() => setPlayerOpened(true)}
+                    >
+                      Watch trailer
+                    </button>
+                  )}
+                </div>
+
                 <h3 className="font-medium text-light text-lg mb-4">
                   Description
                 </h3>
+
                 <p className="font-light text-light text-sm mb-8">
                   {movie.overview}
                 </p>
@@ -174,6 +142,7 @@ const MoviePage = () => {
                 <h3 className="font-medium text-light text-lg mb-4">
                   Status
                 </h3>
+
                 <p className="font-light text-light text-sm mb-8">
                   {movie.status}
                 </p>
@@ -181,6 +150,7 @@ const MoviePage = () => {
                 <h3 className="font-medium text-light text-lg mb-4">
                   Original language
                 </h3>
+
                 <p className="font-light text-light text-sm mb-8">
                   {movie.original_language}
                 </p>
@@ -188,6 +158,7 @@ const MoviePage = () => {
                 <h3 className="font-medium text-light text-lg mb-4">
                   Rating
                 </h3>
+
                 <div className="mb-8 flex gap-3">
                   <div>
                     <div className="flex gap-1 items-center">
@@ -245,6 +216,37 @@ const MoviePage = () => {
                 <ReviewsSection />
               </div>
             </div>
+
+            {isPlayerOpened && (
+              <div 
+                className="
+                  absolute top-0 bottom-0 left-0 right-0 
+                bg-dark bg-opacity-75
+                  flex items-center justify-center p-4 sm:p-20 lg:p-40
+                "
+                onClick={() => setPlayerOpened(false)}
+              >
+                <button
+                  className="absolute top-4 right-4"
+                >
+                  <SvgIcon className="w-8 h-8 fill-light" viewBox="0 0 30 30">
+                    {getIconByName(IconName.CLOSE)}
+                  </SvgIcon>
+                </button>
+
+                <div className="relative w-full pt-[56.25%]">
+                  <Loader />
+
+                  <iframe
+                    className="absolute h-full w-full top-0"
+                    src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
           </section>
         )
         : <Loader />}

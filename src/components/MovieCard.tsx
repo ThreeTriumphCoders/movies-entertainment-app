@@ -82,110 +82,108 @@ export const MovieCard: FC<Props> = ({
       onMouseLeave={stopSlidesAnimation}
     >
       <div id="image-container" className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
-        <>
-          <div className="top-[1px] bottom-[1px] right-[1px] left-[1px] absolute bg-semi-dark animate-pulse"/>
+        <div className="top-[1px] bottom-[1px] right-[1px] left-[1px] absolute bg-semi-dark animate-pulse"/>
 
-          {!imagePath && (
-            <div 
-              className="
-                top-[1px] bottom-[1px] right-[1px] left-[1px] absolute 
-                bg-semi-dark text-2xl
-                flex justify-center items-center
-              "
-            >
-              No image
-            </div>
-          )}
-
-          {!isPlaying && (
-            additionalImagePaths.map((path, index) => (
-              <Image
-                key={path}
-                className={classNames(
-                  'object-cover, transition-all duration-1000',
-                  { 'opacity-0': index !== currentImageIndex },
-                )}
-                alt="movie image"
-                onClick={() => onPlayingChange(movieId)}
-                fill
-                priority
-                sizes="(max-width: 640px) 50vw, 33vw"
-                src={`https://www.themoviedb.org/t/p/original${path}`}
-              />
-            ))
-          )}
-
-          <div
+        {!imagePath && (
+          <div 
             className="
-              absolute bottom-0 left-0
-              right-0 top-0
-              flex items-center justify-center bg-dark bg-opacity-50
-              opacity-0 transition-opacity hover:opacity-100
+              top-[1px] bottom-[1px] right-[1px] left-[1px] absolute 
+              bg-semi-dark text-2xl
+              flex justify-center items-center
             "
           >
-            {!error ? (
-              <div
-                className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 hover:bg-opacity-50 p-2 pr-6 text-lg transition"
-                onClick={() => onPlayingChange(movieId)}
-              >
-                <SvgIcon
-                  className="h-[30px] w-[30px] fill-light"
-                  viewBox="0 0 30 30"
-                >
-                  {getIconByName(IconName.PLAY)}
-                </SvgIcon>
+            No image
+          </div>
+        )}
 
-                <p>Play</p>
-              </div>
+        {!isPlaying && (
+          additionalImagePaths.map((path, index) => (
+            <Image
+              key={path}
+              className={classNames(
+                'object-cover, transition-all duration-1000',
+                { 'opacity-0': index !== currentImageIndex },
+              )}
+              alt="movie image"
+              onClick={() => onPlayingChange(movieId)}
+              fill
+              priority
+              sizes="(max-width: 640px) 50vw, 33vw"
+              src={`https://www.themoviedb.org/t/p/original${path}`}
+            />
+          ))
+        )}
+
+        <div
+          className="
+            absolute bottom-0 left-0
+            right-0 top-0
+            flex items-center justify-center bg-dark bg-opacity-50
+            opacity-0 transition-opacity hover:opacity-100
+          "
+        >
+          {!error ? (
+            <div
+              className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 hover:bg-opacity-50 p-2 pr-6 text-lg transition"
+              onClick={() => onPlayingChange(movieId)}
+            >
+              <SvgIcon
+                className="h-[30px] w-[30px] fill-light"
+                viewBox="0 0 30 30"
+              >
+                {getIconByName(IconName.PLAY)}
+              </SvgIcon>
+
+              <p>Play</p>
+            </div>
+          ) : (
+            <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">
+              <p className="text-medium">No trailer</p>
+            </div>
+          )}
+        </div>
+
+        <div
+          className="
+            absolute right-2 top-2 flex
+            h-8 w-8
+            items-center justify-center rounded-full
+            bg-dark bg-opacity-50
+            opacity-100 transition hover:bg-light 
+            sm:right-4 sm:top-4
+          "
+        >
+          <SvgIcon
+            className="
+              h-[32px] w-[32px]
+              cursor-pointer fill-none
+              stroke-light
+              stroke-[1.5] hover:stroke-dark
+              active:fill-light
+            "
+            viewBox="-10 -9 38 38"
+          >
+            {getIconByName(IconName.BOOKMARK)}
+          </SvgIcon>
+        </div>
+
+        {isPlaying && (
+          <div className="absolute top-0 w-full max-w-full pt-[56.25%]">
+            <Loader />
+
+            {!error ? (
+              <iframe
+                className="absolute left-0 top-0 h-full w-full"
+                src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
             ) : (
-              <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">
-                <p className="text-medium">No trailer</p>
-              </div>
+              <div>{"No trailer :("}</div>
             )}
           </div>
-
-          <div
-            className="
-              hover: absolute right-2 top-2 flex
-              h-8 w-8
-              items-center justify-center rounded-full
-              bg-dark bg-opacity-50
-              opacity-100 transition hover:bg-light 
-              sm:right-4 sm:top-4
-            "
-          >
-            <SvgIcon
-              className="
-                h-[32px] w-[32px]
-                cursor-pointer fill-none
-                stroke-light
-                stroke-[1.5] hover:stroke-dark
-                active:fill-light
-              "
-              viewBox="-10 -9 38 38"
-            >
-              {getIconByName(IconName.BOOKMARK)}
-            </SvgIcon>
-          </div>
-
-          {isPlaying && (
-            <div className="absolute top-0 w-full max-w-full pt-[56.25%]">
-              <Loader />
-
-              {!error ? (
-                <iframe
-                  className="absolute left-0 top-0 h-full w-full"
-                  src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              ) : (
-                <div>{"No trailer :("}</div>
-              )}
-            </div>
-          )}
-        </>
+        )}
       </div>
 
       <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">

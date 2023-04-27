@@ -90,6 +90,6 @@ export const TrendingCard: FC<Props> = ({
           </div>
         </>
       </div>
-      </Link>
+    </Link>
   )
 }

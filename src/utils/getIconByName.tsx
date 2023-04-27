@@ -9,6 +9,7 @@ export enum IconName {
   LOGO = 'Logo',
   AVATAR = 'Avatar',
   ARROW_UP = 'Arrow Up',
+  CLOSE = 'CLOSE',
 }
 
 export const getIconByName = (name: IconName) => {
@@ -73,6 +74,13 @@ export const getIconByName = (name: IconName) => {
       return (
         <path
           d="m10.666 24 2.35 2.35 9.317-9.3v20.283h3.334V17.05l9.3 9.317L37.333 24 24 10.667 10.666 24Z"
+        />
+      )
+
+    case IconName.CLOSE:
+      return (
+        <path 
+          d="M7 4a.995.995 0 0 0-.707.293l-2 2a.999.999 0 0 0 0 1.414L11.586 15l-7.293 7.293a.999.999 0 0 0 0 1.414l2 2a.999.999 0 0 0 1.414 0L15 18.414l7.293 7.293a.999.999 0 0 0 1.414 0l2-2a.999.999 0 0 0 0-1.414L18.414 15l7.293-7.293a.999.999 0 0 0 0-1.414l-2-2a.999.999 0 0 0-1.414 0L15 11.586 7.707 4.293A.996.996 0 0 0 7 4z"
         />
       )
 
