@@ -18,7 +18,7 @@ export const getMovie = async (
   category: Category = Category.MOVIE
 ) => {
   const data = await get<MovieType>(
-    `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${category.toLowerCase()}/${id}?${env.NEXT_PUBLIC_TMDB_API_KEY}`
+    `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${category}/${id}?${env.NEXT_PUBLIC_TMDB_API_KEY}`
   );
 
   return data;
@@ -30,7 +30,7 @@ export const getImages = async (
 ) => {
   try {
     const { backdrops } = await get<ImagesAPIResponseType>(
-      `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${category.toLowerCase()}/${id}/images?${env.NEXT_PUBLIC_TMDB_API_KEY}&include_image_language=null`
+      `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${category}/${id}/images?${env.NEXT_PUBLIC_TMDB_API_KEY}&include_image_language=null`
     );
 
     if (backdrops.length > 5) {
@@ -50,7 +50,7 @@ export const getTrailerKey = async (
   category: Category = Category.MOVIE
 ) => {
   const { results } = await get<VideosAPIResponseType>(
-    `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${category.toLowerCase()}/${id}/videos?${env.NEXT_PUBLIC_TMDB_API_KEY}`
+    `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${category}/${id}/videos?${env.NEXT_PUBLIC_TMDB_API_KEY}`
   );
   const trailer = results.find(
     ({ site, type }) => site === "YouTube" && type === "Trailer"

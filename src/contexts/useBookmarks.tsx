@@ -1,13 +1,12 @@
 import { type Bookmark } from "@prisma/client";
-import { useCallback, useMemo } from "react";
-import { createContext, type FC, useContext, useState, useEffect } from "react";
+import { useCallback } from "react";
+import { createContext, type FC, useContext, useState } from "react";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
-import { Category } from "~/types/Category.enum";
+import { type Category } from "~/types/Category.enum";
 
 type BookmarksContextValue = {
   currentId: number | null;
-  bookmarksIds: number[];
   bookmarks: Bookmark[];
   isInBookmarks: (movieId: number) => boolean;
   addToBookmarks: (movieId: number, type: Category) => void;
@@ -36,10 +35,6 @@ export const BookmarksContextProvider: FC<BookmarksContextProviderProps> = ({
     }
   );
 
-  const newBookmarkIds = useMemo(() => {
-    return bookmarks.map(({ movieId }) => movieId);
-  }, [bookmarks]);
-
   const createBookmark = api.bookmark.create.useMutation({
     onSuccess: () => void refetch(),
   });
@@ -67,7 +62,6 @@ export const BookmarksContextProvider: FC<BookmarksContextProviderProps> = ({
       value={{
         currentId,
         bookmarks,
-        bookmarksIds: newBookmarkIds,
         isInBookmarks,
         addToBookmarks,
         deleteFromBookmarks,
