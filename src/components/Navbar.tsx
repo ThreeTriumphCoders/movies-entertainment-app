@@ -6,10 +6,36 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { IconName, getIconByName } from "~/utils/getIconByName";
 import { SvgIcon } from "./SvgIcon";
 import avatar from '../../public/images/avatar.svg';
+import { useTheme } from "~/utils/ThemeContext";
+import { ThemeType } from "~/types/ThemeType";
+import { useLang } from "~/utils/LangContext";
+import { LangType } from "~/types/LangType";
 
 export const Navbar = () => {
   const { data: sessionData } = useSession();
-  
+  const { themeType, setCurrentTheme } = useTheme();
+  const { langType, setCurrentLang } = useLang();
+
+  const handleThemeChange = () => {
+    if (themeType === ThemeType.Dark) {
+      setCurrentTheme(ThemeType.Light);
+
+      return;
+    }
+
+    setCurrentTheme(ThemeType.Dark);
+  }
+
+  const handleLangChange = () => {
+    if (langType === LangType.ENG) {
+      setCurrentLang(LangType.UA);
+
+      return;
+    }
+
+    setCurrentLang(LangType.ENG);
+  }
+
   return (
     <div 
       className="
@@ -29,7 +55,7 @@ export const Navbar = () => {
           </SvgIcon>
         </Link>
 
-        <ul className="flex lg:flex-col gap-2 sm:gap-4 lg:mb-auto lg:mt-16">
+        <ul className="flex lg:flex-col gap-2 sm:gap-4 lg:mb-16 lg:mt-16">
           <li>
             <NavbarLink href="/">
               {getIconByName(IconName.HOME)}
@@ -54,7 +80,28 @@ export const Navbar = () => {
           )}
         </ul>
 
-        <button onClick={sessionData ? () => void signOut() : () => void signIn()}>
+        <div className="flex items-center gap-4 lg:flex-col">
+          <button
+            type="button"
+            className="text-grey text-sm sm:text-lg hover:text-primary transition"
+            onClick={handleLangChange}
+          >
+            {langType.toUpperCase()}
+          </button>
+          <button 
+            type="button"
+            className="pb-1 flex justify-center items-center"
+            onClick={handleThemeChange}
+          >
+            <SvgIcon className="fill-grey hover:fill-primary transition w-6 h-6 overflow-visible">
+              {themeType === ThemeType.Dark
+                ? getIconByName(IconName.MOON)
+                : getIconByName(IconName.SUN)}
+            </SvgIcon>
+          </button>
+        </div>
+
+        <button className="block" onClick={sessionData ? () => void signOut() : () => void signIn()}>
             <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-primary rounded-full border-light border relative overflow-hidden">
               {sessionData ? (
                 <Image src={sessionData?.user?.image ?? avatar} alt={sessionData?.user?.name ?? "user name"} fill />

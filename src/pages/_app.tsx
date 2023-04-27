@@ -40,7 +40,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </Layout>
         </LangProvider>
       </ThemeProvider>
-      
     </SessionProvider>
   );
 };
