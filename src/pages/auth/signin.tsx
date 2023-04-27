@@ -30,7 +30,7 @@ const SignIn = () => {
         : (
           <>
             <SvgIcon className='fill-primary w-8 h-8'>
-              {getIconByName(IconName.MOVIE)}
+              {getIconByName(IconName.LOGO)};
             </SvgIcon>
 
             <div className="flex flex-col bg-semi-dark px-8 pt-8 pb-28 rounded-3xl w-4/5 sm:w-1/2 lg:w-1/3 xl:w-1/4 font-body text-light">
