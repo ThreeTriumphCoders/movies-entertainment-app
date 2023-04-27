@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
-import { TrendingCard } from "./TrendingCard"
+import { TrendingCard } from "./TrendingCard";
 import { type IconName } from "~/utils/getIconByName";
 import { useGetTrendings } from "~/utils/use-queries";
-import { getCategoryNameFromAPIName } from "~/utils/functions";
 
 export const TrendingList = () => {
   const trendings = useGetTrendings();
@@ -24,12 +23,12 @@ export const TrendingList = () => {
       const isEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 5;
 
       if (isEnd) {
-        scrollRef.current?.scrollTo({left: 0, behavior:'smooth'})
+        scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
         return;
       }
-      
-      scrollRef.current?.scrollBy({ left: clientWidth, behavior: 'smooth' });
-    }
+
+      scrollRef.current?.scrollBy({ left: clientWidth, behavior: "smooth" });
+    };
 
     const slideTime = 10000;
     let slidingInterval = setInterval(scroll, slideTime);
@@ -39,74 +38,72 @@ export const TrendingList = () => {
     const clearSlidingInterval = () => {
       clearTimeout(timeout);
       clearInterval(slidingInterval);
-    }
+    };
 
     const setSlidingInterval = () => {
       timeout = setTimeout(() => {
         slidingInterval = setInterval(scroll, slideTime);
-      }, slideTime)
+      }, slideTime);
     };
 
-
-    scrollRef.current?.addEventListener('mousedown', clearSlidingInterval);
-    scrollRef.current?.addEventListener('mouseup', setSlidingInterval);
-    scrollRef.current?.addEventListener('touchstart', clearSlidingInterval, { passive: true });
-    scrollRef.current?.addEventListener('touchend', setSlidingInterval, { passive: true });
+    scrollRef.current?.addEventListener("mousedown", clearSlidingInterval);
+    scrollRef.current?.addEventListener("mouseup", setSlidingInterval);
+    scrollRef.current?.addEventListener("touchstart", clearSlidingInterval, {
+      passive: true,
+    });
+    scrollRef.current?.addEventListener("touchend", setSlidingInterval, {
+      passive: true,
+    });
 
     return () => {
-      clearInterval(slidingInterval)
-      currentRef?.removeEventListener('mousedown', clearSlidingInterval)
-      currentRef?.removeEventListener('mouseup', setSlidingInterval)
-      currentRef?.removeEventListener('touchstart', clearSlidingInterval)
-      currentRef?.removeEventListener('touchend', setSlidingInterval)
-    }
-    
-  }, [currentRef])
+      clearInterval(slidingInterval);
+      currentRef?.removeEventListener("mousedown", clearSlidingInterval);
+      currentRef?.removeEventListener("mouseup", setSlidingInterval);
+      currentRef?.removeEventListener("touchstart", clearSlidingInterval);
+      currentRef?.removeEventListener("touchend", setSlidingInterval);
+    };
+  }, [currentRef]);
 
   return (
-    <section className="lg:pl-0 lg:pr-8 mb-12 sm:mb-16">
-      <h2 className="text-xl mb-6 sm:text-[32px] lg:mb-10">
+    <section className="mb-12 sm:mb-16 lg:pl-0 lg:pr-8">
+      <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">
         Trending last week
       </h2>
-    
-      <div 
+
+      <div
         className="
-          flex overflow-x-scroll gap-4 sm:gap-10 pb-2 
-          touch-pan-x snap-x snap-mandatory
+          flex touch-pan-x snap-x snap-mandatory gap-4 
+          overflow-x-scroll pb-2 sm:gap-10
         "
         ref={scrollRef}
       >
-        {trendings.length > 0 ? (
-          trendings.map(movie => {
-            const {
-              id,
-              backdrop_path,
-              title,
-              name,
-              release_date,
-              first_air_date,
-              media_type,
-            } = movie;
-  
-            const category = getCategoryNameFromAPIName(media_type || '');
-  
-            return (
-              <TrendingCard 
-                key={id}
-                movieId={id}
-                imagePath={backdrop_path || ''}
-                title={title || name}
-                releaseDate={release_date || first_air_date}
-                category={category as IconName}
-              />
-            )
-          })
-        ) : (
-          [null, null, null, null, null].map((_, index) => (
-            <TrendingCard key={index}/>
-          ))
-        )}
+        {trendings.length > 0
+          ? trendings.map((movie) => {
+              const {
+                id,
+                backdrop_path,
+                title,
+                name,
+                release_date,
+                first_air_date,
+                media_type,
+              } = movie;
+
+              return (
+                <TrendingCard
+                  key={id}
+                  movieId={id}
+                  imagePath={backdrop_path || ""}
+                  title={title || name}
+                  releaseDate={release_date || first_air_date}
+                  category={media_type as IconName}
+                />
+              );
+            })
+          : [null, null, null, null, null].map((_, index) => (
+              <TrendingCard key={index} />
+            ))}
       </div>
     </section>
-  )
-}
+  );
+};

@@ -9,41 +9,20 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useBookmarksContext } from "~/contexts/useBookmarks";
 import { getIconByName, IconName } from "~/utils/getIconByName";
-
-const getIconByCategory = (category: Category) => {
-  switch (category) {
-    case Category.MOVIE:
-      return (
-        <path d="M16.956 0H3.044A3.044 3.044 0 0 0 0 3.044v13.912A3.044 3.044 0 0 0 3.044 20h13.912A3.045 3.045 0 0 0 20 16.956V3.044A3.045 3.045 0 0 0 16.956 0ZM4 9H2V7h2v2Zm0 2H2v2h2v-2Zm14-2h-2V7h2v2Zm0 2h-2v2h2v-2Zm0-8.26V4h-2V2h1.26a.74.74 0 0 1 .74.74ZM4 2H2.74a.74.74 0 0 0-.74.74V4h2V2ZM2 17.26V16h2v2H2.74a.74.74 0 0 1-.74-.74Zm15.26.74a.74.74 0 0 0 .74-.74V16h-2v2h1.26Z" />
-      );
-
-    case Category.TV:
-      return (
-        <path d="M9.08 4.481H20V20H0V4.481h4.92l-2.7-3.278L3.78.029 7 3.91 10.22 0l1.56 1.203-2.7 3.278ZM2 6.421v11.64h10V6.42H2Zm15 7.76h-2v-1.94h2v1.94Zm-2-3.88h2V8.36h-2v1.94Z" />
-      );
-    default:
-      return;
-  }
-};
-
-const separator = (
-  <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
-);
-
-export enum Category {
-  MOVIE = "Movie",
-  TV = "TV Serie",
-}
+import { type Category } from "~/types/Category.enum";
 
 type Props = {
   movieId: number;
   imagePath: string;
   title?: string;
   releaseDate?: string;
-  category: IconName;
-  apiPath: "tv" | "movie";
+  categoryIcon: IconName;
+  category: Category;
   playingId: number;
+  isBookmarkedInitial: boolean;
   onPlayingChange: (id: number) => void;
+  onBookmarksAdd: (id: number, type: Category) => void;
+  onBookmarksRemove: (id: number) => void;
 };
 
 export const MovieCard: FC<Props> = ({
@@ -51,10 +30,13 @@ export const MovieCard: FC<Props> = ({
   imagePath,
   title = "No movie title",
   releaseDate = "No release date",
-  category = IconName.MOVIE,
-  apiPath,
+  categoryIcon = IconName.MOVIE,
+  category,
   playingId,
+  isBookmarkedInitial,
   onPlayingChange,
+  onBookmarksAdd,
+  onBookmarksRemove,
 }) => {
   const { data: sessionData } = useSession();
   const router = useRouter();
@@ -64,22 +46,15 @@ export const MovieCard: FC<Props> = ({
     []
   );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(isBookmarkedInitial);
   const isPlaying = playingId === movieId;
-  const { currentId, bookmarksIds, addToBookmarks, deleteFromBookmarks } =
-    useBookmarksContext();
-
-  useEffect(() => {
-    if (sessionData?.user) {
-      setIsBookmarked(bookmarksIds.includes(movieId));
-    }
-  }, [bookmarksIds]);
+  const { currentId } = useBookmarksContext();
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const key = await getTrailerKey(movieId, apiPath);
-        const imagesPaths = await getImages(movieId, apiPath);
+        const key = await getTrailerKey(movieId, category);
+        const imagesPaths = await getImages(movieId, category);
 
         setAdditionalImagePaths(imagesPaths);
         setTrailerKey(key);
@@ -90,7 +65,7 @@ export const MovieCard: FC<Props> = ({
     };
 
     getData().catch(console.log);
-  }, [movieId, apiPath]);
+  }, [movieId, category]);
 
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
@@ -114,21 +89,13 @@ export const MovieCard: FC<Props> = ({
     clearInterval(intervalRef.current as NodeJS.Timer);
   };
 
-  const handleAddToBookmarks = () => {
-    addToBookmarks(movieId);
-  };
-
-  const handleDeleteFromBookmarks = () => {
-    deleteFromBookmarks(movieId);
-  };
-
   const handleBookmarkClick = () => {
     if (sessionData?.user) {
       if (isBookmarked) {
-        handleDeleteFromBookmarks();
+        onBookmarksRemove(movieId);
         setIsBookmarked(false);
       } else {
-        handleAddToBookmarks();
+        onBookmarksAdd(movieId, category);
         setIsBookmarked(true);
       }
     } else {
@@ -266,10 +233,10 @@ export const MovieCard: FC<Props> = ({
 
         <div className="flex items-center gap-1">
           <SvgIcon className="h-2.5 w-2.5 fill-light">
-            {getIconByName(category)}
+            {getIconByName(categoryIcon)}
           </SvgIcon>
 
-          <p>{category}</p>
+          <p>{categoryIcon === IconName.MOVIE ? "Movie" : "TV Serie"}</p>
         </div>
       </div>
 

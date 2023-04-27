@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { LoadMoreButton } from "~/components/LoadMoreButton";
 import { MoviesList } from "~/components/MoviesList";
+import { Category } from "~/types/Category.enum";
 import { useGetPopularMovies } from "~/utils/use-queries";
 
 const MoviesPage = () => {
@@ -49,7 +50,7 @@ const MoviesPage = () => {
       <MoviesList
         movies={popularMovies}
         title="Popular movies"
-        category="Movie"
+        category={Category.MOVIE}
       />
 
       <LoadMoreButton 

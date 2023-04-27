@@ -3,7 +3,7 @@ import Head from "next/head";
 import { TrendingList } from "~/components/TrendingList";
 import { MoviesList } from "~/components/MoviesList";
 import { useGetPopularMovies, useGetPopularSeries } from "~/utils/use-queries";
-import Link from "next/link";
+import { Category } from "~/types/Category.enum";
 
 const Home: NextPage = () => {
   const [popularMovies] = useGetPopularMovies();
@@ -19,18 +19,16 @@ const Home: NextPage = () => {
 
       <TrendingList />
 
-      <MoviesList 
-        movies={popularMovies.slice(0, 12)} 
-        title = 'Popular movies'
-        category = 'Movie'
-        apiPath = 'movie'
+      <MoviesList
+        movies={popularMovies.slice(0, 12)}
+        title="Popular movies"
+        category={Category.MOVIE}
       />
 
-      <MoviesList 
-        movies={popularSeries.slice(0, 12)} 
-        title = 'Popular series'
-        category = 'TV Serie'
-        apiPath = 'tv'
+      <MoviesList
+        movies={popularSeries.slice(0, 12)}
+        title="Popular series"
+        category={Category.TV}
       />
     </>
   );

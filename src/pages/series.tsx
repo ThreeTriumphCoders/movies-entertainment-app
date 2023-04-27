@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { LoadMoreButton } from "~/components/LoadMoreButton";
 import { MoviesList } from "~/components/MoviesList";
+import { Category } from "~/types/Category.enum";
 import { useGetPopularSeries } from "~/utils/use-queries";
 
 const SeriesPage = () => {
@@ -49,8 +50,7 @@ const SeriesPage = () => {
       <MoviesList 
         movies={popularSeries}
         title="Popular series"
-        category="TV Serie"
-        apiPath='tv'
+        category={Category.TV}
       />
 
       <LoadMoreButton 
