@@ -1,20 +1,26 @@
 import { useState, type FC } from "react";
-import { MovieCard, Category } from "./MovieCard";
+import { MovieCard } from "./MovieCard";
 import { type MoviesType } from "~/types/Movie";
+import { type IconName } from "~/utils/getIconByName";
+import { getCategoryNameFromAPIName } from "~/utils/functions";
 
 type Props = {
   movies: MoviesType;
   title?: string;
+  category?: string;
+  apiPath?: 'tv' | 'movie';
 }
 
 export const MoviesList: FC<Props> = ({
   movies = [],
-  title = 'Movies'
+  title = 'Movies',
+  category = 'Movie',
+  apiPath = 'movie',
 }) => {
   const [playingId, setPlayingId] = useState(0);
 
   return (
-    <div className="px-4 pb-8 sm:px-6 lg:pl-0  lg:pr-8 ">
+    <section className="pb-8 lg:pr-8 mb-6 sm:mb-10">
       <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
 
       <div
@@ -26,15 +32,28 @@ export const MoviesList: FC<Props> = ({
         {movies.length > 0 && (
           <>
             {movies.map((movie) => {
+              const {
+                id,
+                backdrop_path,
+                title,
+                name,
+                release_date,
+                first_air_date,
+                media_type,
+              } = movie;
+
+              const type = getCategoryNameFromAPIName(media_type || category);
+
               return (
                 <MovieCard
-                  key={movie.id}
-                  movieId={movie.id}
-                  title={movie.title}
-                  releaseDate={movie.release_date}
-                  imagePath={movie.backdrop_path || ""}
+                  key={id}
+                  movieId={id}
+                  imagePath={backdrop_path || ''}
+                  title={title || name}
+                  releaseDate={release_date || first_air_date}
+                  category={type as IconName}
+                  apiPath={apiPath}
                   playingId={playingId}
-                  category={Category.MOVIE}
                   onPlayingChange={setPlayingId}
                 />
               );
@@ -42,6 +61,6 @@ export const MoviesList: FC<Props> = ({
           </>
         )}
       </div>
-    </div>
+    </section>
   );
 }

@@ -14,6 +14,12 @@ export default {
       display: "var(--display-font)",
       body: "var(--body-font)",
     },
+    extend: {
+      backgroundImage: {
+        'arrow-up': "url('~/public/images/arrowUp.svg')",
+        'arrow-hover': "url('~/public/images/arrowUpHover.svg')",
+      },
+    },
   },
   plugins: [],
 } satisfies Config;

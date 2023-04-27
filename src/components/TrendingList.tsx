@@ -1,118 +1,27 @@
 import { useEffect, useRef } from "react";
 import { TrendingCard } from "./TrendingCard"
-
-const mockMovies = [
-  {
-    movieCode: '1',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '2',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '3',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '4',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '5',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '6',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '7',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '8',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '9',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-  {
-    movieCode: '10',
-    videoCode: 'je0aAf2f8XQ',
-    imagePath: '/qJeU7KM4nT2C1WpOrwPcSDGFUWE.jpg',
-    title: 'La La Land',
-    releaseDate: '2016-11-29',
-    category: 'Movie',
-  },
-  {
-    movieCode: '11',
-    videoCode: 'Ew9ngL1GZvs',
-    imagePath: '/tmU7GeKVybMWFButWEGl2M4GeiP.jpg',
-    title: 'The Godfather',
-    releaseDate: '1972-03-14',
-    category: 'Movie',
-  },
-]
-
-export enum Category {
-  MOVIE = 'Movie',
-  TV = 'TV Serie',
-}
+import { type IconName } from "~/utils/getIconByName";
+import { useGetTrendings } from "~/utils/use-queries";
+import { getCategoryNameFromAPIName } from "~/utils/functions";
 
 export const TrendingList = () => {
+  const trendings = useGetTrendings();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const currentRef = scrollRef.current;
 
   useEffect(() => {
     if (!scrollRef.current) {
       return;
     }
 
-    const timeout = setInterval(() => {
+    const scroll = () => {
       const {
         scrollLeft = 0,
         scrollWidth = 0,
         clientWidth = 0,
       } = scrollRef.current as HTMLDivElement;
 
-      const isEnd = scrollLeft === scrollWidth - clientWidth;
+      const isEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 5;
 
       if (isEnd) {
         scrollRef.current?.scrollTo({left: 0, behavior:'smooth'})
@@ -120,18 +29,44 @@ export const TrendingList = () => {
       }
       
       scrollRef.current?.scrollBy({ left: clientWidth, behavior: 'smooth' });
-    }, 10000)
+    }
+
+    const slideTime = 10000;
+    let slidingInterval = setInterval(scroll, slideTime);
+
+    let timeout: NodeJS.Timer;
+
+    const clearSlidingInterval = () => {
+      clearTimeout(timeout);
+      clearInterval(slidingInterval);
+    }
+
+    const setSlidingInterval = () => {
+      timeout = setTimeout(() => {
+        slidingInterval = setInterval(scroll, slideTime);
+      }, slideTime)
+    };
+
+
+    scrollRef.current?.addEventListener('mousedown', clearSlidingInterval);
+    scrollRef.current?.addEventListener('mouseup', setSlidingInterval);
+    scrollRef.current?.addEventListener('touchstart', clearSlidingInterval, { passive: true });
+    scrollRef.current?.addEventListener('touchend', setSlidingInterval, { passive: true });
 
     return () => {
-      clearInterval(timeout)
+      clearInterval(slidingInterval)
+      currentRef?.removeEventListener('mousedown', clearSlidingInterval)
+      currentRef?.removeEventListener('mouseup', setSlidingInterval)
+      currentRef?.removeEventListener('touchstart', clearSlidingInterval)
+      currentRef?.removeEventListener('touchend', setSlidingInterval)
     }
     
-  }, [scrollRef])
+  }, [currentRef])
 
   return (
-    <div className="px-4 sm:px-6 lg:pl-0 lg:pr-8 mb-6">
+    <section className="lg:pl-0 lg:pr-8 mb-12 sm:mb-16">
       <h2 className="text-xl mb-6 sm:text-[32px] lg:mb-10">
-        Trending
+        Trending last week
       </h2>
     
       <div 
@@ -141,27 +76,37 @@ export const TrendingList = () => {
         "
         ref={scrollRef}
       >
-        {mockMovies.map(movie => {
-          const {
-            movieCode,
-            imagePath,
-            title,
-            releaseDate,
-            category,
-          } = movie;
-
-          return (
-            <TrendingCard 
-              key={movieCode}
-              movieCode={movieCode}
-              imagePath={imagePath}
-              title={title}
-              releaseDate={releaseDate}
-              category={category as Category}
-            />
-          )
-        })}
+        {trendings.length > 0 ? (
+          trendings.map(movie => {
+            const {
+              id,
+              backdrop_path,
+              title,
+              name,
+              release_date,
+              first_air_date,
+              media_type,
+            } = movie;
+  
+            const category = getCategoryNameFromAPIName(media_type || '');
+  
+            return (
+              <TrendingCard 
+                key={id}
+                movieId={id}
+                imagePath={backdrop_path || ''}
+                title={title || name}
+                releaseDate={release_date || first_air_date}
+                category={category as IconName}
+              />
+            )
+          })
+        ) : (
+          [null, null, null, null, null].map((_, index) => (
+            <TrendingCard key={index}/>
+          ))
+        )}
       </div>
-    </div>
+    </section>
   )
 }
