@@ -4,7 +4,7 @@ import {
   type VideosAPIResponseType,
 } from "~/types/responses";
 import axios from "axios";
-import { MoviesType, type MovieType } from "~/types/Movie";
+import { type MovieType } from "~/types/Movie";
 
 export const get = async <T>(path: string): Promise<T> => {
   const { data } = await axios.get<T>(path);

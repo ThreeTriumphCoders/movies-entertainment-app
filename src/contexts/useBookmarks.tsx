@@ -5,6 +5,7 @@ import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 
 type BookmarksContextValue = {
+  currentId: number | null;
   bookmarksIds: number[];
   isInBookmarks: (movieId: number) => boolean;
   addToBookmarks: (movieId: number) => void;
@@ -22,11 +23,15 @@ interface BookmarksContextProviderProps {
 export const BookmarksContextProvider: FC<BookmarksContextProviderProps> = ({
   children,
 }) => {
+  const [currentId, setCurrentId] = useState<number | null>(null);
+  // const [isLoading, setIsLoading] = useState(false);
   const { data: sessionData } = useSession();
   const { data: bookmarks = [], refetch } = api.bookmark.getAll.useQuery(
-    undefined, 
+    undefined,
     {
       enabled: sessionData?.user !== undefined,
+      onSuccess: () => setCurrentId(null),
+      onError: () => setCurrentId(null),
     }
   );
 
@@ -35,18 +40,20 @@ export const BookmarksContextProvider: FC<BookmarksContextProviderProps> = ({
   }, [bookmarks]);
 
   const createBookmark = api.bookmark.create.useMutation({
-    onSuccess: () => void refetch()
+    onSuccess: () => void refetch(),
   });
 
   const deleteBookmark = api.bookmark.delete.useMutation({
-    onSuccess: () => void refetch()
+    onSuccess: () => void refetch(),
   });
 
   const addToBookmarks = useCallback((movieId: number) => {
+    setCurrentId(movieId);
     createBookmark.mutate({ movieId });
   }, []);
 
   const deleteFromBookmarks = useCallback((movieId: number) => {
+    setCurrentId(movieId);
     deleteBookmark.mutate({ movieId });
   }, []);
 
@@ -57,6 +64,7 @@ export const BookmarksContextProvider: FC<BookmarksContextProviderProps> = ({
   return (
     <BookmarksContext.Provider
       value={{
+        currentId,
         bookmarksIds: newBookmarkIds,
         isInBookmarks,
         addToBookmarks,

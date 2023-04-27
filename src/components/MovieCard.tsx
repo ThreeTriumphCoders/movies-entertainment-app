@@ -65,6 +65,7 @@ export const MovieCard: FC<Props> = ({
   const [isBookmarked, setIsBookmarked] = useState(false);
   const isPlaying = playingId === movieId;
   const {
+    currentId,
     bookmarksIds,
     addToBookmarks,
     deleteFromBookmarks,
@@ -116,7 +117,14 @@ export const MovieCard: FC<Props> = ({
   };
 
   return (
-    <div className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]">
+    <div
+      className={classNames(
+        "min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]",
+        {
+          "pointer-events-none opacity-25": currentId === movieId,
+        },
+      )}
+    >
       <div className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
         <>
           <Image
@@ -206,6 +214,8 @@ export const MovieCard: FC<Props> = ({
             </div>
           )}
         </>
+
+        {currentId === movieId && <Loader />}
       </div>
 
       <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
