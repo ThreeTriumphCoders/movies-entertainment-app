@@ -90,7 +90,7 @@ export const MovieCard: FC<Props> = ({
         setIsBookmarked(true);
       }
     } else {
-      void router.push('/signin');
+      void router.push('/auth/signin');
     }
   };
 
