@@ -4,11 +4,11 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useRef, useState, type FC } from 'react';
+import { useRef,useState,type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { type Category } from '~/types/Category.enum';
-import { IconName, getIconByName } from '~/utils/getIconByName';
-import { getImages, getTrailerKey } from '~/utils/helpers';
+import { IconName,getIconByName } from '~/utils/getIconByName';
+import { getImages,getTrailerKey } from '~/utils/helpers';
 import { Loader } from './Loader';
 import { SvgIcon } from './SvgIcon';
 
@@ -39,14 +39,6 @@ export const MovieCard: FC<Props> = ({
   onBookmarksAdd,
   onBookmarksRemove,
 }) => {
-  const { data: sessionData } = useSession();
-  const router = useRouter();
-
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isBookmarked, setIsBookmarked] = useState(isBookmarkedInitial);
-  const isPlaying = playingId === movieId;
-  const { currentId } = useBookmarksContext();
-
   const { data: newTrailerKey = '' } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => getTrailerKey(movieId, category),
@@ -57,6 +49,8 @@ export const MovieCard: FC<Props> = ({
     queryFn: () => getImages(movieId, category),
   });
 
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const isPlaying = playingId === movieId;
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
   const changeCurrentImageIndex = () => {
@@ -81,6 +75,11 @@ export const MovieCard: FC<Props> = ({
     clearInterval(intervalRef.current as NodeJS.Timer);
   };
 
+  const { data: sessionData } = useSession();
+  const router = useRouter();
+  const [isBookmarked, setIsBookmarked] = useState(isBookmarkedInitial);
+  const { currentId } = useBookmarksContext();
+
   const handleBookmarkClick = () => {
     if (sessionData?.user) {
       if (isBookmarked) {
@@ -97,9 +96,7 @@ export const MovieCard: FC<Props> = ({
 
   return (
     <div
-      className={classNames('min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]', {
-        'pointer-events-none opacity-25': currentId === movieId,
-      })}
+      className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]"
       onMouseEnter={startSlidesAnimation}
       onMouseLeave={stopSlidesAnimation}
     >
@@ -169,14 +166,12 @@ export const MovieCard: FC<Props> = ({
           </div>
 
           <div
-            className="
-              hover: absolute right-2 top-2 flex
-              h-8 w-8
-              items-center justify-center rounded-full
-              bg-dark bg-opacity-50
-              opacity-100 transition hover:bg-light 
-              sm:right-4 sm:top-4
-            "
+            className={classNames(
+              'hover: absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-dark bg-opacity-50 opacity-100 transition hover:bg-light  sm:right-4 sm:top-4',
+              {
+                'pointer-events-none opacity-25': currentId === movieId,
+              },
+            )}
           >
             <button onClick={handleBookmarkClick}>
               <SvgIcon
@@ -212,8 +207,6 @@ export const MovieCard: FC<Props> = ({
             </div>
           )}
         </>
-
-        {currentId === movieId && <Loader />}
       </div>
 
       <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">

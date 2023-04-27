@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
 import { useEffect, useRef } from 'react';
+import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType, type MoviesType } from '~/types/Movie';
 import { type IconName } from '~/utils/getIconByName';
@@ -22,6 +23,22 @@ export const TrendingList = () => {
     ...trendingMovies,
     ...trendingSeries,
   ]);
+
+  const {
+    bookmarks,
+    isInBookmarks,
+    addToBookmarks,
+    deleteFromBookmarks,
+  } = useBookmarksContext();
+
+  const handleAddToBookmarks = (id: number, type: Category) => {
+    addToBookmarks(id, type);
+  };
+
+  const handleRemoveFromBookmarks = (id: number) => {
+    deleteFromBookmarks(id);
+  };
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const currentRef = scrollRef.current;
 
@@ -104,6 +121,11 @@ export const TrendingList = () => {
                     first_air_date,
                     media_type,
                   } = movie;
+                  const isBookmarked = isInBookmarks(id);
+
+                  const type = isBookmarked
+                    ? bookmarks.find(({ movieId }) => movieId === id)?.type
+                    : media_type;
 
                   return (
                     <TrendingCard
@@ -112,7 +134,11 @@ export const TrendingList = () => {
                       imagePath={backdrop_path || ''}
                       title={title || name}
                       releaseDate={release_date || first_air_date}
-                      category={media_type as IconName}
+                      category={type as Category}
+                      categoryIcon={type as IconName}
+                      isBookmarkedInitial={isBookmarked}
+                      onBookmarksAdd={handleAddToBookmarks}
+                      onBookmarksRemove={handleRemoveFromBookmarks}
                     />
                   );
                 })
