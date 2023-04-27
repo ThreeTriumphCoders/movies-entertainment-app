@@ -94,11 +94,11 @@ const MoviePage = () => {
               </div>
 
               <div className="lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3 mb-10 lg:mb-0 max-w-2xl">
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex flex-col gap-3 sm:flex-row justify-between items-center mb-8">
                   <button
                     className="
-                      flex
-                    bg-primary py-3 px-5 text-xl rounded-lg
+                      flex justify-center items-center w-full
+                    bg-primary py-2 px-5 text-md lg:text-xl rounded-lg
                     hover:bg-semi-dark hover:text-light transition
                     " //! maybe do it like wathc trailer button with text "add to bookmarks" or "in bookmarks"
                   >
@@ -121,8 +121,9 @@ const MoviePage = () => {
                   {trailerKey && (
                     <button 
                       className="
-                        bg-primary py-3 px-5 text-xl rounded-lg
-                        hover:bg-semi-dark hover:text-light transition
+                        flex justify-center items-center w-full
+                      bg-primary py-2 px-5 text-md lg:text-xl rounded-lg
+                      hover:bg-semi-dark hover:text-light transition
                       "
                       onClick={() => setPlayerOpened(true)}
                     >
