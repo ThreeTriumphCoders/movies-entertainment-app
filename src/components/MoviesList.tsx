@@ -20,7 +20,7 @@ export const MoviesList: FC<Props> = ({
   const [playingId, setPlayingId] = useState(0);
 
   return (
-    <div className="pb-8 lg:pr-8 ">
+    <section className="pb-8 lg:pr-8 mb-6 sm:mb-10">
       <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
 
       <div
@@ -61,6 +61,6 @@ export const MoviesList: FC<Props> = ({
           </>
         )}
       </div>
-    </div>
+    </section>
   );
 }

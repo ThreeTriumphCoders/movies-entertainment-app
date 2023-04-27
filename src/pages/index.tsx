@@ -9,15 +9,6 @@ const Home: NextPage = () => {
   const [popularMovies] = useGetPopularMovies();
   const [popularSeries] = useGetPopularSeries();
 
-  const buttonClasses = `
-    flex justify-center w-fit mx-auto
-    rounded-lg transition
-    bg-primary hover:bg-semi-dark 
-    px-5 py-1 lg:px-6 lg:py-2
-    sm:text-xl lg:text-2xl
-    text-dark hover:text-light
-  `;
-  const sectionClasses = "mb-6 sm:mb-10";
   return (
     <>
       <Head>
@@ -26,41 +17,21 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className={sectionClasses}>
-        <TrendingList />
-      </section>
+      <TrendingList />
 
-      <section className={sectionClasses}>
-        <MoviesList 
-          movies={popularMovies.slice(0, 12)} 
-          title = 'Popular movies'
-          category = 'Movie'
-          apiPath = 'movie'
-        />
+      <MoviesList 
+        movies={popularMovies.slice(0, 12)} 
+        title = 'Popular movies'
+        category = 'Movie'
+        apiPath = 'movie'
+      />
 
-        <Link 
-          href={'/movies'}
-          className={buttonClasses}
-        >
-          See more movies
-        </Link>
-      </section>
-
-      <section>
-        <MoviesList 
-          movies={popularSeries.slice(0, 12)} 
-          title = 'Popular series'
-          category = 'TV Serie'
-          apiPath = 'tv'
-        />
-
-        <Link 
-          href={'/series'}
-          className={buttonClasses}
-        >
-          See more series
-        </Link>
-      </section>
+      <MoviesList 
+        movies={popularSeries.slice(0, 12)} 
+        title = 'Popular series'
+        category = 'TV Serie'
+        apiPath = 'tv'
+      />
     </>
   );
 };
