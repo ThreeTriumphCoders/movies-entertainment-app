@@ -33,7 +33,7 @@ const SignIn = () => {
               {getIconByName(IconName.MOVIE)}
             </SvgIcon>
 
-            <div className="flex flex-col bg-semi-dark px-8 pt-8 pb-28 rounded-4xl w-4/5 sm:w-1/2 lg:w-1/3 xl:w-1/4 font-body text-light">
+            <div className="flex flex-col bg-semi-dark px-8 pt-8 pb-28 rounded-3xl w-4/5 sm:w-1/2 lg:w-1/3 xl:w-1/4 font-body text-light">
               <h1 className="font-body text-3xl text-center mb-16">
                 Login
               </h1>
