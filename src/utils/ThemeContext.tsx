@@ -1,16 +1,15 @@
 import React,
 {
-  type Dispatch,
-  type SetStateAction,
-  useState,
   useContext,
-  type ReactNode
+  type ReactNode,
+  useEffect,
 } from 'react';
 import { ThemeType } from '~/types/ThemeType';
+import { useLocalTheme } from './useLocalTheme';
 
 interface ThemeContextProps {
   themeType: ThemeType;
-  setCurrentTheme: Dispatch<SetStateAction<ThemeType>>;
+  setCurrentTheme: (value: ThemeType) => void;
 }
 
 export const ThemeContext = React.createContext<ThemeContextProps>({
@@ -22,7 +21,7 @@ type Props = {
 }
 
 export const ThemeProvider: React.FC<Props> = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeType>(ThemeType.Dark);
+  const [currentTheme, setCurrentTheme] = useLocalTheme();
 
   return (
     <ThemeContext.Provider value={{ themeType: currentTheme, setCurrentTheme }} >
@@ -31,4 +30,4 @@ export const ThemeProvider: React.FC<Props> = ({ children }) => {
   );
 }
 
-export const useTheme = () => useContext(ThemeContext);
+export const useThemeContext = () => useContext(ThemeContext);

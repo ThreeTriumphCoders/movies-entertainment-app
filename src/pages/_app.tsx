@@ -7,10 +7,9 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import { Layout } from "~/components/Layout";
-import { ThemeProvider } from "~/utils/ThemeContext";
-import { LangProvider } from "~/utils/LangContext";
 import { useRouter } from "next/router";
 import React from "react";
+import { ThemeProvider } from "~/utils/ThemeContext";
 
 const outfitBody = Outfit({
   weight: ["300"],
@@ -36,17 +35,19 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <ThemeProvider>
-        <LangProvider>
-          <LayoutComponent>
-            <Component
-              className={`${outfitBody.variable} ${outfitHeading.variable}`}
-              {...pageProps}
-            />
-          </LayoutComponent>
-        </LangProvider>
+        <LayoutComponent>
+          <Component
+            className={`${outfitBody.variable} ${outfitHeading.variable}`}
+            {...pageProps}
+          />
+        </LayoutComponent>
       </ThemeProvider>
     </SessionProvider>
   );
+};
+
+MyApp.getInitialProps = async ({ req }: NextPageContext): Promise<Props> => {
+  return {};
 };
 
 export default api.withTRPC(MyApp);

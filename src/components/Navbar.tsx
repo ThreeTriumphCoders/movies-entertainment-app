@@ -2,23 +2,27 @@
 import Link from "next/link";
 import Image from 'next/image';
 import { NavbarLink } from "./NavbarLink";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { IconName, getIconByName } from "~/utils/getIconByName";
 import { SvgIcon } from "./SvgIcon";
 import avatar from '../../public/images/avatar.svg';
-import { useTheme } from "~/utils/ThemeContext";
 import { ThemeType } from "~/types/ThemeType";
-import { useLang } from "~/utils/LangContext";
 import { LangType } from "~/types/LangType";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import classNames from "classnames";
+import { useLocalTheme } from "~/utils/useLocalTheme";
+import { useLocalLang } from "~/utils/useLocalLang";
+import { useThemeContext } from "~/utils/ThemeContext";
+
 
 export const Navbar = () => {
   const [isSignOut, setIsSignOut] = useState(false);
   const { data: sessionData } = useSession();
-  const { themeType, setCurrentTheme } = useTheme();
-  const { langType, setCurrentLang } = useLang();
+  const [lang, setLang] = useLocalLang();
+
+  const { themeType, setCurrentTheme } = useThemeContext();
+  console.log('navbar', themeType);
 
   const handleThemeChange = () => {
     if (themeType === ThemeType.Dark) {
@@ -31,17 +35,17 @@ export const Navbar = () => {
   }
 
   const handleLangChange = () => {
-    if (langType === LangType.ENG) {
-      setCurrentLang(LangType.UA);
+    if (lang === LangType.ENG) {
+      setLang(LangType.UA);
 
       return;
     }
 
-    setCurrentLang(LangType.ENG);
+    setLang(LangType.ENG);
   }
 
   const router = useRouter();
-  
+
   return (
     <div 
       className="
@@ -61,7 +65,7 @@ export const Navbar = () => {
           </SvgIcon>
         </Link>
 
-        <ul className="flex lg:flex-col gap-2 sm:gap-4 lg:mb-16 lg:mt-16">
+        <ul className="flex lg:flex-col gap-2 sm:gap-4">
           <li>
             <NavbarLink href="/">
               {getIconByName(IconName.HOME)}
@@ -86,24 +90,32 @@ export const Navbar = () => {
           )}
         </ul>
 
-        <div className="flex items-center gap-4 lg:flex-col">
+        <div className="flex items-center gap-4 lg:flex-col lg:mt-32">
           <button
             type="button"
             className="text-grey text-sm sm:text-lg hover:text-primary transition"
             onClick={handleLangChange}
           >
-            {langType.toUpperCase()}
+            {lang.toUpperCase()}
           </button>
           <button 
             type="button"
             className="pb-1 flex justify-center items-center"
             onClick={handleThemeChange}
           >
-            <SvgIcon className="fill-grey hover:fill-primary transition w-6 h-6 overflow-visible">
-              {themeType === ThemeType.Dark
-                ? getIconByName(IconName.MOON)
-                : getIconByName(IconName.SUN)}
-            </SvgIcon>
+            {/* <SvgIcon className="fill-grey hover:fill-primary transition w-6 h-6 overflow-visible">
+              {getIconByName(icon)}
+            </SvgIcon> */}
+            {themeType === ThemeType.Dark && (
+              <SvgIcon className="fill-grey hover:fill-primary transition w-6 h-6 overflow-visible">
+                {getIconByName(IconName.MOON)}
+              </SvgIcon>
+            )}
+            {themeType === ThemeType.Light && (
+              <SvgIcon className="fill-grey hover:fill-primary transition w-6 h-6 overflow-visible">
+                {getIconByName(IconName.LIGHT)}
+              </SvgIcon>
+            )}
           </button>
         </div>
 
