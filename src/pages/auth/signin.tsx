@@ -3,29 +3,40 @@
 import google from '../../../public/images/google.svg';
 import github from '../../../public/images/github.svg';
 import Image from 'next/image';
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { type NextPage } from "next";
+import { useRouter } from "next/router";
+import { type LiteralUnion, signIn, useSession } from "next-auth/react";
+import { type BuiltInProviderType } from "next-auth/providers";
+import { useEffect, useState } from "react";
+import { env } from "process";
 import { Loader } from '~/components/Loader';
 import { SvgIcon } from '~/components/SvgIcon';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 
-const SignIn = () => {
-  const [isLoading, setIsLoading] = useState(false);
+const SignIn: NextPage = ({}) => {
+  const { status } = useSession();
+  const router = useRouter();
 
-  const handleSignIn = async (provider: string) => {
-    try {
-      setIsLoading(true);
-      await signIn(provider, { callbackUrl: process.env.NEXTAUTH_URL });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  useEffect(() => {
+    const redirectToHomePage = async () => {
+      if (status === "authenticated") {
+        await router.push("/").catch(() => console.error("error occured"));
+      }
+    };
+
+    redirectToHomePage().catch((err) => console.error(err));
+  }, [status]);
+
+  const handleSignInClick = (provider: LiteralUnion<BuiltInProviderType>) => {
+    signIn(provider, {
+      callbackUrl: env.NEXTAUTH_URL,
+    })
+      .catch((err) => console.error(err))
+  };
 
   return (
     <section className="flex flex-col gap-20 justify-center items-center bg-dark h-screen">
-      {isLoading
+      {status === "loading"
         ? <Loader />
         : (
           <>
@@ -42,7 +53,7 @@ const SignIn = () => {
                 <button 
                   type="button" 
                   className="flex gap-x-5 justify-center items-center font-light border border-grey rounded-lg w-full py-4 hover:bg-primary hover:border-primary hover:text-dark transition-all"
-                  onClick={() => void handleSignIn('google')}
+                  onClick={() => void handleSignInClick('google')}
                 >
                   <Image src={google} alt="google" width="28" height="28" />
                   Login with Google
@@ -51,7 +62,7 @@ const SignIn = () => {
                 <button 
                   type="button" 
                   className="flex gap-x-5 justify-center items-center font-light border border-grey rounded-lg w-full py-4 hover:bg-primary hover:border-primary hover:text-dark transition-all"
-                  onClick={() => void handleSignIn('github')}
+                  onClick={() => void handleSignInClick('github')}
                 >
                 <Image src={github} alt="google" width="28" height="28" />
                   Login with GitHub
