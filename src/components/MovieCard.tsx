@@ -1,15 +1,16 @@
-import Image from "next/image";
-import { SvgIcon } from "./SvgIcon";
-import Link from "next/link";
-import { useEffect, type FC, useState, useRef } from "react";
-import { Loader } from "./Loader";
-import { getImages, getTrailerKey } from "~/utils/helpers";
-import classNames from "classnames";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useBookmarksContext } from "~/contexts/useBookmarks";
-import { getIconByName, IconName } from "~/utils/getIconByName";
-import { type Category } from "~/types/Category.enum";
+import { useQuery } from '@tanstack/react-query';
+import classNames from 'classnames';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useRef, useState, type FC } from 'react';
+import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { type Category } from '~/types/Category.enum';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { getImages, getTrailerKey } from '~/utils/helpers';
+import { Loader } from './Loader';
+import { SvgIcon } from './SvgIcon';
 
 type Props = {
   movieId: number;
@@ -28,8 +29,8 @@ type Props = {
 export const MovieCard: FC<Props> = ({
   movieId = 0,
   imagePath,
-  title = "No movie title",
-  releaseDate = "No release date",
+  title = 'No movie title',
+  releaseDate = 'No release date',
   categoryIcon = IconName.MOVIE,
   category,
   playingId,
@@ -40,49 +41,40 @@ export const MovieCard: FC<Props> = ({
 }) => {
   const { data: sessionData } = useSession();
   const router = useRouter();
-  const [error, setError] = useState(false);
-  const [trailerKey, setTrailerKey] = useState("");
-  const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>(
-    []
-  );
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(isBookmarkedInitial);
   const isPlaying = playingId === movieId;
   const { currentId } = useBookmarksContext();
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const key = await getTrailerKey(movieId, category);
-        const imagesPaths = await getImages(movieId, category);
+  const { data: newTrailerKey = '' } = useQuery({
+    queryKey: [`${movieId}-trailerKey`],
+    queryFn: () => getTrailerKey(movieId, category),
+  });
 
-        setAdditionalImagePaths(imagesPaths);
-        setTrailerKey(key);
-      } catch (err) {
-        setError(true);
-        setTrailerKey("");
-      }
-    };
-
-    getData().catch(console.log);
-  }, [movieId, category]);
+  const { isError: isImagesError, data: moreImagePaths = [] } = useQuery({
+    queryKey: [`${movieId}-images`],
+    queryFn: () => getImages(movieId, category),
+  });
 
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
   const changeCurrentImageIndex = () => {
     setCurrentImageIndex((index) =>
-      index === additionalImagePaths.length - 1 ? 0 : index + 1
+      index === moreImagePaths.length - 1 ? 0 : index + 1,
     );
   };
 
   const startSlidesAnimation = () => {
-    setTimeout(() => {
-      changeCurrentImageIndex();
-    }, 500);
+    if (!isImagesError && moreImagePaths.length > 0) {
+      setTimeout(() => {
+        changeCurrentImageIndex();
+      }, 500);
 
-    intervalRef.current = setInterval(() => {
-      changeCurrentImageIndex();
-    }, 5000);
+      intervalRef.current = setInterval(() => {
+        changeCurrentImageIndex();
+      }, 3000);
+    }
   };
 
   const stopSlidesAnimation = () => {
@@ -99,14 +91,14 @@ export const MovieCard: FC<Props> = ({
         setIsBookmarked(true);
       }
     } else {
-      void router.push("/signin");
+      void router.push('/signin');
     }
   };
 
   return (
     <div
-      className={classNames("min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]", {
-        "pointer-events-none opacity-25": currentId === movieId,
+      className={classNames('min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]', {
+        'pointer-events-none opacity-25': currentId === movieId,
       })}
       onMouseEnter={startSlidesAnimation}
       onMouseLeave={stopSlidesAnimation}
@@ -131,12 +123,12 @@ export const MovieCard: FC<Props> = ({
           )}
 
           {!isPlaying &&
-            additionalImagePaths.map((path, index) => (
+            moreImagePaths.map((path, index) => (
               <Image
                 key={path}
                 className={classNames(
-                  "object-cover, transition-all duration-1000",
-                  { "opacity-0": index !== currentImageIndex }
+                  'object-cover, transition-all duration-1000',
+                  { 'opacity-0': index !== currentImageIndex },
                 )}
                 alt="movie image"
                 onClick={() => onPlayingChange(movieId)}
@@ -155,7 +147,7 @@ export const MovieCard: FC<Props> = ({
               opacity-0 transition-opacity hover:opacity-100
             "
           >
-            {!error ? (
+            {newTrailerKey ? (
               <div
                 className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg transition hover:bg-opacity-50"
                 onClick={() => onPlayingChange(movieId)}
@@ -189,11 +181,11 @@ export const MovieCard: FC<Props> = ({
             <button onClick={handleBookmarkClick}>
               <SvgIcon
                 className={classNames(
-                  "h-[32px] w-[32px] cursor-pointer fill-none stroke-light stroke-[1.5] hover:stroke-dark active:fill-light",
+                  'h-[32px] w-[32px] cursor-pointer fill-none stroke-light stroke-[1.5] hover:stroke-dark active:fill-light',
                   {
-                    "fill-primary stroke-primary hover:stroke-primary":
+                    'fill-primary stroke-primary hover:stroke-primary':
                       isBookmarked,
-                  }
+                  },
                 )}
                 viewBox="-10 -9 38 38"
               >
@@ -206,16 +198,16 @@ export const MovieCard: FC<Props> = ({
             <div className="absolute top-0 w-full max-w-full pt-[56.25%]">
               <Loader />
 
-              {!error ? (
+              {newTrailerKey ? (
                 <iframe
                   className="absolute left-0 top-0 h-full w-full"
-                  src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
+                  src={`https://www.youtube.com/embed/${newTrailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
                   title="YouTube video player"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
               ) : (
-                <div>{"No trailer :("}</div>
+                <div>{'No trailer :('}</div>
               )}
             </div>
           )}
@@ -236,7 +228,7 @@ export const MovieCard: FC<Props> = ({
             {getIconByName(categoryIcon)}
           </SvgIcon>
 
-          <p>{categoryIcon === IconName.MOVIE ? "Movie" : "TV Serie"}</p>
+          <p>{categoryIcon === IconName.MOVIE ? 'Movie' : 'TV Serie'}</p>
         </div>
       </div>
 
