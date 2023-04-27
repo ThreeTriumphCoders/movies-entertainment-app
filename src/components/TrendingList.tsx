@@ -64,7 +64,7 @@ export const TrendingList = () => {
   }, [currentRef])
 
   return (
-    <div className="lg:pl-0 lg:pr-8 mb-6">
+    <section className="lg:pl-0 lg:pr-8 mb-12 sm:mb-16">
       <h2 className="text-xl mb-6 sm:text-[32px] lg:mb-10">
         Trending last week
       </h2>
@@ -107,6 +107,6 @@ export const TrendingList = () => {
           ))
         )}
       </div>
-    </div>
+    </section>
   )
 }

@@ -9,6 +9,8 @@ import "~/styles/globals.css";
 import { Layout } from "~/components/Layout";
 import { ThemeProvider } from "~/utils/ThemeContext";
 import { LangProvider } from "~/utils/LangContext";
+import { useRouter } from "next/router";
+import React from "react";
 
 const outfitBody = Outfit({
   weight: ["300"],
@@ -28,16 +30,19 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const router = useRouter();
+  const LayoutComponent = router.pathname === '/auth/signin' ? React.Fragment : Layout;
+
   return (
     <SessionProvider session={session}>
       <ThemeProvider>
         <LangProvider>
-          <Layout>
+          <LayoutComponent>
             <Component
               className={`${outfitBody.variable} ${outfitHeading.variable}`}
               {...pageProps}
             />
-          </Layout>
+          </LayoutComponent>
         </LangProvider>
       </ThemeProvider>
     </SessionProvider>

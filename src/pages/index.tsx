@@ -1,18 +1,13 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useRef } from "react";
 import { TrendingList } from "~/components/TrendingList";
 import { MoviesList } from "~/components/MoviesList";
-import { useGetPopularMovies } from "~/utils/use-queries";
+import { useGetPopularMovies, useGetPopularSeries } from "~/utils/use-queries";
+import Link from "next/link";
 
 const Home: NextPage = () => {
-  const [popularMovies, getPopularMovies] = useGetPopularMovies();
-  const page = useRef(1);
-
-  const loadMoreMovies = async () => {
-    page.current += 1;
-    await getPopularMovies(page.current);
-  };
+  const [popularMovies] = useGetPopularMovies();
+  const [popularSeries] = useGetPopularSeries();
 
   return (
     <>
@@ -22,19 +17,21 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section>
-        <TrendingList />
+      <TrendingList />
 
-        <MoviesList movies={popularMovies} />
-        <div className="flex justify-center">
-          <button
-            onClick={() => void loadMoreMovies()}
-            className="rounded-lg bg-primary px-8 py-2 text-dark"
-          >
-            Load more
-          </button>
-        </div>
-      </section>
+      <MoviesList 
+        movies={popularMovies.slice(0, 12)} 
+        title = 'Popular movies'
+        category = 'Movie'
+        apiPath = 'movie'
+      />
+
+      <MoviesList 
+        movies={popularSeries.slice(0, 12)} 
+        title = 'Popular series'
+        category = 'TV Serie'
+        apiPath = 'tv'
+      />
     </>
   );
 };

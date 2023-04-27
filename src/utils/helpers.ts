@@ -26,7 +26,7 @@ export const getMovieImages = async ( //? Rename to getImages
 ) => {
   try {
     const { backdrops } = await get<ImagesAPIResponseType>(
-      `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${category}/${id}/images?${env.NEXT_PUBLIC_TMDB_API_KEY}`
+      `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/${category}/${id}/images?${env.NEXT_PUBLIC_TMDB_API_KEY}&include_image_language=null`
     );
 
     if (backdrops.length > 5) {
