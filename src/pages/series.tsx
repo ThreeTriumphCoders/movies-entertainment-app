@@ -1,62 +1,66 @@
-import { useRef, useEffect, useState } from "react";
-import { LoadMoreButton } from "~/components/LoadMoreButton";
-import { MoviesList } from "~/components/MoviesList";
-import { useGetPopularSeries } from "~/utils/use-queries";
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
+import { LoadMoreButton } from '~/components/LoadMoreButton';
+import { Loader } from '~/components/Loader';
+import { MoviesList } from '~/components/MoviesList';
+import { Category } from '~/types/Category.enum';
+import { type MoviesType } from '~/types/Movie';
+import { getPopular } from '~/utils/helpers';
 
 const SeriesPage = () => {
-  const [popularSeries, getPopularSeries] = useGetPopularSeries();
   const page = useRef(1);
+  const [series, setSeries] = useState<MoviesType>([]);
 
-  const [isButtonLoading, setButtonLoading] = useState(false);
-  const isLoading = useRef(false);
+  const { isLoading, isError, refetch } = useQuery({
+    queryKey: ['series'],
+    queryFn: () => getPopular(page.current, Category.TV),
+    onSuccess(data) {
+      setSeries((prev) => [...prev, ...data]);
+      page.current += 1;
+    },
+  });
 
-  const loadMoreSeries = () => {
-    page.current += 1;
-    isLoading.current = true;
-    setButtonLoading(true);
-    
-    getPopularSeries(page.current)
-      .then(() => {
-        isLoading.current = false;
-        setButtonLoading(false);
-      })
-      .catch(console.error)
+  const loadMoreSeries = async () => {
+    await refetch();
   };
 
   useEffect(() => {
     const loadNewMovies = () => {
-      const {
-        clientHeight,
-        scrollHeight,
-        scrollTop,
-      } = document.documentElement;
+      const { clientHeight, scrollHeight, scrollTop } =
+        document.documentElement;
 
       const needLoad = scrollHeight - clientHeight - scrollTop < 1000;
-      if (needLoad && !isLoading.current) {
+
+      if (needLoad) {
         void loadMoreSeries();
       }
-    }
+    };
 
     window.addEventListener('scroll', loadNewMovies);
 
     return () => {
       window.removeEventListener('scroll', loadNewMovies);
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <>
-      <MoviesList 
-        movies={popularSeries}
-        title="Popular series"
-        category="TV Serie"
-        apiPath='tv'
-      />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <MoviesList
+            movies={isError ? [] : series}
+            title={isError ? 'Error! No series loaded :(' : 'Popular series'}
+            category={Category.TV}
+          />
 
-      <LoadMoreButton 
-        isLoading={isButtonLoading}
-        onClick={loadMoreSeries}
-      />
+          <LoadMoreButton
+            isLoading={isLoading}
+            onClick={() => void loadMoreSeries()}
+          />
+        </>
+      )}
     </>
   );
 };

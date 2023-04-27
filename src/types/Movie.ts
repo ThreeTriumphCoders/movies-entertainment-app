@@ -6,7 +6,6 @@ export const MovieSchema = z.object({
   title: z.string().optional(),
   name: z.string().optional(),
   poster_path: z.string(),
-  // posterImage: z.string(),
   backdrop_path: z.string().nullable(),
   release_date: z.string().optional(),
   first_air_date: z.string().optional(),
@@ -25,7 +24,6 @@ export const MovieSchema = z.object({
   status: z.string(),
   runtime: z.number(),
   origin_country: z.array(z.string()).optional(),
-  // video_id: z.string().optional(),
 });
 export const MoviesSchema = z.array(MovieSchema);
 
