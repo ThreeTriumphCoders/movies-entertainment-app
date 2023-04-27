@@ -6,9 +6,14 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { IconName, getIconByName } from "~/utils/getIconByName";
 import { SvgIcon } from "./SvgIcon";
 import avatar from '../../public/images/avatar.svg';
+import { useRouter } from "next/router";
+import { useState } from "react";
+import classNames from "classnames";
 
 export const Navbar = () => {
+  const [isSignOut, setIsSignOut] = useState(false);
   const { data: sessionData } = useSession();
+  const router = useRouter();
   
   return (
     <div 
@@ -54,7 +59,7 @@ export const Navbar = () => {
           )}
         </ul>
 
-        <button onClick={sessionData ? () => void signOut() : () => void signIn()}>
+        <button onClick={sessionData ? () => setIsSignOut(state => !state) : () => void router.push('/auth/signin')}>
             <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-primary rounded-full border-light border relative overflow-hidden">
               {sessionData ? (
                 <Image src={sessionData?.user?.image ?? avatar} alt={sessionData?.user?.name ?? "user name"} fill />
@@ -63,6 +68,23 @@ export const Navbar = () => {
               )}
             </div>
         </button>
+
+        <div 
+          className={classNames(
+            "absolute w-max bottom-16 left-36 flex justify-center items-center bg-semi-dark rounded-lg py-3 px-8 transition-all",
+            {
+              '-translate-x-96 opacity-0': !isSignOut,
+            }
+          )}
+        >
+          <button 
+            type="button" 
+            className="py-1 px-10 bg-primary text-dark font-body rounded-lg"
+            onClick={() => void signOut()}
+          >
+            Log Out
+          </button>
+        </div>
       </div>
     </div>
   )
