@@ -3,7 +3,8 @@ import React,
   type Dispatch,
   type SetStateAction,
   useState,
-  useContext
+  useContext,
+  type ReactNode
 } from 'react';
 import { ThemeType } from '~/types/ThemeType';
 
@@ -16,7 +17,11 @@ export const ThemeContext = React.createContext<ThemeContextProps>({
   themeType: ThemeType.Dark
 } as ThemeContextProps);
 
-export const ThemeProvider = (children: React.ReactNode) => {
+type Props = {
+  children?: ReactNode,
+}
+
+export const ThemeProvider: React.FC<Props> = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState<ThemeType>(ThemeType.Dark);
 
   return (

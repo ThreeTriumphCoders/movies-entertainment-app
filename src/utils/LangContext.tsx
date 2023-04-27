@@ -3,7 +3,8 @@ import React,
   type Dispatch,
   type SetStateAction,
   useState,
-  useContext
+  useContext,
+  type ReactNode
 } from 'react';
 import { LangType } from '~/types/LangType';
 
@@ -16,7 +17,11 @@ export const LangContext = React.createContext<LangContextProps>({
   langType: LangType.ENG
 } as LangContextProps);
 
-export const ThemeProvider = (children: React.ReactNode) => {
+type Props = {
+  children?: ReactNode,
+}
+
+export const LangProvider: React.FC<Props> = ({ children }) => {
   const [currentLang, setCurrentLang] = useState<LangType>(LangType.ENG);
 
   return (

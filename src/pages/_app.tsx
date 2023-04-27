@@ -7,6 +7,8 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import { Layout } from "~/components/Layout";
+import { ThemeProvider } from "~/utils/ThemeContext";
+import { LangProvider } from "~/utils/LangContext";
 
 const outfitBody = Outfit({
   weight: ["300"],
@@ -28,12 +30,17 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Layout>
-        <Component
-          className={`${outfitBody.variable} ${outfitHeading.variable}`}
-          {...pageProps}
-        />
-      </Layout>
+      <ThemeProvider>
+        <LangProvider>
+          <Layout>
+            <Component
+              className={`${outfitBody.variable} ${outfitHeading.variable}`}
+              {...pageProps}
+            />
+          </Layout>
+        </LangProvider>
+      </ThemeProvider>
+      
     </SessionProvider>
   );
 };
