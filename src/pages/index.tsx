@@ -38,6 +38,25 @@ const Home: NextPage = () => {
         title="Popular series"
         category={Category.TV}
       />
+
+      <footer className="flex w-full flex-col items-center justify-center">
+        <p>
+          Made with &#x1F49B; by{' '}
+          <a
+            href="https://github.com/ThreeTriumphCoders"
+            className="font-medium transition-all hover:text-primary"
+          >
+            ThreeTriumphCoders
+          </a>
+        </p>
+        <br />
+        <a
+          href="https://github.com/ThreeTriumphCoders/movies-entertainment-app#readme"
+          className="font-medium transition-all hover:text-primary"
+        >
+          GitHub Repository
+        </a>
+      </footer>
     </>
   );
 };
