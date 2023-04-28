@@ -1,13 +1,14 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { SvgIcon } from "~/components/SvgIcon";
-import { type MovieType } from "~/types/Movie";
-import { getMovie } from "~/utils/helpers";
-import Image from "next/image";
-import { Loader } from "~/components/Loader";
-import { getImages, getTrailerKey } from "~/utils/helpers";
-import { ReviewsSection } from "~/components/ReviewsSection";
-import classNames from "classnames";
+import classNames from 'classnames';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
+import { Loader } from '~/components/Loader';
+import { MovieSlider } from '~/components/MovieSlider';
+import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
+import { ReviewsSection } from '~/components/ReviewsSection';
+import { SvgIcon } from '~/components/SvgIcon';
+import { type MovieType } from '~/types/Movie';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
 const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
@@ -15,11 +16,11 @@ const separator = (
 
 const MoviePage = () => {
   const [movie, setMovie] = useState<MovieType | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [error, setError] = useState(false);
-  const [trailerKey, setTrailerKey] = useState("");
+  const [error, setError] = useState(false); //! handle this error
+  const [trailerKey, setTrailerKey] = useState('');
+  const [isPlayerOpened, setPlayerOpened] = useState(false);
   const [additionalImagePaths, setAdditionalImagePaths] = useState<string[]>(
-    []
+    [],
   );
   const { query } = useRouter();
 
@@ -42,7 +43,7 @@ const MoviePage = () => {
         }
       } catch (err) {
         setError(true);
-        setTrailerKey("");
+        setTrailerKey('');
       }
     };
 
@@ -50,9 +51,13 @@ const MoviePage = () => {
     getMovieFromServer().catch(console.log);
   }, [query]);
 
+  const handlePopup = useCallback(() => {
+    setPlayerOpened((prev) => !prev);
+  }, []);
+
   const date = movie?.release_date
     ? movie.release_date.slice(0, 4)
-    : "No release date";
+    : 'No release date';
 
   return (
     <>
@@ -75,104 +80,78 @@ const MoviePage = () => {
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3 lg:grid-rows-2">
-            <div className="lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-              <div className="mb-8">
-                <div className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]">
-                  <>
-                    <Image
-                      alt="movie image"
-                      onClick={() => setIsPlaying(true)}
-                      priority
-                      src={`https://www.themoviedb.org/t/p/original${
-                        movie.backdrop_path || ""
-                      }`} //! do placeholder
-                      fill
-                    />
-
-                    <div
-                      className="
-                          absolute bottom-0 left-0
-                          right-0 top-0 
-                          flex items-center justify-center bg-dark bg-opacity-50
-                          opacity-0 transition-opacity hover:opacity-100
-                        "
-                    >
-                      {!error ? (
-                        <div
-                          className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg"
-                          onClick={() => setIsPlaying(true)}
-                        >
-                          <SvgIcon
-                            className="h-[30px] w-[30px] fill-light"
-                            viewBox="0 0 30 30"
-                          >
-                            <path d="M0 15C0 6.713 6.713 0 15 0c8.288 0 15 6.713 15 15 0 8.288-6.712 15-15 15-8.287 0-15-6.712-15-15Zm21-.5L12 8v13l9-6.5Z" />
-                          </SvgIcon>
-
-                          <p>Play</p>
-                        </div>
-                      ) : (
-                        <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">
-                          <p className="text-medium">No trailer</p>
-                        </div>
-                      )}
-                    </div>
-
-                    <div
-                      className="
-                          hover: absolute right-2 top-2 flex
-                          h-8 w-8
-                          items-center justify-center rounded-full
-                          bg-dark bg-opacity-50
-                          opacity-100 transition hover:bg-light 
-                          sm:right-4 sm:top-4
-                        "
-                    >
-                      <SvgIcon
-                        className="
-                            h-[32px] w-[32px]
-                            cursor-pointer fill-none
-                            stroke-light
-                            stroke-[1.5] hover:stroke-dark
-                            active:fill-light
-                          "
-                        viewBox="-9 -8 30 30"
-                      >
-                        <path d="m10.711.771.01.004.01.005c.068.027.108.06.14.107.032.048.046.09.046.15v11.927a.243.243 0 0 1-.046.15.282.282 0 0 1-.14.106l-.007.004-.008.003a.29.29 0 0 1-.107.014.326.326 0 0 1-.24-.091L6.356 9.235l-.524-.512-.524.512-4.011 3.915a.327.327 0 0 1-.24.1.244.244 0 0 1-.103-.021l-.01-.004-.01-.005a.281.281 0 0 1-.139-.107.244.244 0 0 1-.046-.15V1.037c0-.058.014-.101.046-.15A.281.281 0 0 1 .935.78l.01-.005.01-.004A.245.245 0 0 1 1.057.75h9.552c.038 0 .07.007.102.021Z" />
-                      </SvgIcon>
-                    </div>
-
-                    {isPlaying && (
-                      <div className="absolute top-0 w-full max-w-full pt-[56.25%]">
-                        <Loader />
-
-                        {!error ? (
-                          <iframe
-                            className="absolute left-0 top-0 h-full w-full"
-                            src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
-                            title="YouTube video player"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                          />
-                        ) : (
-                          <div>{"No trailer :("}</div>
-                        )}
-                      </div>
-                    )}
-                  </>
+            <div className="relative mb-8 overflow-hidden lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
+              {additionalImagePaths ? (
+                <MovieSlider imagesPaths={...additionalImagePaths} />
+              ) : (
+                <div
+                  className="
+                      bottom-[1px] left-[1px] right-[1px] top-[1px]
+                      flex items-center
+                      justify-center bg-semi-dark text-2xl
+                    "
+                >
+                  No image
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="mb-10 max-w-2xl lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3 lg:mb-0">
+              <div
+                className="
+                    mb-8 flex flex-col flex-wrap items-center
+                    justify-between gap-[4%] gap-y-3 sm:flex-row
+
+                  "
+              >
+                <button
+                  className="
+                      text-md relative flex w-full items-center justify-center rounded-lg
+                    bg-primary py-2 pl-12 pr-5 transition hover:bg-semi-dark hover:text-light
+                    sm:w-[48%] lg:w-full lg:text-xl
+                    xl:w-[48%]
+                    "
+                >
+                  <SvgIcon
+                    className="absolute left-4 h-5 w-5 fill-light"
+                    viewBox="0 0 20 20"
+                  >
+                    {getIconByName(IconName.BOOKMARK)}
+                  </SvgIcon>
+                  Add&nbsp;to&nbsp;bookmarks {/* Or "In bookmarks" */}
+                </button>
+
+                {trailerKey && (
+                  <button
+                    className="
+                        text-md relative flex w-full items-center justify-center rounded-lg
+                      bg-[#ff0000] py-2 pl-12 pr-5 transition hover:bg-semi-dark hover:text-light
+                      sm:w-[48%] lg:w-full lg:text-xl
+                        xl:w-[48%]
+                      "
+                    onClick={handlePopup}
+                  >
+                    <SvgIcon
+                      className="absolute left-3 h-7 w-7 fill-light"
+                      viewBox="0 0 32 32"
+                    >
+                      {getIconByName(IconName.YT)}
+                    </SvgIcon>
+                    Watch&nbsp;trailer
+                  </button>
+                )}
+              </div>
+
               <h3 className="mb-4 text-lg font-medium text-light">
                 Description
               </h3>
+
               <p className="mb-8 text-sm font-light text-light">
                 {movie.overview}
               </p>
 
               <h3 className="mb-4 text-lg font-medium text-light">Status</h3>
+
               <p className="mb-8 text-sm font-light text-light">
                 {movie.status}
               </p>
@@ -180,20 +159,22 @@ const MoviePage = () => {
               <h3 className="mb-4 text-lg font-medium text-light">
                 Original language
               </h3>
+
               <p className="mb-8 text-sm font-light text-light">
                 {movie.original_language}
               </p>
 
               <h3 className="mb-4 text-lg font-medium text-light">Rating</h3>
+
               <div className="mb-8 flex gap-3">
                 <div>
                   <div className="flex items-center gap-1">
                     <div
-                      className={classNames("h-2 w-2 rounded-full", {
-                        "bg-[#7ED061]": movie.vote_average > 7.4,
-                        "bg-[#FFF961]":
+                      className={classNames('h-2 w-2 rounded-full', {
+                        'bg-[#7ED061]': movie.vote_average > 7.4,
+                        'bg-[#FFF961]':
                           movie.vote_average > 4.9 && movie.vote_average < 7.5,
-                        "bg-[#E84545]": movie.vote_average < 5,
+                        'bg-[#E84545]': movie.vote_average < 5,
                       })}
                     />
                     <p className="text-sm font-light text-light">
@@ -225,8 +206,8 @@ const MoviePage = () => {
               <p className="mb-8 text-sm font-light text-light">
                 {movie.genres
                   .reduce((acc, genre) => {
-                    return acc + genre.name + ", ";
-                  }, "")
+                    return acc + genre.name + ', ';
+                  }, '')
                   .slice(0, -2)}
               </p>
 
@@ -240,6 +221,10 @@ const MoviePage = () => {
               <ReviewsSection />
             </div>
           </div>
+
+          {isPlayerOpened && (
+            <MovieTrailerPopup trailerKey={trailerKey} onClose={handlePopup} />
+          )}
         </section>
       ) : (
         <Loader />
