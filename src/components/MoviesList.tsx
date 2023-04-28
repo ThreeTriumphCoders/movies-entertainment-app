@@ -1,9 +1,9 @@
-import { useState, type FC, useMemo } from "react";
-import { MovieCard } from "./MovieCard";
-import { type MoviesType } from "~/types/Movie";
-import { IconName } from "~/utils/getIconByName";
-import { Category } from "~/types/Category.enum";
-import { useBookmarksContext } from "~/contexts/useBookmarks";
+import { useState, type FC } from 'react';
+import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { type Category } from '~/types/Category.enum';
+import { type MoviesType } from '~/types/Movie';
+import { type IconName } from '~/utils/getIconByName';
+import { MovieCard } from './MovieCard';
 
 type Props = {
   movies: MoviesType;
@@ -13,16 +13,12 @@ type Props = {
 
 export const MoviesList: FC<Props> = ({
   movies = [],
-  title = "Movies",
+  title = 'Movies',
   category,
 }) => {
   const [playingId, setPlayingId] = useState(0);
-  const {
-    bookmarks,
-    isInBookmarks,
-    addToBookmarks,
-    deleteFromBookmarks,
-  } = useBookmarksContext();
+  const { bookmarks, isInBookmarks, addToBookmarks, deleteFromBookmarks } =
+    useBookmarksContext();
 
   const handleAddToBookmarks = (id: number, type: Category) => {
     addToBookmarks(id, type);
@@ -33,7 +29,7 @@ export const MoviesList: FC<Props> = ({
   };
 
   return (
-    <section className="mb-6 pb-8 sm:mb-10 lg:pr-8">
+    <section className="mb-6 pb-8 sm:mb-10">
       <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
 
       <div
@@ -64,7 +60,7 @@ export const MoviesList: FC<Props> = ({
                 <MovieCard
                   key={id}
                   movieId={id}
-                  imagePath={backdrop_path || ""}
+                  imagePath={backdrop_path || ''}
                   title={title || name}
                   releaseDate={release_date || first_air_date}
                   categoryIcon={type as IconName}
