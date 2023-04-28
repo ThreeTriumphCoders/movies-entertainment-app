@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
-import { useEffect, useRef } from 'react';
+import { useEffect,useMemo,useRef } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
-import { type MovieType, type MoviesType } from '~/types/Movie';
+import { type MovieType,type MoviesType } from '~/types/Movie';
 import { type IconName } from '~/utils/getIconByName';
 import { getTrending } from '~/utils/helpers';
 import { TrendingCard } from './TrendingCard';
@@ -19,10 +19,9 @@ export const TrendingList = () => {
     queryFn: () => getTrending(Category.TV),
   });
 
-  const trendings: MoviesType = _.shuffle<MovieType>([
-    ...trendingMovies,
-    ...trendingSeries,
-  ]);
+  const trendings: MoviesType = useMemo(() => {
+    return _.shuffle<MovieType>([...trendingMovies, ...trendingSeries]);
+  }, [trendingMovies, trendingSeries]);
 
   const {
     bookmarks,

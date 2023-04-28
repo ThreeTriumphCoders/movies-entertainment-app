@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useRef,useState,type FC } from 'react';
+import { useEffect,useRef,useState,type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { type Category } from '~/types/Category.enum';
 import { IconName,getIconByName } from '~/utils/getIconByName';
@@ -78,7 +78,11 @@ export const MovieCard: FC<Props> = ({
   const { data: sessionData } = useSession();
   const router = useRouter();
   const [isBookmarked, setIsBookmarked] = useState(isBookmarkedInitial);
-  const { currentId } = useBookmarksContext();
+  const { currentId, bookmarks, isInBookmarks } = useBookmarksContext();
+
+  useEffect(() => {
+    setIsBookmarked(isInBookmarks(movieId));
+  }, [bookmarks]);
 
   const handleBookmarkClick = () => {
     if (sessionData?.user) {

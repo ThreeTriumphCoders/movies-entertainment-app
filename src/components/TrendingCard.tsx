@@ -40,15 +40,12 @@ export const TrendingCard: FC<Props> = ({
   const router = useRouter();
 
   const [isBookmarked, setIsBookmarked] = useState(isBookmarkedInitial);
-  const { currentId } = useBookmarksContext();
+  const { currentId, bookmarks, isInBookmarks } = useBookmarksContext();
 
-  // useEffect(() => {
-  //   const updatedIsInBookmark = isInBookmarks(movieId);
+  useEffect(() => {
+    setIsBookmarked(isInBookmarks(movieId));
+  }, [bookmarks]);
 
-  //   if (updatedIsInBookmark !== isBookmarked) {
-  //     setIsBookmarked(updatedIsInBookmark);
-  //   }
-  // }, [isBookmarked]);
 
   const handleBookmarkClick = () => {
     if (
