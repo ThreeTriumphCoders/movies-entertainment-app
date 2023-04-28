@@ -73,11 +73,11 @@ export const MovieSlider = ({
             imagesPaths.map((path) => (
               <div key={path} className="relative min-w-full min-h-full">
                 <Image
-                  className='transition-all duration-1000'
+                  className='object-cover transition-all duration-1000'
                   alt="movie image"
                   fill
                   priority
-                  sizes="(max-width: 640px) 50vw, 33vw"
+                  sizes={origin}
                   src={`https://www.themoviedb.org/t/p/original${path}`}
                 />
               </div>
@@ -130,8 +130,8 @@ export const MovieSlider = ({
       <div className="
         hidden sm:flex
         absolute bottom-0 left-0 right-0 
-        justify-center items-center gap-2 h-20
-        opacity-0 hover:opacity-100 transition duration-500
+        justify-center items-center gap-2 pb-1
+        opacity-100 transition duration-500
         bg-gradient-to-t from-dark to-10%
       ">
         {imagesPaths.map((path, index) => (
@@ -141,7 +141,7 @@ export const MovieSlider = ({
             onClick={() => setCurrentSlide(index)}
           >
             <Image
-              className='object-cover, transition-all duration-1000'
+              className='object-cover, transition-all duration-1000 rounded-lg'
               alt="movie image"
               fill
               priority

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SvgIcon } from "~/components/SvgIcon";
 import { type MovieType } from "~/types/Movie";
 import { getMovie } from "~/utils/helpers";
@@ -9,6 +9,7 @@ import { ReviewsSection } from "~/components/ReviewsSection";
 import classNames from "classnames";
 import { MovieSlider } from "~/components/MovieSlider";
 import { IconName, getIconByName } from "~/utils/getIconByName";
+import { MovieTrailerPopup } from "~/components/MovieTrailerPopup";
 
 const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
@@ -48,6 +49,10 @@ const MoviePage = () => {
     getData().catch(console.log);
     getMovieFromServer().catch(console.log);
   }, [query]);
+
+  const handlePopup = useCallback(() => {
+    setPlayerOpened(prev => !prev);
+  }, [])
 
   const date = movie?.release_date
   ? movie.release_date.slice(0, 4)
@@ -94,40 +99,42 @@ const MoviePage = () => {
               </div>
 
               <div className="lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3 mb-10 lg:mb-0 max-w-2xl">
-                <div className="flex flex-col gap-3 sm:flex-row justify-between items-center mb-8">
+                <div 
+                  className="
+                    flex flex-wrap flex-col gap-[4%] gap-y-3
+                    sm:flex-row justify-between items-center mb-8
+
+                  "
+                >
                   <button
                     className="
-                      flex justify-center items-center w-full
-                    bg-primary py-2 px-5 text-md lg:text-xl rounded-lg
+                      flex justify-center items-center w-full sm:w-[48%] lg:w-full xl:w-[48%]
+                    bg-primary py-2 pr-5 pl-12 text-md lg:text-xl rounded-lg
                     hover:bg-semi-dark hover:text-light transition
-                    " //! maybe do it like wathc trailer button with text "add to bookmarks" or "in bookmarks"
+                    relative
+                    "
                   >
-                    {/* <SvgIcon
-                      className="
-                        h-[32px] w-[32px]
-                        cursor-pointer fill-none
-                        stroke-dark
-                        stroke-[1.5] hover:stroke-dark
-                        active:fill-light
-                      "
-                      viewBox="-10 -9 38 38"
-                    >
-                      {getIconByName(IconName.BOOKMARK)}
-                    </SvgIcon> */}
+                    <SvgIcon className="h-5 w-5 fill-light absolute left-4" viewBox="0 0 20 20">
+                        {getIconByName(IconName.BOOKMARK)}
+                    </SvgIcon>
 
-                    Add to bookmarks
+                    Add&nbsp;to&nbsp;bookmarks {/* Or "In bookmarks" */}
                   </button>
 
                   {trailerKey && (
                     <button 
                       className="
-                        flex justify-center items-center w-full
-                      bg-primary py-2 px-5 text-md lg:text-xl rounded-lg
+                        flex justify-center items-center w-full sm:w-[48%] lg:w-full xl:w-[48%]
+                      bg-[#ff0000] py-2 pr-5 pl-12 text-md lg:text-xl rounded-lg
                       hover:bg-semi-dark hover:text-light transition
+                        relative
                       "
-                      onClick={() => setPlayerOpened(true)}
+                      onClick={handlePopup}
                     >
-                      Watch trailer
+                      <SvgIcon className="h-7 w-7 fill-light absolute left-3" viewBox="0 0 32 32">
+                        {getIconByName(IconName.YT)}
+                      </SvgIcon>
+                      Watch&nbsp;trailer
                     </button>
                   )}
                 </div>
@@ -219,34 +226,7 @@ const MoviePage = () => {
             </div>
 
             {isPlayerOpened && (
-              <div 
-                className="
-                  absolute top-0 bottom-0 left-0 right-0 
-                bg-dark bg-opacity-75
-                  flex items-center justify-center p-4 sm:p-20 lg:p-40
-                "
-                onClick={() => setPlayerOpened(false)}
-              >
-                <button
-                  className="absolute top-4 right-4"
-                >
-                  <SvgIcon className="w-8 h-8 fill-light" viewBox="0 0 30 30">
-                    {getIconByName(IconName.CLOSE)}
-                  </SvgIcon>
-                </button>
-
-                <div className="relative w-full pt-[56.25%]">
-                  <Loader />
-
-                  <iframe
-                    className="absolute h-full w-full top-0"
-                    src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
-                </div>
-              </div>
+              <MovieTrailerPopup trailerKey={trailerKey} onClose={handlePopup}/>
             )}
           </section>
         )
