@@ -1,7 +1,7 @@
 export enum IconName {
   NONE = '',
-  MOVIE = 'Movie',
-  TV = 'TV Serie',
+  MOVIE = 'movie',
+  TV = 'tv',
   PLAY = 'Play',
   SEARCH = 'Search',
   BOOKMARK = 'Bookmark',

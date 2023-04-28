@@ -1,17 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import google from '../../../public/images/google.svg';
-import github from '../../../public/images/github.svg';
+import { type NextPage } from 'next';
+import { type BuiltInProviderType } from 'next-auth/providers';
+import { signIn, useSession, type LiteralUnion } from 'next-auth/react';
 import Image from 'next/image';
-import { type NextPage } from "next";
-import { useRouter } from "next/router";
-import { type LiteralUnion, signIn, useSession } from "next-auth/react";
-import { type BuiltInProviderType } from "next-auth/providers";
-import { useEffect, useState } from "react";
-import { env } from "process";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { env } from 'process';
+import { useEffect } from 'react';
 import { Loader } from '~/components/Loader';
 import { SvgIcon } from '~/components/SvgIcon';
 import { IconName, getIconByName } from '~/utils/getIconByName';
+import github from '../../../public/images/github.svg';
+import google from '../../../public/images/google.svg';
+
+const buttonClasses =
+  'flex w-full items-center justify-center gap-x-5 rounded-lg border border-grey py-4 font-light transition-all hover:border-primary hover:bg-primary hover:text-dark font-medium';
 
 const SignIn: NextPage = ({}) => {
   const { status } = useSession();
@@ -19,8 +23,8 @@ const SignIn: NextPage = ({}) => {
 
   useEffect(() => {
     const redirectToHomePage = async () => {
-      if (status === "authenticated") {
-        await router.push("/").catch(() => console.error("error occured"));
+      if (status === 'authenticated') {
+        await router.push('/').catch(() => console.error('error occured'));
       }
     };
 
@@ -30,47 +34,53 @@ const SignIn: NextPage = ({}) => {
   const handleSignInClick = (provider: LiteralUnion<BuiltInProviderType>) => {
     signIn(provider, {
       callbackUrl: env.NEXTAUTH_URL,
-    })
-      .catch((err) => console.error(err))
+    }).catch((err) => console.error(err));
   };
 
   return (
-    <section className="flex flex-col gap-20 justify-center items-center bg-dark h-screen">
-      {status === "loading"
-        ? <Loader />
-        : (
-          <>
-            <SvgIcon className='fill-primary w-8 h-8' viewBox='0 0 32 32'>
+    <section className="flex h-screen flex-col items-center justify-center gap-20 bg-dark">
+      {status === 'loading' ? (
+        <Loader />
+      ) : (
+        <>
+          <Link href="/">
+            <SvgIcon className="h-8 w-8 fill-primary" viewBox="0 0 32 32">
               {getIconByName(IconName.LOGO)};
             </SvgIcon>
+          </Link>
 
-            <div className="flex flex-col bg-semi-dark px-8 pt-8 pb-28 rounded-3xl w-4/5 sm:w-1/2 lg:w-1/3 xl:w-1/4 font-body text-light">
-              <h1 className="font-body text-3xl text-center mb-16">
-                Login
-              </h1>
+          <div className="flex w-4/5 flex-col rounded-3xl bg-semi-dark px-8 pb-28 pt-8 font-body text-light sm:w-1/2 lg:w-1/3 xl:w-1/4">
+            <h1 className="mb-16 text-center font-body text-3xl">Login</h1>
 
-              <div className="flex flex-col gap-y-6">
-                <button 
-                  type="button" 
-                  className="flex gap-x-5 justify-center items-center font-light border border-grey rounded-lg w-full py-4 hover:bg-primary hover:border-primary hover:text-dark transition-all"
-                  onClick={() => void handleSignInClick('google')}
-                >
-                  <Image src={google} alt="google" width="28" height="28" />
-                  Login with Google
-                </button>
+            <div className="flex flex-col gap-y-6">
+              <button
+                type="button"
+                className={buttonClasses}
+                onClick={() => void handleSignInClick('google')}
+              >
+                <Image src={google} alt="google" width="28" height="28" />
+                Login with Google
+              </button>
 
-                <button 
-                  type="button" 
-                  className="flex gap-x-5 justify-center items-center font-light border border-grey rounded-lg w-full py-4 hover:bg-primary hover:border-primary hover:text-dark transition-all"
-                  onClick={() => void handleSignInClick('github')}
-                >
+              <button
+                type="button"
+                className={buttonClasses}
+                onClick={() => void handleSignInClick('github')}
+              >
                 <Image src={github} alt="google" width="28" height="28" />
-                  Login with GitHub
-                </button>
-              </div>
+                Login with GitHub
+              </button>
+
+              <Link
+                href="/"
+                className="text-center transition-all hover:text-primary"
+              >
+                Back to Homepage
+              </Link>
             </div>
-          </>
-        )}
+          </div>
+        </>
+      )}
     </section>
   );
 };

@@ -1,13 +1,21 @@
-import { type NextPage } from "next";
-import Head from "next/head";
-import { TrendingList } from "~/components/TrendingList";
-import { MoviesList } from "~/components/MoviesList";
-import { useGetPopularMovies, useGetPopularSeries } from "~/utils/use-queries";
-import Link from "next/link";
+import { useQuery } from '@tanstack/react-query';
+import { type NextPage } from 'next';
+import Head from 'next/head';
+import { MoviesList } from '~/components/MoviesList';
+import { TrendingList } from '~/components/TrendingList';
+import { Category } from '~/types/Category.enum';
+import { getPopular } from '~/utils/helpers';
 
 const Home: NextPage = () => {
-  const [popularMovies] = useGetPopularMovies();
-  const [popularSeries] = useGetPopularSeries();
+  const { data: popularMovies = [] } = useQuery({
+    queryKey: ['popularMovies'],
+    queryFn: () => getPopular(1, Category.MOVIE),
+  });
+
+  const { data: popularSeries = [] } = useQuery({
+    queryKey: ['popularSeries'],
+    queryFn: () => getPopular(1, Category.TV),
+  });
 
   return (
     <>
@@ -19,18 +27,16 @@ const Home: NextPage = () => {
 
       <TrendingList />
 
-      <MoviesList 
-        movies={popularMovies.slice(0, 12)} 
-        title = 'Popular movies'
-        category = 'Movie'
-        apiPath = 'movie'
+      <MoviesList
+        movies={popularMovies.slice(0, 12)}
+        title="Popular movies"
+        category={Category.MOVIE}
       />
 
-      <MoviesList 
-        movies={popularSeries.slice(0, 12)} 
-        title = 'Popular series'
-        category = 'TV Serie'
-        apiPath = 'tv'
+      <MoviesList
+        movies={popularSeries.slice(0, 12)}
+        title="Popular series"
+        category={Category.TV}
       />
     </>
   );
