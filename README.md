@@ -48,15 +48,15 @@ $ cd movies-entertainment-app
 $ npm install
 ```
 
-4. Push current Prisma models to the database:
-```bash
-$ npx prisma db push
-```
-
-5. Add all needed Environmental variables to `.env.` You can use `.env.example` as template.
+4. Add all needed Environmental variables to `.env.` You can use `.env.example` as template.
   
   - [How to setup GitHub OAuth](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)
   - [How to setup Google OAuth](https://support.google.com/cloud/answer/6158849?hl=en)
+
+5. Push current Prisma models to the database:
+```bash
+$ npx prisma db push
+```
 
 6. Finally start the development server:
 ```bash
