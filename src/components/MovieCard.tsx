@@ -4,11 +4,11 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect,useRef,useState,type FC } from 'react';
+import { useEffect, useRef, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { type Category } from '~/types/Category.enum';
-import { IconName,getIconByName } from '~/utils/getIconByName';
-import { getImages,getTrailerKey } from '~/utils/helpers';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { getImages, getTrailerKey } from '~/utils/helpers';
 import { Loader } from './Loader';
 import { SvgIcon } from './SvgIcon';
 
@@ -109,7 +109,7 @@ export const MovieCard: FC<Props> = ({
         className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]"
       >
         <>
-          <div className="absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse bg-semi-dark" />
+          <div className="absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse  bg-semi-dark" />
 
           {!imagePath && (
             <div
@@ -142,8 +142,7 @@ export const MovieCard: FC<Props> = ({
 
           <div
             className="
-              absolute bottom-0 left-0
-              right-0 top-0
+              absolute bottom-0 left-0 right-0 top-0
               flex items-center justify-center bg-dark bg-opacity-50
               opacity-0 transition-opacity hover:opacity-100
             "
