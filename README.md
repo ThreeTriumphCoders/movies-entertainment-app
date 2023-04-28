@@ -69,6 +69,6 @@ $ npm run dev
 
 👩‍💻 Anastasiia Kuznetsova [@kuznetsova-anastasiia](https://github.com/kuznetsova-anastasiia)
 
-👨‍💻 Kirill Vypirovsky [@kirill-vypirovskyi](https://github.com/kirill-vypirovskyi)
+👨‍💻 Kirill Vypirovskyi [@kirill-vypirovskyi](https://github.com/kirill-vypirovskyi)
 
 👨‍💻 Stanislav Korchevskyi [@stanislavcodes](https://github.com/stanislavcodes)
