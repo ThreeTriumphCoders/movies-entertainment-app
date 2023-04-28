@@ -8,7 +8,7 @@ import { ReviewsSection } from '~/components/ReviewsSection';
 import { SvgIcon } from '~/components/SvgIcon';
 import { type MovieType } from '~/types/Movie';
 import { IconName, getIconByName } from '~/utils/getIconByName';
-import { getMovie, getImages, getTrailerKey } from '~/utils/helpers';
+import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
 const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
