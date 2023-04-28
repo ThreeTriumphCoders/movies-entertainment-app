@@ -32,8 +32,6 @@ export const useLocalTheme = (): [ThemeType, SetTheme] => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Only set the initial value on the client
-      console.log('trigger')
       setTheme(getTheme());
     }
   }, []);

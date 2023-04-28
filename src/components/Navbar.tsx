@@ -11,7 +11,6 @@ import { LangType } from "~/types/LangType";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import classNames from "classnames";
-import { useLocalTheme } from "~/utils/useLocalTheme";
 import { useLocalLang } from "~/utils/useLocalLang";
 import { useThemeContext } from "~/utils/ThemeContext";
 
@@ -55,7 +54,10 @@ export const Navbar = () => {
       lg:bottom-0 lg:left-0
       "
     >
-      <div className="bg-semi-dark flex lg:flex-col justify-between p-4 lg:p-7 items-center sm:rounded-xl lg:rounded-[20px] h-full">
+      <div className={classNames(
+        "bg-grey flex lg:flex-col justify-between p-4 lg:p-7 items-center sm:rounded-xl lg:rounded-[20px] h-full",
+        { 'bg-semi-dark': themeType === ThemeType.Dark }
+      )}>
         <Link href="/">
           <SvgIcon 
             className="h-6 w-6 sm:w-8 sm:h-8 fill-primary hover:opacity-75 transition"
@@ -93,7 +95,10 @@ export const Navbar = () => {
         <div className="flex items-center gap-4 lg:flex-col lg:mt-32">
           <button
             type="button"
-            className="text-grey text-sm sm:text-lg hover:text-primary transition"
+            className={classNames(
+              "text-grey text-sm sm:text-lg hover:text-primary transition",
+              { 'text-light': themeType === ThemeType.Light }
+            )}
             onClick={handleLangChange}
           >
             {lang.toUpperCase()}
@@ -112,8 +117,8 @@ export const Navbar = () => {
               </SvgIcon>
             )}
             {themeType === ThemeType.Light && (
-              <SvgIcon className="fill-grey hover:fill-primary transition w-6 h-6 overflow-visible">
-                {getIconByName(IconName.LIGHT)}
+              <SvgIcon className="fill-light hover:fill-primary transition w-6 h-6 overflow-visible">
+                {getIconByName(IconName.SUN)}
               </SvgIcon>
             )}
           </button>

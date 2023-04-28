@@ -34,7 +34,7 @@ export const ScrollUpButton = () => {
       onClick={() => window.scrollTo(0, 0)}
     >
       <SvgIcon 
-        className="h-12 w-12 rounded-full bg-semi-dark hover:bg-primary transition-colors fill-dark" 
+        className="h-12 w-12 rounded-full bg-semi-dark opacity-60 hover:opacity-100 hover:bg-primary transition-colors fill-dark" 
         viewBox="0 0 48 48"
       >
         {getIconByName(IconName.ARROW_UP)}

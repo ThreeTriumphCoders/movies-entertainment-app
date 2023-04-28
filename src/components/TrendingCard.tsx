@@ -84,7 +84,7 @@ export const TrendingCard: FC<Props> = ({
               </div>
             </div>
 
-            <h3 className='text-sm sm:text-lg leading-[18px] sm:leading-6 font-medium'>
+            <h3 className='text-sm text-light sm:text-lg leading-[18px] sm:leading-6 font-medium'>
               {title}
             </h3>
           </div>

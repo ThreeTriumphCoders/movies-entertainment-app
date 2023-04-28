@@ -8,9 +8,13 @@ import { useState } from 'react';
 import { Loader } from '~/components/Loader';
 import { SvgIcon } from '~/components/SvgIcon';
 import { IconName, getIconByName } from '~/utils/getIconByName';
+import { useThemeContext } from '~/utils/ThemeContext';
+import classNames from 'classnames';
+import { ThemeType } from '~/types/ThemeType';
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { themeType } = useThemeContext();
 
   const handleSignIn = async (provider: string) => {
     try {
@@ -24,7 +28,12 @@ const SignIn = () => {
   }
 
   return (
-    <section className="flex flex-col gap-20 justify-center items-center bg-dark h-screen">
+    <section 
+      className={classNames(
+        "flex flex-col gap-20 justify-center items-center h-screen",
+        { 'bg-dark': themeType === ThemeType.Dark }
+      )}
+    >
       {isLoading
         ? <Loader />
         : (
@@ -33,7 +42,12 @@ const SignIn = () => {
               {getIconByName(IconName.LOGO)};
             </SvgIcon>
 
-            <div className="flex flex-col bg-semi-dark px-8 pt-8 pb-28 rounded-3xl w-4/5 sm:w-1/2 lg:w-1/3 xl:w-1/4 font-body text-light">
+            <div 
+              className={classNames(
+                "flex flex-col bg-grey px-8 pt-8 pb-28 rounded-3xl w-4/5 sm:w-1/2 lg:w-1/3 xl:w-1/4 font-body text-light",
+                { 'bg-semi-dark': themeType === ThemeType.Dark }
+              )}
+            >
               <h1 className="font-body text-3xl text-center mb-16">
                 Login
               </h1>
@@ -41,7 +55,10 @@ const SignIn = () => {
               <div className="flex flex-col gap-y-6">
                 <button 
                   type="button" 
-                  className="flex gap-x-5 justify-center items-center font-light border border-grey rounded-lg w-full py-4 hover:bg-primary hover:border-primary hover:text-dark transition-all"
+                  className={classNames(
+                    "flex gap-x-5 justify-center items-center font-light border border-grey rounded-lg w-full py-4 hover:bg-primary hover:border-primary hover:text-dark transition-all",
+                    { 'border-light': themeType === ThemeType.Light }
+                  )}
                   onClick={() => void handleSignIn('google')}
                 >
                   <Image src={google} alt="google" width="28" height="28" />
@@ -50,7 +67,10 @@ const SignIn = () => {
 
                 <button 
                   type="button" 
-                  className="flex gap-x-5 justify-center items-center font-light border border-grey rounded-lg w-full py-4 hover:bg-primary hover:border-primary hover:text-dark transition-all"
+                  className={classNames(
+                    "flex gap-x-5 justify-center items-center font-light border border-grey rounded-lg w-full py-4 hover:bg-primary hover:border-primary hover:text-dark transition-all",
+                    { 'border-light': themeType === ThemeType.Light }
+                  )}
                   onClick={() => void handleSignIn('github')}
                 >
                 <Image src={github} alt="google" width="28" height="28" />
