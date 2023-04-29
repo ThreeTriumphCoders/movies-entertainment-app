@@ -7,8 +7,8 @@ import { ThemeType } from "~/types/ThemeType";
 import { useThemeContext } from "~/utils/ThemeContext";
 
 type Props = {
-  children : React.ReactNode,
-}
+  children: React.ReactNode;
+};
 
 export const Layout: React.FC<Props> = ({ children }) => {
   const { themeType } = useThemeContext();
@@ -24,20 +24,20 @@ export const Layout: React.FC<Props> = ({ children }) => {
   }, [themeType])
 
   return (
-    <main 
-      className={classNames(
-        "min-h-screen font-body lg:pl-40 px-4 sm:px-6 py-16 sm:pt-[116px] lg:pt-0",
-        {
-          'bg-dark text-light' : themeType === ThemeType.Dark,
-        }
-      )}
+    <main
+      className="
+        min-h-screen bg-dark px-4 pb-8 pt-16
+        font-body text-light selection:bg-primary 
+        selection:text-dark sm:px-6 sm:pt-[116px] lg:pl-40 lg:pt-0
+      "
     >
       <Navbar />
+
       <Searchbar />
-      <div className="pb-10">
-        {children}
-      </div>
+
+      <div className="pb-10">{children}</div>
+
       <ScrollUpButton />
     </main>
   );
-}
+};
