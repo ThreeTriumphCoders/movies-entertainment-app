@@ -4,11 +4,11 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState, type FC } from 'react';
+import { useEffect,useRef,useState,type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { type Category } from '~/types/Category.enum';
-import { IconName, getIconByName } from '~/utils/getIconByName';
-import { getImages, getTrailerKey } from '~/utils/helpers';
+import { IconName,getIconByName } from '~/utils/getIconByName';
+import { getImages,getTrailerKey } from '~/utils/helpers';
 import { Loader } from './Loader';
 import { SvgIcon } from './SvgIcon';
 
@@ -39,14 +39,25 @@ export const MovieCard: FC<Props> = ({
   onBookmarksAdd,
   onBookmarksRemove,
 }) => {
-  const { data: newTrailerKey = '' } = useQuery({
+  const {
+    data: trailerKey = '',
+    refetch: loadTrailerKey,
+    isSuccess: isTrailerKeyLoaded,
+  } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => getTrailerKey(movieId, category),
+    enabled: false,
   });
 
-  const { isError: isImagesError, data: moreImagePaths = [] } = useQuery({
+  const {
+    isError: isImagesError,
+    data: moreImagePaths = imagePath ? [imagePath] : [],
+    refetch: loadMoreImages,
+    isSuccess: isImagesLoaded,
+  } = useQuery({
     queryKey: [`${movieId}-images`],
     queryFn: () => getImages(movieId, category),
+    enabled: false,
   });
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -59,7 +70,12 @@ export const MovieCard: FC<Props> = ({
     );
   };
 
-  const startSlidesAnimation = () => {
+  const startSlidesAnimation = async () => {
+    if (!isImagesLoaded) {
+      await loadMoreImages();
+      await loadTrailerKey();
+    }
+
     if (!isImagesError && moreImagePaths.length > 0) {
       setTimeout(() => {
         changeCurrentImageIndex();
@@ -101,7 +117,7 @@ export const MovieCard: FC<Props> = ({
   return (
     <div
       className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]"
-      onMouseEnter={startSlidesAnimation}
+      onMouseEnter={() => void startSlidesAnimation()}
       onMouseLeave={stopSlidesAnimation}
     >
       <div
@@ -147,7 +163,7 @@ export const MovieCard: FC<Props> = ({
               opacity-0 transition-opacity hover:opacity-100
             "
           >
-            {newTrailerKey ? (
+            {trailerKey ? (
               <div
                 className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg transition hover:bg-opacity-50"
                 onClick={() => onPlayingChange(movieId)}
@@ -196,10 +212,10 @@ export const MovieCard: FC<Props> = ({
             <div className="absolute top-0 w-full max-w-full pt-[56.25%]">
               <Loader />
 
-              {newTrailerKey ? (
+              {trailerKey ? (
                 <iframe
                   className="absolute left-0 top-0 h-full w-full"
-                  src={`https://www.youtube.com/embed/${newTrailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
                   title="YouTube video player"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
