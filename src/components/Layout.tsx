@@ -25,11 +25,10 @@ export const Layout: React.FC<Props> = ({ children }) => {
 
   return (
     <main
-      className="
-        min-h-screen bg-dark px-4 pb-8 pt-16
-        font-body text-light selection:bg-primary 
-        selection:text-dark sm:px-6 sm:pt-[116px] lg:pl-40 lg:pt-0
-      "
+      className={classNames(
+        "min-h-screen px-4 pb-8 pt-16 font-body selection:bg-primary selection:text-dark sm:px-6 sm:pt-[116px] lg:pl-40 lg:pt-0",
+        { 'bg-dark text-light': themeType === ThemeType.Dark }
+      )}
     >
       <Navbar />
 
