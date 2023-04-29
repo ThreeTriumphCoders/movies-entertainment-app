@@ -1,12 +1,17 @@
 @tailwind base;
 
+:root {
+  scroll-behavior: smooth;
+  --MyBackColor: transparent;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background-color: var(--MyBackColor);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -20,7 +25,3 @@
 
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  scroll-behavior: smooth;
-}

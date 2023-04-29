@@ -1,12 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navbar } from "./Navbar";
 import { Searchbar } from "./Searchbar";
 import { ScrollUpButton } from "./ScrollUpButton";
 import classNames from "classnames";
 import { ThemeType } from "~/types/ThemeType";
-import { useLocalTheme } from "~/utils/useLocalTheme";
 import { useThemeContext } from "~/utils/ThemeContext";
-// import { useTheme } from "~/utils/useLocalStorage";
 
 type Props = {
   children : React.ReactNode,
@@ -14,6 +12,16 @@ type Props = {
 
 export const Layout: React.FC<Props> = ({ children }) => {
   const { themeType } = useThemeContext();
+
+  useEffect(() => {
+    if (themeType === ThemeType.Dark) {
+      document.documentElement.style.setProperty("--MyBackColor", "#171717");
+
+      return;
+    }
+
+    document.documentElement.style.setProperty("--MyBackColor", "transparent");
+  }, [themeType])
 
   return (
     <main 

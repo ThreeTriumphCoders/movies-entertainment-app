@@ -21,8 +21,9 @@ export const NavbarLink: React.FC<Props> = (props) => {
         className={classNames(
           "fill-grey hover:fill-primary transition h-4 w-4 sm:h-5 sm:w-5",
           {
-            'fill-light': themeType === ThemeType.Light,
-            'fill-primary': pathname === href,
+            'fill-light hover:fill-semi-dark': themeType === ThemeType.Light,
+            'fill-semi-dark hover:fill-dark': pathname === href && themeType === ThemeType.Light,
+            'fill-light': pathname === href,
           }
         )}
       >

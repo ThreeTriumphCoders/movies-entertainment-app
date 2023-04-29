@@ -7,18 +7,15 @@ import { IconName, getIconByName } from "~/utils/getIconByName";
 import { SvgIcon } from "./SvgIcon";
 import avatar from '../../public/images/avatar.svg';
 import { ThemeType } from "~/types/ThemeType";
-import { LangType } from "~/types/LangType";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import classNames from "classnames";
-import { useLocalLang } from "~/utils/useLocalLang";
 import { useThemeContext } from "~/utils/ThemeContext";
 
 
 export const Navbar = () => {
   const [isSignOut, setIsSignOut] = useState(false);
   const { data: sessionData } = useSession();
-  const [lang, setLang] = useLocalLang();
 
   const { themeType, setCurrentTheme } = useThemeContext();
   console.log('navbar', themeType);
@@ -33,16 +30,6 @@ export const Navbar = () => {
     setCurrentTheme(ThemeType.Dark);
   }
 
-  const handleLangChange = () => {
-    if (lang === LangType.ENG) {
-      setLang(LangType.UA);
-
-      return;
-    }
-
-    setLang(LangType.ENG);
-  }
-
   const router = useRouter();
 
   return (
@@ -55,19 +42,24 @@ export const Navbar = () => {
       "
     >
       <div className={classNames(
-        "bg-grey flex lg:flex-col justify-between p-4 lg:p-7 items-center sm:rounded-xl lg:rounded-[20px] h-full",
+        "bg-primary flex lg:flex-col justify-between p-4 lg:p-7 items-center sm:rounded-xl lg:rounded-[20px] h-full",
         { 'bg-semi-dark': themeType === ThemeType.Dark }
       )}>
         <Link href="/">
           <SvgIcon 
-            className="h-6 w-6 sm:w-8 sm:h-8 fill-primary hover:opacity-75 transition"
+            className={classNames(
+              "h-6 w-6 sm:w-8 sm:h-8 fill-primary hover:opacity-75 transition",
+              {
+                'fill-semi-dark': themeType === ThemeType.Light,
+              }
+            )}
             viewBox="0 0 32 26"
           >
             {getIconByName(IconName.LOGO)}
           </SvgIcon>
         </Link>
 
-        <ul className="flex lg:flex-col gap-2 sm:gap-4">
+        <ul className="flex lg:flex-col gap-2 sm:gap-4 lg:mb-32">
           <li>
             <NavbarLink href="/">
               {getIconByName(IconName.HOME)}
@@ -92,44 +84,46 @@ export const Navbar = () => {
           )}
         </ul>
 
-        <div className="flex items-center gap-4 lg:flex-col lg:mt-32">
-          <button
-            type="button"
-            className={classNames(
-              "text-grey text-sm sm:text-lg hover:text-primary transition",
-              { 'text-light': themeType === ThemeType.Light }
-            )}
-            onClick={handleLangChange}
-          >
-            {lang.toUpperCase()}
-          </button>
-          <button 
-            type="button"
-            className="pb-1 flex justify-center items-center"
-            onClick={handleThemeChange}
-          >
-            {/* <SvgIcon className="fill-grey hover:fill-primary transition w-6 h-6 overflow-visible">
-              {getIconByName(icon)}
-            </SvgIcon> */}
-            {themeType === ThemeType.Dark && (
-              <SvgIcon className="fill-grey hover:fill-primary transition w-6 h-6 overflow-visible">
-                {getIconByName(IconName.MOON)}
-              </SvgIcon>
-            )}
-            {themeType === ThemeType.Light && (
-              <SvgIcon className="fill-light hover:fill-primary transition w-6 h-6 overflow-visible">
-                {getIconByName(IconName.SUN)}
-              </SvgIcon>
-            )}
-          </button>
-        </div>
+        <button 
+          type="button"
+          className="flex justify-center items-center"
+          onClick={handleThemeChange}
+        >
+          {themeType === ThemeType.Dark && (
+            <SvgIcon className="fill-grey hover:fill-primary transition w-4 h-4 sm:w-6 sm:h-6 overflow-visible">
+              {getIconByName(IconName.MOON)}
+            </SvgIcon>
+          )}
+          {themeType === ThemeType.Light && (
+            <SvgIcon className="fill-light hover:fill-semi-dark transition w-4 h-4 sm:w-6 sm:h-6 overflow-visible">
+              {getIconByName(IconName.SUN)}
+            </SvgIcon>
+          )}
+        </button>
 
         <button onClick={sessionData ? () => setIsSignOut(state => !state) : () => void router.push('/auth/signin')}>
-            <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-primary rounded-full border-light border relative overflow-hidden">
+            <div 
+              className={classNames(
+                "w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-primary rounded-full border-light border relative overflow-hidden",
+                { 
+                  'bg-semi-dark': themeType === ThemeType.Light,
+                }
+              )}
+            >
               {sessionData ? (
                 <Image src={sessionData?.user?.image ?? avatar} alt={sessionData?.user?.name ?? "user name"} fill />
               ) : (
-                <Image src={avatar} alt="profile avatar" fill className="p-0.5"/>
+                <SvgIcon 
+                  className={classNames(
+                    'px-1 pt-1',
+                    {
+                      'fill-light': themeType === ThemeType.Light,
+                    }
+                  )}
+                  viewBox="0 0 24 24"
+                >
+                  {getIconByName(IconName.AVATAR)}
+                </SvgIcon>
               )}
             </div>
         </button>
