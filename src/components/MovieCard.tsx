@@ -11,6 +11,8 @@ import { IconName,getIconByName } from '~/utils/getIconByName';
 import { getImages,getTrailerKey } from '~/utils/helpers';
 import { Loader } from './Loader';
 import { SvgIcon } from './SvgIcon';
+import { useThemeContext } from '~/utils/ThemeContext';
+import { ThemeType } from '~/types/ThemeType';
 
 type Props = {
   movieId: number;
@@ -39,6 +41,8 @@ export const MovieCard: FC<Props> = ({
   onBookmarksAdd,
   onBookmarksRemove,
 }) => {
+  const { themeType } = useThemeContext();
+
   const { data: newTrailerKey = '' } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => getTrailerKey(movieId, category),
@@ -213,7 +217,7 @@ export const MovieCard: FC<Props> = ({
         </>
       </div>
 
-      <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
+      <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:text-[13px] sm:leading-4">
         <p>{releaseDate.slice(0, 4)}</p>
 
         <p className="-translate-y-1/4 select-none font-semibold opacity-60">
@@ -221,7 +225,12 @@ export const MovieCard: FC<Props> = ({
         </p>
 
         <div className="flex items-center gap-1">
-          <SvgIcon className="h-2.5 w-2.5 fill-light">
+          <SvgIcon 
+            className={classNames(
+              "h-2.5 w-2.5 fill-light",
+              { 'fill-semi-dark': themeType === ThemeType.Light }
+            )}
+          >
             {getIconByName(categoryIcon)}
           </SvgIcon>
 
