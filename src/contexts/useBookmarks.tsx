@@ -1,8 +1,14 @@
-import { type Bookmark } from "@prisma/client";
-import { useSession } from "next-auth/react";
-import { createContext,useCallback,useContext,useState,type FC } from "react";
-import { type Category } from "~/types/Category.enum";
-import { api } from "~/utils/api";
+import { type Bookmark } from '@prisma/client';
+import { useSession } from 'next-auth/react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  type FC,
+} from 'react';
+import { type Category } from '~/types/Category.enum';
+import { api } from '~/utils/api';
 
 type BookmarksContextValue = {
   currentId: number | null;
@@ -13,7 +19,7 @@ type BookmarksContextValue = {
 };
 
 const BookmarksContext = createContext<BookmarksContextValue | undefined>(
-  undefined
+  undefined,
 );
 
 interface BookmarksContextProviderProps {
@@ -31,7 +37,7 @@ export const BookmarksContextProvider: FC<BookmarksContextProviderProps> = ({
       enabled: sessionData?.user !== undefined,
       onSuccess: () => setCurrentId(null),
       onError: () => setCurrentId(null),
-    }
+    },
   );
 
   const createBookmark = api.bookmark.create.useMutation({
@@ -52,9 +58,12 @@ export const BookmarksContextProvider: FC<BookmarksContextProviderProps> = ({
     deleteBookmark.mutate({ movieId });
   }, []);
 
-  const isInBookmarks = useCallback((movieId: number) => {
-    return bookmarks.some((bookmark) => bookmark.movieId === movieId);
-  }, [bookmarks]);
+  const isInBookmarks = useCallback(
+    (movieId: number) => {
+      return bookmarks.some((bookmark) => bookmark.movieId === movieId);
+    },
+    [bookmarks],
+  );
 
   return (
     <BookmarksContext.Provider
@@ -75,7 +84,7 @@ export const useBookmarksContext = () => {
   const bookmarksContext = useContext(BookmarksContext);
 
   if (bookmarksContext === undefined) {
-    throw new Error("useBookmarksContext must be inside a BookmarksContext");
+    throw new Error('useBookmarksContext must be inside a BookmarksContext');
   }
 
   return bookmarksContext;
