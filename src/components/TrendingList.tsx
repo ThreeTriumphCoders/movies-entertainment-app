@@ -75,8 +75,8 @@ export const TrendingList = () => {
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault();
 
-      const setTimer = () => {
-        setTimeout(() => (isScrolling.current = false), 500);
+      const setTimer = (time = 500) => {
+        setTimeout(() => (isScrolling.current = false), time);
       };
 
       if (isScrolling.current) return;
@@ -98,7 +98,7 @@ export const TrendingList = () => {
       if (isEnd && delta === 1) {
         currentRef?.scrollTo({ left: 0, behavior: 'smooth' });
 
-        setTimer();
+        setTimer(1000);
         return;
       }
 
@@ -108,7 +108,7 @@ export const TrendingList = () => {
           behavior: 'smooth',
         });
 
-        setTimer();
+        setTimer(1000);
         return;
       }
 
