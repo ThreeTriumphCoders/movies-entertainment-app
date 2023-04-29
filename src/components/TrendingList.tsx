@@ -7,8 +7,13 @@ import { type MovieType, type MoviesType } from '~/types/Movie';
 import { type IconName } from '~/utils/getIconByName';
 import { getTrending } from '~/utils/helpers';
 import { TrendingCard } from './TrendingCard';
+import classNames from 'classnames';
+import { useThemeContext } from '~/utils/ThemeContext';
+import { ThemeType } from '~/types/ThemeType';
 
 export const TrendingList = () => {
+  const { themeType } = useThemeContext();
+
   const { isError: isMoviesError, data: trendingMovies = [] } = useQuery({
     queryKey: ['trendingMovies'],
     queryFn: () => getTrending(Category.MOVIE),
@@ -191,7 +196,12 @@ export const TrendingList = () => {
                 ))}
           </div>
 
-          <div className="pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l from-dark to-0%" />
+          <div 
+            className={classNames(
+              "pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l from-dark to-0%",
+              { 'from-[#fff]': themeType === ThemeType.Light }
+            )}
+          />
         </section>
       )}
     </>
