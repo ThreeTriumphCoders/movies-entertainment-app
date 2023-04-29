@@ -42,7 +42,7 @@ const BookmarksPage = () => {
   return (
     <section>
       <MoviesList
-        title={isError ? 'No Bookmarks yet' : 'Bookmarks'}
+        title={isError || !movies.length ? 'No Bookmarks yet' : 'Bookmarks'}
         movies={movies}
       />
     </section>
