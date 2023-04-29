@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import _ from 'lodash';
-import { useEffect,useMemo,useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
-import { type MovieType,type MoviesType } from '~/types/Movie';
+import { type MovieType, type MoviesType } from '~/types/Movie';
 import { type IconName } from '~/utils/getIconByName';
 import { getTrending } from '~/utils/helpers';
 import { TrendingCard } from './TrendingCard';
@@ -23,12 +23,8 @@ export const TrendingList = () => {
     return _.shuffle<MovieType>([...trendingMovies, ...trendingSeries]);
   }, [trendingMovies, trendingSeries]);
 
-  const {
-    bookmarks,
-    isInBookmarks,
-    addToBookmarks,
-    deleteFromBookmarks,
-  } = useBookmarksContext();
+  const { bookmarks, isInBookmarks, addToBookmarks, deleteFromBookmarks } =
+    useBookmarksContext();
 
   const handleAddToBookmarks = (id: number, type: Category) => {
     addToBookmarks(id, type);
@@ -40,27 +36,24 @@ export const TrendingList = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const currentRef = scrollRef.current;
+  const isScrolling = useRef(false);
 
   useEffect(() => {
-    if (!scrollRef.current) {
+    if (!currentRef) {
       return;
     }
 
     const scroll = () => {
-      const {
-        scrollLeft = 0,
-        scrollWidth = 0,
-        clientWidth = 0,
-      } = scrollRef.current as HTMLDivElement;
+      const { scrollLeft = 0, scrollWidth = 0, clientWidth = 0 } = currentRef;
 
       const isEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 5;
 
       if (isEnd) {
-        scrollRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
+        currentRef?.scrollTo({ left: 0, behavior: 'smooth' });
         return;
       }
 
-      scrollRef.current?.scrollBy({ left: clientWidth, behavior: 'smooth' });
+      currentRef?.scrollBy({ left: clientWidth / 2, behavior: 'smooth' });
     };
 
     const slideTime = 10000;
@@ -79,19 +72,71 @@ export const TrendingList = () => {
       }, slideTime);
     };
 
-    scrollRef.current?.addEventListener('mousedown', clearSlidingInterval);
-    scrollRef.current?.addEventListener('mouseup', setSlidingInterval);
-    scrollRef.current?.addEventListener('touchstart', clearSlidingInterval, {
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+
+      const setTimer = () => {
+        setTimeout(() => (isScrolling.current = false), 500);
+      };
+
+      if (isScrolling.current) return;
+
+      isScrolling.current = true;
+
+      const {
+        scrollLeft = 0,
+        scrollWidth = 0,
+        clientWidth = 0,
+        offsetWidth = 0,
+      } = currentRef;
+
+      const isEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 5;
+      const isStart = scrollLeft === 0;
+
+      const delta = Math.max(-1, Math.min(1, event.deltaY || -event.detail));
+
+      if (isEnd && delta === 1) {
+        currentRef?.scrollTo({ left: 0, behavior: 'smooth' });
+
+        setTimer();
+        return;
+      }
+
+      if (isStart && delta === -1) {
+        currentRef?.scrollTo({
+          left: Math.abs(scrollWidth - clientWidth - scrollLeft),
+          behavior: 'smooth',
+        });
+
+        setTimer();
+        return;
+      }
+
+      currentRef?.scrollTo({
+        left: scrollLeft + (delta * offsetWidth) / 2,
+        behavior: 'smooth',
+      });
+
+      setTimer();
+    };
+
+    currentRef?.addEventListener('wheel', handleWheel, {
+      passive: false,
+    });
+    currentRef?.addEventListener('mouseenter', clearSlidingInterval);
+    currentRef?.addEventListener('mouseleave', setSlidingInterval);
+    currentRef?.addEventListener('touchstart', clearSlidingInterval, {
       passive: true,
     });
-    scrollRef.current?.addEventListener('touchend', setSlidingInterval, {
+    currentRef?.addEventListener('touchend', setSlidingInterval, {
       passive: true,
     });
 
     return () => {
       clearInterval(slidingInterval);
-      currentRef?.removeEventListener('mousedown', clearSlidingInterval);
-      currentRef?.removeEventListener('mouseup', setSlidingInterval);
+      currentRef?.removeEventListener('wheel', handleWheel);
+      currentRef?.removeEventListener('mouseenter', clearSlidingInterval);
+      currentRef?.removeEventListener('mouseleave', setSlidingInterval);
       currentRef?.removeEventListener('touchstart', clearSlidingInterval);
       currentRef?.removeEventListener('touchend', setSlidingInterval);
     };
@@ -100,7 +145,7 @@ export const TrendingList = () => {
   return (
     <>
       {!isMoviesError && !isSeriesError && (
-        <section className="mb-12 sm:mb-16 lg:pl-0 lg:pr-8">
+        <section className="relative mb-12 sm:mb-16 lg:pl-0">
           <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">
             Trending last week
           </h2>
@@ -145,6 +190,8 @@ export const TrendingList = () => {
                   <TrendingCard key={index} />
                 ))}
           </div>
+
+          <div className="pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l from-dark to-0%" />
         </section>
       )}
     </>
