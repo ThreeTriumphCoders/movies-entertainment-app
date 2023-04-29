@@ -1,88 +1,114 @@
-import Link from "next/link";
+import classNames from 'classnames';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { SvgIcon } from "./SvgIcon";
-import { type FC } from "react";
-import { IconName, getIconByName } from "~/utils/getIconByName";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect,useState,type FC } from 'react';
+import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { Category } from '~/types/Category.enum';
+import { IconName,getIconByName } from '~/utils/getIconByName';
+import { SvgIcon } from './SvgIcon';
 
 type Props = {
   movieId?: number;
   imagePath?: string;
   title?: string;
   releaseDate?: string;
-  category?: IconName;
-}
+  categoryIcon?: IconName;
+  category?: Category;
+  isBookmarkedInitial?: boolean;
+  onBookmarksAdd?: (id: number, type: Category) => void;
+  onBookmarksRemove?: (id: number) => void;
+};
 
-const separator = <p className='-translate-y-1/4 select-none font-semibold opacity-60'>.</p>;
+const separator = (
+  <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
+);
 
 export const TrendingCard: FC<Props> = ({
-  movieId = '',
+  movieId = 0,
   imagePath = '',
   title = '',
   releaseDate = '',
-  category = IconName.NONE,
+  categoryIcon = IconName.NONE,
+  category = Category.MOVIE,
+  isBookmarkedInitial,
+  onBookmarksAdd,
+  onBookmarksRemove,
 }) => {
+  const { data: sessionData } = useSession();
+  const router = useRouter();
+
+  const [isBookmarked, setIsBookmarked] = useState(isBookmarkedInitial);
+  const { currentId, bookmarks, isInBookmarks } = useBookmarksContext();
+
+  useEffect(() => {
+    setIsBookmarked(isInBookmarks(movieId));
+  }, [bookmarks]);
+
+
+  const handleBookmarkClick = () => {
+    if (
+      sessionData?.user &&
+      currentId !== movieId &&
+      onBookmarksAdd &&
+      onBookmarksRemove
+    ) {
+      if (isBookmarked) {
+        onBookmarksRemove(movieId);
+        setIsBookmarked(false);
+      } else {
+        onBookmarksAdd(movieId, category);
+        setIsBookmarked(true);
+      }
+    } else {
+      void router.push('/signin');
+    }
+  };
+
   if (!movieId) {
     return (
-      <div className='min-w-[230px] sm:min-w-[410px] lg:min-w-[470px] snap-start'>
-        <div className='relative pt-[50%] rounded-lg overflow-hidden'>
-          <div className="top-0 bottom-0 right-0 left-0 absolute bg-semi-dark animate-pulse"/>
+      <div className="min-w-[230px] snap-start sm:min-w-[410px] lg:min-w-[470px]">
+        <div className="relative overflow-hidden rounded-lg pt-[50%]">
+          <div className="absolute bottom-0 left-0 right-0 top-0 animate-pulse bg-semi-dark" />
         </div>
       </div>
-    )
+    );
   }
 
   return (
-    <Link href={`/movie/${movieId}`} className='min-w-[230px] sm:min-w-[410px] lg:min-w-[470px] snap-start'>
-      <div className='relative pt-[50%] rounded-lg overflow-hidden'>
-        <>
-          <Image
-            className='object-cover hover:scale-110 duration-1000'
-            alt='movie image'
-            fill
-            priority
-            sizes="(max-width: 640px) 50vw, 33vw"
-            src={`https://www.themoviedb.org/t/p/original${imagePath}`}
-          />
+    <div className="relative min-w-[230px] snap-start sm:min-w-[410px] lg:min-w-[470px]">
+      <Link
+        href={`/movie/${movieId}`}
+        className="min-w-[230px] snap-start sm:min-w-[410px] lg:min-w-[470px]"
+      >
+        <div className="relative overflow-hidden rounded-lg pt-[50%]">
+          <>
+            <Image
+              className="object-cover duration-1000 hover:scale-110"
+              alt="movie image"
+              fill
+              priority
+              sizes="(max-width: 640px) 50vw, 33vw"
+              src={`https://www.themoviedb.org/t/p/original${imagePath}`}
+            />
 
-          <div 
-            className='
-              absolute top-2 right-2 sm:top-4 sm:right-4
-              bg-dark hover:bg-light
-              bg-opacity-50 hover: opacity-100
-              rounded-full transition
-              flex items-center justify-center 
-              w-8 h-8
-            '
-          >
-            <SvgIcon 
-              className='
-                fill-none active:fill-light
-                stroke-light hover:stroke-dark
-                stroke-[1.5]
-                h-[32px] w-[32px]
-                cursor-pointer
-              ' 
-              viewBox="-10 -9 38 38"
-            >
-              {getIconByName(IconName.BOOKMARK)}
-            </SvgIcon>
-          </div>
+            <div className="absolute bottom-2 left-2 rounded-md bg-dark bg-opacity-50 p-2">
+              <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
+                <p>{releaseDate.slice(0, 4)}</p>
 
-          <div className="absolute bottom-2 left-2 p-2 bg-dark bg-opacity-50 rounded-md">
-            <div className='flex gap-1.5 text-light opacity-75 font-light text-[11px] sm:text-[13px] leading-[14px] sm:leading-4 mb-1'>
-              <p>{releaseDate.slice(0, 4)}</p>
+                {separator}
 
-              {separator}
+                <div className="flex items-center gap-1">
+                  <SvgIcon className="h-2.5 w-2.5 fill-light">
+                    {getIconByName(categoryIcon)}
+                  </SvgIcon>
 
-              <div className='flex gap-1 items-center'>
-                <SvgIcon className='fill-light h-2.5 w-2.5'>
-                  {getIconByName(category)}
-                </SvgIcon>
-
-
-                <p>{category}</p>
+                  <p>
+                    {categoryIcon === IconName.MOVIE ? 'Movie' : 'TV Serie'}
+                  </p>
+                </div>
               </div>
-            </div>
 
             <h3 className='text-sm text-light sm:text-lg leading-[18px] sm:leading-6 font-medium'>
               {title}
@@ -91,5 +117,30 @@ export const TrendingCard: FC<Props> = ({
         </>
       </div>
       </Link>
-  )
-}
+
+      <div
+        className={classNames(
+          'hover: absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-dark bg-opacity-50 opacity-100 transition hover:bg-light  sm:right-4 sm:top-4',
+          {
+            'pointer-events-none opacity-25': currentId === movieId,
+          },
+        )}
+      >
+        <button onClick={handleBookmarkClick}>
+          <SvgIcon
+            className={classNames(
+              'h-[32px] w-[32px] cursor-pointer fill-none stroke-light stroke-[1.5] hover:stroke-dark active:fill-light',
+              {
+                'fill-primary stroke-primary hover:stroke-primary':
+                  isBookmarked,
+              },
+            )}
+            viewBox="-10 -9 38 38"
+          >
+            {getIconByName(IconName.BOOKMARK)}
+          </SvgIcon>
+        </button>
+      </div>
+    </div>
+  );
+};

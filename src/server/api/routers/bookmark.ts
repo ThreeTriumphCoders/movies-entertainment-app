@@ -7,11 +7,12 @@ import {
 
 export const bookmarkRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(z.object({ movieId: z.number() }))
+    .input(z.object({ movieId: z.number(), type: z.string() }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.bookmark.create({
         data: {
           movieId: input.movieId,
+          type: input.type,
           userId: ctx.session.user.id,
         },
       });

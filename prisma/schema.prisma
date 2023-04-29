@@ -71,6 +71,7 @@ model Bookmark {
     id      String @id @default(cuid())
     movieId Int
     userId  String
+    type    String
     user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
