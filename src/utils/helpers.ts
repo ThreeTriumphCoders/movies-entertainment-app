@@ -72,3 +72,20 @@ export const getTrending = async (category: Category = Category.MOVIE) => {
 
   return results;
 };
+
+export const getSearchResult = async (query: string, page = 1) => {
+  const { results: moviesResults } = await get<MoviesAPIResponseType>(
+    `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/search/movie?${env.NEXT_PUBLIC_TMDB_API_KEY}&query=${query}&page=${page}`,
+  );
+  const { results: seriesResults } = await get<MoviesAPIResponseType>(
+    `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/search/tv?${env.NEXT_PUBLIC_TMDB_API_KEY}&query=${query}&page=${page}`,
+  );
+
+  const results = moviesResults
+    .concat(seriesResults)
+    .sort((a, b) => b.vote_count - a.vote_count);
+
+  console.log(results);
+
+  return results;
+};
