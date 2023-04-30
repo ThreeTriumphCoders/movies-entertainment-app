@@ -89,14 +89,10 @@ const SearchPage = () => {
 
   return (
     <>
-      {/* {isLoading ? (
-        <Loader />
-      ) : ( */}
       <MoviesList
         movies={results?.results || []}
         title={isError ? 'Something went wrong.' : titleIfFound}
       />
-      {/* )} */}
     </>
   );
 };

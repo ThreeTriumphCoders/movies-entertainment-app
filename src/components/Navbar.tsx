@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import classNames from 'classnames';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import avatar from '../../public/images/avatar.svg';
 import { NavbarLink } from './NavbarLink';
 import { SvgIcon } from './SvgIcon';
-import { ThemeType } from "~/types/ThemeType";
-import classNames from "classnames";
-import { useThemeContext } from "~/utils/ThemeContext";
-
 
 export const Navbar = () => {
   const [isSignOut, setIsSignOut] = useState(false);
@@ -27,7 +26,7 @@ export const Navbar = () => {
     }
 
     setCurrentTheme(ThemeType.Dark);
-  }
+  };
 
   const router = useRouter();
 
@@ -40,18 +39,20 @@ export const Navbar = () => {
       lg:w-40 lg:p-8
       "
     >
-      <div className={classNames(
-        "bg-primary flex lg:flex-col justify-between p-4 lg:p-7 items-center sm:rounded-xl lg:rounded-[20px] h-full",
-        { 'bg-semi-dark': themeType === ThemeType.Dark }
-      )}>
-        <div className="flex justify-end items-center lg:flex-col gap-8 sm:gap-16">
+      <div
+        className={classNames(
+          'flex h-full items-center justify-between bg-primary p-4 sm:rounded-xl lg:flex-col lg:rounded-[20px] lg:p-7',
+          { 'bg-semi-dark': themeType === ThemeType.Dark },
+        )}
+      >
+        <div className="flex items-center justify-end gap-8 sm:gap-16 lg:flex-col">
           <Link href="/">
-            <SvgIcon 
+            <SvgIcon
               className={classNames(
-                "h-6 w-6 sm:w-8 sm:h-8 fill-primary hover:opacity-75 transition",
+                'h-6 w-6 fill-primary transition hover:opacity-75 sm:h-8 sm:w-8',
                 {
                   'fill-semi-dark': themeType === ThemeType.Light,
-                }
+                },
               )}
               viewBox="0 0 32 26"
             >
@@ -59,11 +60,9 @@ export const Navbar = () => {
             </SvgIcon>
           </Link>
 
-          <ul className="flex lg:flex-col gap-2 sm:gap-4">
+          <ul className="flex gap-2 sm:gap-4 lg:flex-col">
             <li>
-              <NavbarLink href="/">
-                {getIconByName(IconName.HOME)}
-              </NavbarLink>
+              <NavbarLink href="/">{getIconByName(IconName.HOME)}</NavbarLink>
             </li>
             <li>
               <NavbarLink href="/movies">
@@ -85,67 +84,92 @@ export const Navbar = () => {
           </ul>
         </div>
 
-        <div className="flex justify-center items-center lg:flex-col gap-6 sm:gap-16">
-          <button 
+        <div className="flex items-center justify-center gap-6 sm:gap-16 lg:flex-col lg:gap-20">
+          <button
             type="button"
-            className="flex justify-center items-center"
+            className="flex items-center justify-center"
             onClick={handleThemeChange}
           >
             {themeType === ThemeType.Dark && (
-              <SvgIcon className="fill-grey hover:fill-primary transition w-4 h-4 sm:w-6 sm:h-6 overflow-visible">
+              <SvgIcon className="h-4 w-4 overflow-visible fill-grey transition hover:fill-primary sm:h-6 sm:w-6">
                 {getIconByName(IconName.MOON)}
               </SvgIcon>
             )}
             {themeType === ThemeType.Light && (
-              <SvgIcon className="fill-light hover:fill-semi-dark transition w-4 h-4 sm:w-6 sm:h-6 overflow-visible">
+              <SvgIcon className="h-4 w-4 overflow-visible fill-light transition hover:fill-semi-dark sm:h-6 sm:w-6">
                 {getIconByName(IconName.SUN)}
               </SvgIcon>
             )}
           </button>
 
-          <button onClick={sessionData ? () => setIsSignOut(state => !state) : () => void router.push('/auth/signin')}>
-              <div 
-                className={classNames(
-                  "w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 bg-primary rounded-full border-light border relative overflow-hidden",
-                  { 
-                    'bg-semi-dark': themeType === ThemeType.Light,
-                  }
-                )}
-              >
-                {sessionData ? (
-                  <Image src={sessionData?.user?.image ?? avatar} alt={sessionData?.user?.name ?? "user name"} fill />
-                ) : (
-                  <SvgIcon 
-                    className={classNames(
-                      'px-1 pt-1',
-                      {
-                        'fill-light': themeType === ThemeType.Light,
-                      }
-                    )}
-                    viewBox="0 0 24 24"
-                  >
-                    {getIconByName(IconName.AVATAR)}
-                  </SvgIcon>
-                )}
-              </div>
-          </button>
-
-          <div 
-            className={classNames(
-              "absolute w-max bottom-16 left-36 flex justify-center items-center bg-semi-dark rounded-lg py-3 px-8 transition-all",
-              {
-                '-translate-x-96 opacity-0': !isSignOut,
-              }
-            )}
-          >
-            <button 
-              type="button" 
-              className="py-1 px-10 bg-primary text-dark font-body rounded-lg"
-              onClick={() => void signOut()}
+          {sessionData && (
+            <div
+              className={`
+            absolute right-[13px] flex flex-nowrap items-center rounded-full text-dark
+            transition-all lg:bottom-14 lg:right-14 lg:items-start lg:justify-center
+            ${
+              themeType === ThemeType.Dark
+                ? 'bg-primary hover:bg-light'
+                : 'bg-light hover:bg-grey'
+            }
+            ${
+              isSignOut
+                ? 'h-8 w-32 scale-100 pr-8 opacity-100 sm:h-10 sm:w-36 lg:h-24 lg:w-12 lg:pr-0'
+                : 'h-10 w-4 scale-0 pr-0 opacity-0 lg:w-12'
+            }`}
             >
-              Log Out
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => void signOut()}
+                className="flex items-center gap-2 p-1"
+                aria-label="logout"
+                title="Logout"
+              >
+                <SvgIcon
+                  className="transition-color h-6 w-6 fill-none stroke-dark p-1 sm:h-8 sm:w-8 lg:h-10 lg:w-10"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                >
+                  {getIconByName(IconName.EXIT)}
+                </SvgIcon>
+                <p className="lg:hidden">{isSignOut ? 'Logout' : ''}</p>
+              </button>
+            </div>
+          )}
+
+          <button
+            onClick={
+              sessionData
+                ? () => setIsSignOut((state) => !state)
+                : () => void router.push('/auth/signin')
+            }
+          >
+            <div
+              className={classNames(
+                'relative h-6 w-6 overflow-hidden rounded-full border border-light bg-primary sm:h-8 sm:w-8 lg:h-10 lg:w-10',
+                {
+                  'bg-semi-dark': themeType === ThemeType.Light,
+                },
+              )}
+            >
+              {sessionData ? (
+                <Image
+                  src={sessionData?.user?.image ?? avatar}
+                  alt={sessionData?.user?.name ?? 'user name'}
+                  fill
+                />
+              ) : (
+                <SvgIcon
+                  className={classNames('px-1 pt-1', {
+                    'fill-light': themeType === ThemeType.Light,
+                  })}
+                  viewBox="0 0 24 24"
+                >
+                  {getIconByName(IconName.AVATAR)}
+                </SvgIcon>
+              )}
+            </div>
+          </button>
         </div>
       </div>
     </div>
