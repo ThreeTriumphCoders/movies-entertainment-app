@@ -20,27 +20,27 @@ const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
 );
 
-const MoviePage = () => {
+const TVPage = () => {
   const { query } = useRouter();
   const movieId = query.movieId ? Number(query.movieId) : 0;
-  const [movie, setMovie] = useState<MovieType | null>(null);
+  const [tv, setTv] = useState<MovieType | null>(null);
   const [isPlayerOpened, setPlayerOpened] = useState(false);
   const { themeType } = useThemeContext();
 
   const { isError: isMovieLoadingError } = useQuery({
-    queryKey: [`${movieId}-movie`],
-    queryFn: () => getMovie(movieId, Category.MOVIE),
-    onSuccess: (data) => setMovie(data),
+    queryKey: [`${movieId}-tv`],
+    queryFn: () => getMovie(movieId, Category.TV),
+    onSuccess: (data) => setTv(data),
   });
 
   const { data: trailerKey = '' } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
-    queryFn: () => getTrailerKey(movieId, Category.MOVIE),
+    queryFn: () => getTrailerKey(movieId, Category.TV),
   });
 
   const { isError: isImagesError, data: moreImagePaths = [] } = useQuery({
     queryKey: [`${String(movieId)}-images`],
-    queryFn: () => getImages(movieId, Category.MOVIE),
+    queryFn: () => getImages(movieId, Category.TV),
   });
 
   const { data: sessionData } = useSession();
@@ -63,7 +63,7 @@ const MoviePage = () => {
       if (isBookmarked) {
         deleteFromBookmarks(movieId);
       } else {
-        addToBookmarks(movieId, Category.MOVIE);
+        addToBookmarks(movieId, Category.TV);
       }
     } else {
       void router.push('/auth/signin');
@@ -74,16 +74,18 @@ const MoviePage = () => {
     setPlayerOpened((prev) => !prev);
   }, []);
 
-  const date = movie?.release_date
-    ? movie.release_date.slice(0, 4)
+  const date = tv?.first_air_date
+    ? tv.first_air_date.slice(0, 4)
     : 'No release date';
 
+
+  console.log(tv);
   return (
     <>
-      {!isMovieLoadingError && movie ? (
+      {!isMovieLoadingError && tv ? (
         <section>
-          <h1 className="mb-2 text-xl font-light text-light sm:mb-4 sm:text-3xl">
-            {movie.name}
+          <h1 className="mb-2 text-xl font-light sm:mb-4 sm:text-3xl">
+            {tv.name}
           </h1>
 
           <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
@@ -92,14 +94,14 @@ const MoviePage = () => {
             <div className="flex items-center gap-1">
               <SvgIcon 
                 className={classNames(
-                  "h-2.5 w-2.5",
-                  { 'fill-light': themeType === ThemeType.Dark }
+                  "h-2.5 w-2.5 fill-light",
+                  { 'fill-semi-dark': themeType === ThemeType.Light }
                 )}
               >
-                {getIconByName(IconName.MOVIE)}
+                {getIconByName(IconName.TV)}
               </SvgIcon>
 
-              <p>Movie</p>
+              <p>TV Serie</p>
             </div>
           </div>
 
@@ -113,6 +115,7 @@ const MoviePage = () => {
                       absolute bottom-[1px] left-[1px] right-[1px]
                       top-[1px] flex items-center
                       justify-center bg-semi-dark text-2xl
+                      text-light
                     "
                 >
                   No image
@@ -125,7 +128,6 @@ const MoviePage = () => {
                 className="
                     mb-8 flex flex-col flex-wrap items-center
                     justify-between gap-[4%] gap-y-3 sm:flex-row
-
                   "
               >
                 <button
@@ -177,18 +179,18 @@ const MoviePage = () => {
                 Description
               </h3>
 
-              <p className="mb-8 font-light">{movie.overview}</p>
+              <p className="mb-8 font-light">{tv.overview || 'No description'}</p>
 
               <h3 className="mb-4 text-lg font-medium">Status</h3>
 
-              <p className="mb-8 font-light">{movie.status}</p>
+              <p className="mb-8 font-light">{tv.status}</p>
 
               <h3 className="mb-4 text-lg font-medium">
                 Original language
               </h3>
 
               <p className="mb-8 font-light">
-                {movie.original_language}
+                {tv.original_language}
               </p>
 
               <h3 className="mb-4 text-lg font-medium">Rating</h3>
@@ -198,14 +200,14 @@ const MoviePage = () => {
                   <div className="flex items-center gap-1">
                     <div
                       className={classNames('h-2 w-2 rounded-full', {
-                        'bg-[#3B931C]': movie.vote_average > 7.4,
+                        'bg-[#7ED061]': tv.vote_average > 7.4,
                         'bg-[#FFF961]':
-                          movie.vote_average > 4.9 && movie.vote_average < 7.5,
-                        'bg-[#E84545]': movie.vote_average < 5,
+                          tv.vote_average > 4.9 && tv.vote_average < 7.5,
+                        'bg-[#E84545]': tv.vote_average < 5,
                       })}
                     />
                     <p className="font-light">
-                      {movie.vote_average.toFixed(1)}
+                      {tv.vote_average.toFixed(1)}
                     </p>
                   </div>
                   <div>
@@ -213,7 +215,7 @@ const MoviePage = () => {
                         className={classNames(
                           'w-2 h-2 rounded-full',
                           {
-                            'bg-[#3B931C]': rating > 7.4,
+                            'bg-[#7ED061]': rating > 7.4,
                             'bg-[#FFF961]': rating > 4.9 && rating < 7.5,
                             'bg-[#E84545]': rating < 5,
                           },
@@ -229,17 +231,30 @@ const MoviePage = () => {
                 </div>
               </div>
 
-              <h3 className="mb-4 text-lg font-mediumt">Genres</h3>
+              <h3 className="mb-4 text-lg font-medium">Genres</h3>
               <p className="mb-8 font-light">
-                {movie.genres
+                {tv.genres
                   .reduce((acc, genre) => {
                     return acc + genre.name + ', ';
                   }, '')
                   .slice(0, -2)}
               </p>
 
-              <h3 className="mb-4 text-lg font-medium">Duration</h3>
-              <p className="font-light">{movie.runtime} min.</p>
+              <h3 className="mb-4 text-lg font-medium">Seasons</h3>
+              <table className='text-left w-4/5 sm:w-2/3 lg:w-full'>
+                <tr className='text-sm'>
+                  <th className='pr-3'>Name</th>
+                  <th className='pr-3'>Series count</th>
+                  <th>Release date</th>
+                </tr>
+                {tv.seasons?.map(season => (
+                  <tr key={season.id} className='font-light'>
+                    <td className='pr-3'>{season.name}</td>
+                    <td>{season.episode_count}</td>
+                    <td>{season.air_date ? season.air_date.split('-').join('.') : '-'}</td>
+                  </tr>
+                ))}
+              </table>
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
@@ -258,4 +273,4 @@ const MoviePage = () => {
   );
 };
 
-export default MoviePage;
+export default TVPage;
