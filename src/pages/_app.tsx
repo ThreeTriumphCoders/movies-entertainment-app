@@ -5,10 +5,13 @@ import { Outfit } from 'next/font/google';
 
 import { api } from '~/utils/api';
 
+import "~/styles/globals.css";
+import { Layout } from "~/components/Layout";
+import { useRouter } from "next/router";
+import React from "react";
+import { ThemeProvider } from "~/utils/ThemeContext";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import { Layout } from '~/components/Layout';
 import { BookmarksContextProvider } from '~/contexts/useBookmarks';
 import '~/styles/globals.css';
 
@@ -40,12 +43,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <BookmarksContextProvider>
-          <LayoutComponent>
-            <Component
-              className={`${outfitBody.variable} ${outfitHeading.variable}`}
-              {...pageProps}
-            />
-          </LayoutComponent>
+          <ThemeProvider>
+            <LayoutComponent>
+              <Component
+                className={`${outfitBody.variable} ${outfitHeading.variable}`}
+                {...pageProps}
+              />
+            </LayoutComponent>
+          </ThemeProvider>
         </BookmarksContextProvider>
       </QueryClientProvider>
     </SessionProvider>
