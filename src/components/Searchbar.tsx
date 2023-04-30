@@ -14,7 +14,7 @@ export const Searchbar = () => {
     if (!param) {
       void router.push(lastPage.current);
     } else {
-      void router.push(`/search?params=${param}`);
+      void router.replace(`/search?params=${param}`);
     }
   };
 
@@ -24,8 +24,6 @@ export const Searchbar = () => {
     setCurrentQuery(event.target.value);
 
     if (!router.asPath.includes('/search')) {
-      console.log('setting last page');
-
       lastPage.current = router.asPath;
     }
 

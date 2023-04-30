@@ -18,38 +18,56 @@ const SearchPage = () => {
   const attempsWithoutResult = useRef(0);
 
   const queryParams = Array.isArray(query.params)
-    ? query.params[0] || ''
-    : query.params || '';
+    ? query.params[0]
+    : query.params;
 
   const { isLoading, isError, refetch } = useQuery({
     queryKey: ['movies'],
-    queryFn: () => getSearchResult(queryParams, page.current),
+    queryFn: () => {
+      return getSearchResult(queryParams || '', page.current);
+    },
     onSuccess(data) {
       setResults((prev) => {
+        console.log('setting results ' + String(data.results.length));
+
         if (!data.results.length) {
           attempsWithoutResult.current += 1;
         }
 
         return {
-          results: uniqBy([...prev.results, ...data.results], (e) => e.id),
+          results: uniqBy(
+            [...prev.results, ...data.results],
+            (elem) => elem.id,
+          ),
           total: data.total,
         };
       });
       page.current += 1;
     },
+    enabled: false,
   });
 
   const loadMoreResults = async () => {
-    if (attempsWithoutResult.current <= 5) {
+    console.log(attempsWithoutResult);
+
+    if (attempsWithoutResult.current <= 10) {
+      console.log('fetching');
+
       await refetch();
     }
   };
 
   useEffect(() => {
-    page.current = 1;
-    setResults(defaultResults);
+    const initialLoad = async () => {
+      page.current = 1;
+      attempsWithoutResult.current = 0;
+      setResults(defaultResults);
 
-    void loadMoreResults();
+      await loadMoreResults();
+      console.log(queryParams ? queryParams : 'no params in useEffect');
+    }
+
+    initialLoad().catch(console.error);
   }, [queryParams]);
 
   useEffect(() => {
@@ -71,9 +89,9 @@ const SearchPage = () => {
     };
   }, []);
 
-  const titleIfFound = `Found ${
-    results?.total || 0
-  } results for '${queryParams}'`;
+  const titleIfFound = `Found ${results?.total || 0} results for '${
+    queryParams || 'your request'
+  }'`;
 
   return (
     <>

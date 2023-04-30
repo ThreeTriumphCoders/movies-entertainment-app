@@ -49,6 +49,7 @@ export const MoviesList: FC<Props> = ({
                 release_date,
                 first_air_date,
                 media_type,
+                poster_path,
               } = movie;
 
               const isBookmarked = isInBookmarks(id);
@@ -62,7 +63,7 @@ export const MoviesList: FC<Props> = ({
                 <MovieCard
                   key={`${type || 'item'}_${id}`}
                   movieId={id}
-                  imagePath={backdrop_path || ''}
+                  imagePath={backdrop_path || poster_path || ''}
                   title={title || name}
                   releaseDate={release_date || first_air_date}
                   categoryIcon={type as IconName}

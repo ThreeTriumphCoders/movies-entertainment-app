@@ -101,6 +101,8 @@ export const getSearchResult = async (
     .concat(series)
     .sort((a, b) => b.vote_count - a.vote_count);
 
+  console.log(results);
+
   return {
     results: results,
     total: totalMovies + totalSeries,
