@@ -123,7 +123,22 @@ export const MovieCard: FC<Props> = ({
             </div>
           )}
 
+          {!isPlaying && imagePath && (
+            <div className="absolute bottom-0 left-0 right-0 top-0 bg-semi-dark">
+              <Image
+                className="object-contain"
+                alt="movie image"
+                onClick={() => onPlayingChange(movieId)}
+                fill
+                priority
+                sizes="(max-width: 640px) 50vw, 33vw"
+                src={`https://www.themoviedb.org/t/p/original${imagePath}`}
+              />
+            </div>
+          )}
+
           {!isPlaying &&
+            moreImagePaths.length > 0 &&
             moreImagePaths.map((path, index) => (
               <Image
                 key={path}

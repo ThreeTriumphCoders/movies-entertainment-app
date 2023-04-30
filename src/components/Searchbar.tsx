@@ -5,6 +5,7 @@ import { IconName, getIconByName } from '~/utils/getIconByName';
 import { SvgIcon } from './SvgIcon';
 
 export const Searchbar = () => {
+  console.log('rerender search');
   const [currentQuery, setCurrentQuery] = useState('');
   const router = useRouter();
 
@@ -14,11 +15,11 @@ export const Searchbar = () => {
     if (!param) {
       void router.push(lastPage.current);
     } else {
-      void router.replace(`/search?params=${param}`);
+      void router.push(`/search?params=${param}`);
     }
   };
 
-  const debouncedRequest = useRef(_.debounce(handleRequest, 500)).current;
+  const debouncedRequest = useRef(_.debounce(handleRequest, 1000)).current;
 
   const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentQuery(event.target.value);
@@ -39,25 +40,35 @@ export const Searchbar = () => {
   }, [router]);
 
   return (
-    <label
-      className="
+    <form
+      action="get"
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleRequest(currentQuery);
+      }}
+    >
+      <label
+        className="
         flex cursor-text items-center 
         gap-4
         py-4 sm:mb-6 sm:gap-6 sm:py-2
         sm:text-2xl 
         lg:pt-16
       "
-    >
-      <SvgIcon className="h-6 w-6 fill-light sm:h-8 sm:w-8" viewBox="0 0 24 24">
-        {getIconByName(IconName.SEARCH)}
-      </SvgIcon>
+      >
+        <SvgIcon
+          className="h-6 w-6 fill-light sm:h-8 sm:w-8"
+          viewBox="0 0 24 24"
+        >
+          {getIconByName(IconName.SEARCH)}
+        </SvgIcon>
 
-      <input
-        type="text"
-        placeholder="Search for movies or TV series"
-        value={currentQuery}
-        onChange={handleChangeQuery}
-        className="
+        <input
+          type="text"
+          placeholder="Search for movies or TV series"
+          value={currentQuery}
+          onChange={handleChangeQuery}
+          className="
           w-full 
           border-b 
           border-b-dark 
@@ -67,7 +78,8 @@ export const Searchbar = () => {
           outline-none 
           placeholder:text-light placeholder:opacity-50 focus:border-b-grey
         "
-      />
-    </label>
+        />
+      </label>
+    </form>
   );
 };

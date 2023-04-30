@@ -20,15 +20,13 @@ const SearchPage = () => {
     ? query.params[0]
     : query.params;
 
-  const { isLoading, isError, refetch } = useQuery({
+  const { isError, refetch } = useQuery({
     queryKey: ['movies'],
     queryFn: () => {
       return getSearchResult(queryParams || '', page.current);
     },
     onSuccess(data) {
       setResults((prev) => {
-        console.log('setting results ' + String(data.results.length));
-
         if (!data.results.length) {
           attempsWithoutResult.current += 1;
         }
@@ -47,37 +45,23 @@ const SearchPage = () => {
   });
 
   const loadMoreResults = async () => {
-    console.log(attempsWithoutResult);
-
     if (attempsWithoutResult.current <= 5) {
-      console.log('fetching');
-
       await refetch();
     }
   };
 
   const loadFirstResults = async (queryParams = '') => {
-    console.log('fetching result');
-
     const results = await getSearchResult(queryParams, 1);
-
-    console.log(results);
 
     setResults(results);
   };
 
   useEffect(() => {
-    console.log('useeffect executing');
-    const initialLoad = async () => {
-      page.current = 1;
-      attempsWithoutResult.current = 0;
-      setResults(defaultResults);
+    page.current = 1;
+    attempsWithoutResult.current = 0;
 
-      await loadFirstResults(queryParams);
-      console.log(queryParams ? queryParams : 'no params in useEffect');
-    };
-
-    initialLoad().catch(console.error);
+    setResults(defaultResults);
+    void loadFirstResults(queryParams);
   }, [queryParams]);
 
   useEffect(() => {
