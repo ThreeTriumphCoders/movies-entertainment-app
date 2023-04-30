@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { Loader } from '~/components/Loader';
 import { MoviesList } from '~/components/MoviesList';
 import { getSearchResult, type SearchResults } from '~/utils/helpers';
 
@@ -50,22 +49,33 @@ const SearchPage = () => {
   const loadMoreResults = async () => {
     console.log(attempsWithoutResult);
 
-    if (attempsWithoutResult.current <= 10) {
+    if (attempsWithoutResult.current <= 5) {
       console.log('fetching');
 
       await refetch();
     }
   };
 
+  const loadFirstResults = async (queryParams = '') => {
+    console.log('fetching result');
+
+    const results = await getSearchResult(queryParams, 1);
+
+    console.log(results);
+
+    setResults(results);
+  };
+
   useEffect(() => {
+    console.log('useeffect executing');
     const initialLoad = async () => {
       page.current = 1;
       attempsWithoutResult.current = 0;
       setResults(defaultResults);
 
-      await loadMoreResults();
+      await loadFirstResults(queryParams);
       console.log(queryParams ? queryParams : 'no params in useEffect');
-    }
+    };
 
     initialLoad().catch(console.error);
   }, [queryParams]);
@@ -95,14 +105,14 @@ const SearchPage = () => {
 
   return (
     <>
-      {isLoading ? (
+      {/* {isLoading ? (
         <Loader />
-      ) : (
-        <MoviesList
-          movies={results?.results || []}
-          title={isError ? 'Something went wrong.' : titleIfFound}
-        />
-      )}
+      ) : ( */}
+      <MoviesList
+        movies={results?.results || []}
+        title={isError ? 'Something went wrong.' : titleIfFound}
+      />
+      {/* )} */}
     </>
   );
 };
