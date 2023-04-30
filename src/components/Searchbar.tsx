@@ -1,32 +1,44 @@
 import _ from 'lodash';
 import { useRouter } from 'next/router';
-import { useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { SvgIcon } from './SvgIcon';
 
 export const Searchbar = () => {
   const [currentQuery, setCurrentQuery] = useState('');
-  const [lastPage, setLastPage] = useState('/');
   const router = useRouter();
 
-  const handleRequest = _.debounce((param: string) => {
+  const lastPage = useRef('/');
+
+  const handleRequest = (param: string) => {
     if (!param) {
-      void router.push(lastPage);
+      void router.push(lastPage.current);
     } else {
       void router.push(`/search?params=${param}`);
     }
-  }, 1000);
+  };
+
+  const debouncedRequest = useRef(_.debounce(handleRequest, 500)).current;
 
   const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
-    handleRequest.cancel();
     setCurrentQuery(event.target.value);
 
     if (!router.asPath.includes('/search')) {
-      setLastPage(router.asPath);
+      console.log('setting last page');
+
+      lastPage.current = router.asPath;
     }
 
-    handleRequest(event.target.value);
+    debouncedRequest.cancel();
+
+    debouncedRequest(event.target.value);
   };
+
+  useEffect(() => {
+    if (!router.asPath.includes('/search')) {
+      setCurrentQuery('');
+    }
+  }, [router]);
 
   return (
     <label

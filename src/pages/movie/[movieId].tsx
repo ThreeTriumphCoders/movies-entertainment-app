@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback,useEffect,useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '~/components/Loader';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
@@ -11,8 +11,8 @@ import { SvgIcon } from '~/components/SvgIcon';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
-import { IconName,getIconByName } from '~/utils/getIconByName';
-import { getImages,getMovie,getTrailerKey } from '~/utils/helpers';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
 const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
@@ -80,7 +80,7 @@ const MoviePage = () => {
       {!isMovieLoadingError && movie ? (
         <section>
           <h1 className="mb-2 text-xl font-light text-light sm:mb-4 sm:text-3xl">
-            {movie.original_title}
+            {movie.title}
           </h1>
 
           <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
@@ -142,7 +142,9 @@ const MoviePage = () => {
                       >
                         {getIconByName(IconName.BOOKMARK)}
                       </SvgIcon>
-                      {isBookmarked ? 'Bookmarked' : 'Bookmark'}
+                      {isBookmarked
+                        ? 'Already in bookmarks'
+                        : 'Add to bookmarks'}
                     </>
                   )}
                 </button>

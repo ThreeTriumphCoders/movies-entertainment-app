@@ -82,8 +82,6 @@ export const getSearchResult = async (
   query: string,
   page = 1,
 ): Promise<SearchResults> => {
-  console.log(`doing request. page: ${page} query: ${query}`);
-
   const { results: moviesResults, total_results: totalMovies = 0 } =
     await get<MoviesAPIResponseType>(
       `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/search/movie?${env.NEXT_PUBLIC_TMDB_API_KEY}&query=${query}&page=${page}`,

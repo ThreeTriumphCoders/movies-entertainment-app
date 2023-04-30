@@ -60,7 +60,7 @@ export const MoviesList: FC<Props> = ({
 
               return (
                 <MovieCard
-                  key={id}
+                  key={`${type || 'item'}_${id}`}
                   movieId={id}
                   imagePath={backdrop_path || ''}
                   title={title || name}
