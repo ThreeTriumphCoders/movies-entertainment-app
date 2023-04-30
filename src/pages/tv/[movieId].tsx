@@ -18,26 +18,26 @@ const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
 );
 
-const MoviePage = () => {
+const TVPage = () => {
   const { query } = useRouter();
   const movieId = query.movieId ? Number(query.movieId) : 0;
-  const [movie, setMovie] = useState<MovieType | null>(null);
+  const [tv, setTv] = useState<MovieType | null>(null);
   const [isPlayerOpened, setPlayerOpened] = useState(false);
 
   const { isError: isMovieLoadingError } = useQuery({
-    queryKey: [`${movieId}-movie`],
-    queryFn: () => getMovie(movieId, Category.MOVIE),
-    onSuccess: (data) => setMovie(data),
+    queryKey: [`${movieId}-tv`],
+    queryFn: () => getMovie(movieId, Category.TV),
+    onSuccess: (data) => setTv(data),
   });
 
   const { data: trailerKey = '' } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
-    queryFn: () => getTrailerKey(movieId, Category.MOVIE),
+    queryFn: () => getTrailerKey(movieId, Category.TV),
   });
 
   const { isError: isImagesError, data: moreImagePaths = [] } = useQuery({
     queryKey: [`${String(movieId)}-images`],
-    queryFn: () => getImages(movieId, Category.MOVIE),
+    queryFn: () => getImages(movieId, Category.TV),
   });
 
   const { data: sessionData } = useSession();
@@ -60,7 +60,7 @@ const MoviePage = () => {
       if (isBookmarked) {
         deleteFromBookmarks(movieId);
       } else {
-        addToBookmarks(movieId, Category.MOVIE);
+        addToBookmarks(movieId, Category.TV);
       }
     } else {
       void router.push('/auth/signin');
@@ -71,27 +71,29 @@ const MoviePage = () => {
     setPlayerOpened((prev) => !prev);
   }, []);
 
-  const date = movie?.release_date
-    ? movie.release_date.slice(0, 4)
+  const date = tv?.first_air_date
+    ? tv.first_air_date.slice(0, 4)
     : 'No release date';
 
+
+  console.log(tv);
   return (
     <>
-      {!isMovieLoadingError && movie ? (
+      {!isMovieLoadingError && tv ? (
         <section>
-          <h1 className="mb-2 text-xl font-light text-light sm:mb-4 sm:text-3xl">
-            {movie.name}
+          <h1 className="mb-2 text-xl font-light sm:mb-4 sm:text-3xl">
+            {tv.name}
           </h1>
 
-          <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
+          <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
             <p>{date}</p>
             {separator}
             <div className="flex items-center gap-1">
               <SvgIcon className="h-2.5 w-2.5 fill-light">
-                {getIconByName(IconName.MOVIE)}
+                {getIconByName(IconName.TV)}
               </SvgIcon>
 
-              <p>Movie</p>
+              <p>TV Serie</p>
             </div>
           </div>
 
@@ -105,6 +107,7 @@ const MoviePage = () => {
                       absolute bottom-[1px] left-[1px] right-[1px]
                       top-[1px] flex items-center
                       justify-center bg-semi-dark text-2xl
+                      text-light
                     "
                 >
                   No image
@@ -123,7 +126,7 @@ const MoviePage = () => {
                 <button
                   className="
                     text-md relative flex h-10 w-full items-center justify-center gap-2
-                    rounded-lg bg-primary transition hover:bg-semi-dark hover:text-light
+                    rounded-lg bg-primary transition hover:bg-semi-dark text-light
                     sm:w-[48%] lg:w-full
                     xl:w-[48%]
                     "
@@ -151,7 +154,7 @@ const MoviePage = () => {
                   <button
                     className="
                       text-md relative flex h-10 w-full items-center justify-center gap-2
-                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-dark hover:text-light
+                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-darktext-light
                       sm:w-[48%] lg:w-full 
                       xl:w-[48%]
                       "
@@ -169,35 +172,35 @@ const MoviePage = () => {
                 Description
               </h3>
 
-              <p className="mb-8 font-light text-light">{movie.overview}</p>
+              <p className="mb-8 font-light">{tv.overview || 'No description'}</p>
 
-              <h3 className="mb-4 text-lg font-medium text-light">Status</h3>
+              <h3 className="mb-4 text-lg font-medium">Status</h3>
 
-              <p className="mb-8 font-light text-light">{movie.status}</p>
+              <p className="mb-8 font-light">{tv.status}</p>
 
-              <h3 className="mb-4 text-lg font-medium text-light">
+              <h3 className="mb-4 text-lg font-medium">
                 Original language
               </h3>
 
-              <p className="mb-8 font-light text-light">
-                {movie.original_language}
+              <p className="mb-8 font-light">
+                {tv.original_language}
               </p>
 
-              <h3 className="mb-4 text-lg font-medium text-light">Rating</h3>
+              <h3 className="mb-4 text-lg font-medium">Rating</h3>
 
               <div className="mb-8 flex gap-3">
                 <div>
                   <div className="flex items-center gap-1">
                     <div
                       className={classNames('h-2 w-2 rounded-full', {
-                        'bg-[#7ED061]': movie.vote_average > 7.4,
+                        'bg-[#7ED061]': tv.vote_average > 7.4,
                         'bg-[#FFF961]':
-                          movie.vote_average > 4.9 && movie.vote_average < 7.5,
-                        'bg-[#E84545]': movie.vote_average < 5,
+                          tv.vote_average > 4.9 && tv.vote_average < 7.5,
+                        'bg-[#E84545]': tv.vote_average < 5,
                       })}
                     />
-                    <p className="font-light text-light">
-                      {movie.vote_average.toFixed(1)}
+                    <p className="font-light">
+                      {tv.vote_average.toFixed(1)}
                     </p>
                   </div>
                   <div>
@@ -212,26 +215,39 @@ const MoviePage = () => {
                         )}
                       />
                       <p className="font-light text-light text-sm">9.0</p> */}
-                    <p className="font-light text-light">No votes</p>
+                    <p className="font-light">No votes</p>
                   </div>
                 </div>
                 <div>
-                  <p className="font-light text-light">TMDB</p>
-                  <p className="font-light text-light">Movies Ent.</p>
+                  <p className="font-light">TMDB</p>
+                  <p className="font-light">Movies Ent.</p>
                 </div>
               </div>
 
-              <h3 className="mb-4 text-lg font-medium text-light">Genres</h3>
+              <h3 className="mb-4 text-lg font-medium">Genres</h3>
               <p className="mb-8 font-light text-light">
-                {movie.genres
+                {tv.genres
                   .reduce((acc, genre) => {
                     return acc + genre.name + ', ';
                   }, '')
                   .slice(0, -2)}
               </p>
 
-              <h3 className="mb-4 text-lg font-medium text-light">Duration</h3>
-              <p className="font-light text-light">{movie.runtime} min.</p>
+              <h3 className="mb-4 text-lg font-medium">Seasons</h3>
+              <table className='text-left w-3/4 sm:w-1/2 lg:w-full'>
+                <tr className='text-sm'>
+                  <th className='pr-8'>Name</th>
+                  <th className='pr-3'>Series count</th>
+                  <th>Release date</th>
+                </tr>
+                {tv.seasons?.map(season => (
+                  <tr key={season.id}>
+                    <td>{season.name}</td>
+                    <td>{season.episode_count}</td>
+                    <td>{season.air_date}</td>
+                  </tr>
+                ))}
+              </table>
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
@@ -250,4 +266,4 @@ const MoviePage = () => {
   );
 };
 
-export default MoviePage;
+export default TVPage;

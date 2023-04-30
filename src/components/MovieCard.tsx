@@ -229,7 +229,7 @@ export const MovieCard: FC<Props> = ({
       </div>
 
       <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
-        <Link href={category === Category.MOVIE ? `/movie/${movieId}` : `/serie/${movieId}`}>{title}</Link>
+        <Link href={category === Category.MOVIE ? `/movie/${movieId}` : `/tv/${movieId}`}>{title}</Link>
       </h3>
     </div>
   );
