@@ -244,7 +244,7 @@ const TVPage = () => {
                   <tr key={season.id}>
                     <td>{season.name}</td>
                     <td>{season.episode_count}</td>
-                    <td>{season.air_date}</td>
+                    <td>{season.air_date.split('-').join('.')}</td>
                   </tr>
                 ))}
               </table>
