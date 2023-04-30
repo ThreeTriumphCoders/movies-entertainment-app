@@ -18,7 +18,6 @@ export const Navbar = () => {
   const { data: sessionData } = useSession();
 
   const { themeType, setCurrentTheme } = useThemeContext();
-  console.log('navbar', themeType);
 
   const handleThemeChange = () => {
     if (themeType === ThemeType.Dark) {

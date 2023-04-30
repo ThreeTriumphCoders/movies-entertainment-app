@@ -14,7 +14,6 @@ export const useLocalTheme = (): [ThemeType, SetTheme] => {
 
     try {
       const item = localStorage.getItem(themeKey);
-      console.log(item)
       return item ? (item as ThemeType) : initialTheme;
     } catch (err) {
       console.log(themeKey, err);
