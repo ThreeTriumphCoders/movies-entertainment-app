@@ -11,6 +11,8 @@ import { SvgIcon } from '~/components/SvgIcon';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName,getIconByName } from '~/utils/getIconByName';
 import { getImages,getMovie,getTrailerKey } from '~/utils/helpers';
 
@@ -23,6 +25,7 @@ const MoviePage = () => {
   const movieId = query.movieId ? Number(query.movieId) : 0;
   const [movie, setMovie] = useState<MovieType | null>(null);
   const [isPlayerOpened, setPlayerOpened] = useState(false);
+  const { themeType } = useThemeContext();
 
   const { isError: isMovieLoadingError } = useQuery({
     queryKey: [`${movieId}-movie`],
@@ -79,15 +82,20 @@ const MoviePage = () => {
     <>
       {!isMovieLoadingError && movie ? (
         <section>
-          <h1 className="mb-2 text-xl font-light text-light sm:mb-4 sm:text-3xl">
+          <h1 className="mb-2 text-xl font-light sm:mb-4 sm:text-3xl">
             {movie.original_title}
           </h1>
 
-          <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
+          <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
             <p>{date}</p>
             {separator}
             <div className="flex items-center gap-1">
-              <SvgIcon className="h-2.5 w-2.5 fill-light">
+              <SvgIcon 
+                className={classNames(
+                  "h-2.5 w-2.5",
+                  { 'fill-light': themeType === ThemeType.Dark }
+                )}
+              >
                 {getIconByName(IconName.MOVIE)}
               </SvgIcon>
 
@@ -96,7 +104,7 @@ const MoviePage = () => {
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3 lg:grid-rows-2">
-            <div className="relative mb-8 overflow-hidden lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
+            <div className="relative mb-8 overflow-hidden rounded-xl lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
               {moreImagePaths.length && !isImagesError ? (
                 <MovieSlider imagesPaths={...moreImagePaths} />
               ) : (
@@ -123,7 +131,7 @@ const MoviePage = () => {
                 <button
                   className="
                     text-md relative flex h-10 w-full items-center justify-center gap-2
-                    rounded-lg bg-primary transition hover:bg-semi-dark hover:text-light
+                    rounded-lg bg-primary transition hover:bg-semi-dark text-light
                     sm:w-[48%] lg:w-full
                     xl:w-[48%]
                     "
@@ -151,7 +159,7 @@ const MoviePage = () => {
                   <button
                     className="
                       text-md relative flex h-10 w-full items-center justify-center gap-2
-                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-dark hover:text-light
+                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-dark text-light
                       sm:w-[48%] lg:w-full 
                       xl:w-[48%]
                       "
@@ -165,38 +173,38 @@ const MoviePage = () => {
                 )}
               </div>
 
-              <h3 className="mb-4 text-lg font-medium text-light">
+              <h3 className="mb-4 text-lg font-medium">
                 Description
               </h3>
 
-              <p className="mb-8 font-light text-light">{movie.overview}</p>
+              <p className="mb-8 font-light">{movie.overview}</p>
 
-              <h3 className="mb-4 text-lg font-medium text-light">Status</h3>
+              <h3 className="mb-4 text-lg font-medium">Status</h3>
 
-              <p className="mb-8 font-light text-light">{movie.status}</p>
+              <p className="mb-8 font-light">{movie.status}</p>
 
-              <h3 className="mb-4 text-lg font-medium text-light">
+              <h3 className="mb-4 text-lg font-medium">
                 Original language
               </h3>
 
-              <p className="mb-8 font-light text-light">
+              <p className="mb-8 font-light">
                 {movie.original_language}
               </p>
 
-              <h3 className="mb-4 text-lg font-medium text-light">Rating</h3>
+              <h3 className="mb-4 text-lg font-medium">Rating</h3>
 
               <div className="mb-8 flex gap-3">
                 <div>
                   <div className="flex items-center gap-1">
                     <div
                       className={classNames('h-2 w-2 rounded-full', {
-                        'bg-[#7ED061]': movie.vote_average > 7.4,
+                        'bg-[#3B931C]': movie.vote_average > 7.4,
                         'bg-[#FFF961]':
                           movie.vote_average > 4.9 && movie.vote_average < 7.5,
                         'bg-[#E84545]': movie.vote_average < 5,
                       })}
                     />
-                    <p className="font-light text-light">
+                    <p className="font-light">
                       {movie.vote_average.toFixed(1)}
                     </p>
                   </div>
@@ -205,24 +213,24 @@ const MoviePage = () => {
                         className={classNames(
                           'w-2 h-2 rounded-full',
                           {
-                            'bg-[#7ED061]': rating > 7.4,
+                            'bg-[#3B931C]': rating > 7.4,
                             'bg-[#FFF961]': rating > 4.9 && rating < 7.5,
                             'bg-[#E84545]': rating < 5,
                           },
                         )}
                       />
                       <p className="font-light text-light text-sm">9.0</p> */}
-                    <p className="font-light text-light">No votes</p>
+                    <p className="font-light">No votes</p>
                   </div>
                 </div>
                 <div>
-                  <p className="font-light text-light">TMDB</p>
-                  <p className="font-light text-light">Movies Ent.</p>
+                  <p className="font-light">TMDB</p>
+                  <p className="font-light">Movies Ent.</p>
                 </div>
               </div>
 
-              <h3 className="mb-4 text-lg font-medium text-light">Genres</h3>
-              <p className="mb-8 font-light text-light">
+              <h3 className="mb-4 text-lg font-mediumt">Genres</h3>
+              <p className="mb-8 font-light">
                 {movie.genres
                   .reduce((acc, genre) => {
                     return acc + genre.name + ', ';
@@ -230,8 +238,8 @@ const MoviePage = () => {
                   .slice(0, -2)}
               </p>
 
-              <h3 className="mb-4 text-lg font-medium text-light">Duration</h3>
-              <p className="font-light text-light">{movie.runtime} min.</p>
+              <h3 className="mb-4 text-lg font-medium">Duration</h3>
+              <p className="font-light">{movie.runtime} min.</p>
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">

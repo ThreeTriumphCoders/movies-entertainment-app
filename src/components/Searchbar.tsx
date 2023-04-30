@@ -1,9 +1,13 @@
 import { type ChangeEvent, useState } from "react";
 import { SvgIcon } from "./SvgIcon";
 import { IconName, getIconByName } from "~/utils/getIconByName";
+import classNames from "classnames";
+import { useThemeContext } from "~/utils/ThemeContext";
+import { ThemeType } from "~/types/ThemeType";
 
 export const Searchbar = () => {
   const [query, setQuery] = useState('');
+  const { themeType } = useThemeContext();
 
   const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -19,7 +23,13 @@ export const Searchbar = () => {
         sm:text-2xl
       "
     >
-      <SvgIcon className="fill-light h-6 w-6 sm:h-8 sm:w-8" viewBox="0 0 24 24">
+      <SvgIcon 
+        className={classNames(
+          "h-6 w-6 sm:h-8 sm:w-8",
+          { 'fill-light': themeType === ThemeType.Dark}
+        )} 
+        viewBox="0 0 24 24"
+      >
         {getIconByName(IconName.SEARCH)}
       </SvgIcon>
 
@@ -28,16 +38,10 @@ export const Searchbar = () => {
         placeholder="Search for movies or TV series" 
         value={query}
         onChange={handleChangeQuery}
-        className="
-          caret-primary 
-          bg-dark 
-          p-2 
-          w-full 
-          font-light text-light 
-          placeholder:text-light placeholder:opacity-50 
-          outline-none 
-          border-b border-b-dark focus:border-b-grey
-        "
+        className={classNames(
+          "caret-primary p-2 w-full font-light text-light placeholder-dark placeholder:opacity-50 outline-none border-b focus:border-b-grey",
+          { 'bg-dark border-b-dark placeholder:text-light': themeType === ThemeType.Dark }
+        )}
       />
     </label>
   )
