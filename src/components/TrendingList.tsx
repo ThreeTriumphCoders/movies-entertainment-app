@@ -198,8 +198,8 @@ export const TrendingList = () => {
 
           <div 
             className={classNames(
-              "pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l from-dark to-0%",
-              { 'from-[#fff]': themeType === ThemeType.Light }
+              "pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l from-[#fff] to-0%",
+              { 'from-dark': themeType === ThemeType.Dark }
             )}
           />
         </section>

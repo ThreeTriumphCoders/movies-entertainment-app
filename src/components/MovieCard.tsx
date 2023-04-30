@@ -121,6 +121,7 @@ export const MovieCard: FC<Props> = ({
                 absolute bottom-[1px] left-[1px] right-[1px] top-[1px] 
                 flex items-center
                 justify-center bg-semi-dark text-2xl
+                text-light
               "
             >
               No image
@@ -163,7 +164,7 @@ export const MovieCard: FC<Props> = ({
                   {getIconByName(IconName.PLAY)}
                 </SvgIcon>
 
-                <p>Play</p>
+                <p className='text-light'>Play</p>
               </div>
             ) : (
               <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">

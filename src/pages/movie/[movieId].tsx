@@ -131,7 +131,7 @@ const MoviePage = () => {
                 <button
                   className="
                     text-md relative flex h-10 w-full items-center justify-center gap-2
-                    rounded-lg bg-primary transition hover:bg-semi-dark hover:text-light
+                    rounded-lg bg-primary transition hover:bg-semi-dark text-light
                     sm:w-[48%] lg:w-full
                     xl:w-[48%]
                     "
@@ -159,7 +159,7 @@ const MoviePage = () => {
                   <button
                     className="
                       text-md relative flex h-10 w-full items-center justify-center gap-2
-                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-dark hover:text-light
+                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-dark text-light
                       sm:w-[48%] lg:w-full 
                       xl:w-[48%]
                       "
