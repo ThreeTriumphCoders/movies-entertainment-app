@@ -12,11 +12,13 @@ const SearchPage = () => {
     total: 0,
   });
 
-  console.log(results.results.length);
+  const queryParams = Array.isArray(query.params)
+    ? query.params[0] || ''
+    : query.params || '';
 
   const { isLoading, isError, refetch } = useQuery({
     queryKey: ['movies'],
-    queryFn: () => getSearchResult(query?.params || '', page.current),
+    queryFn: () => getSearchResult(queryParams, page.current),
     onSuccess(data) {
       setResults((prev) => ({
         results: [...prev?.results, ...data.results],
@@ -31,7 +33,7 @@ const SearchPage = () => {
   };
 
   const getMovies = async () => {
-    const moviesFromServer = await getSearchResult(query?.params || '', 1); //! change
+    const moviesFromServer = await getSearchResult(queryParams, 1);
     console.log(moviesFromServer);
 
     setResults(moviesFromServer);
@@ -65,9 +67,7 @@ const SearchPage = () => {
     <section>
       <MoviesList
         movies={results?.results || []}
-        title={`Found ${results?.total || 0} results for '${
-          query?.params || ''
-        }'`}
+        title={`Found ${results?.total || 0} results for '${queryParams}'`}
       />
     </section>
   );
