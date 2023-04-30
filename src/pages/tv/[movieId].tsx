@@ -98,7 +98,7 @@ const TVPage = () => {
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3 lg:grid-rows-2">
-            <div className="relative mb-8 overflow-hidden lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
+            <div className="relative mb-8 overflow-hidden rounded-xl lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
               {moreImagePaths.length && !isImagesError ? (
                 <MovieSlider imagesPaths={...moreImagePaths} />
               ) : (
