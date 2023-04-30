@@ -1,6 +1,9 @@
+import classNames from 'classnames';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { SvgIcon } from './SvgIcon';
 
@@ -8,6 +11,7 @@ export const Searchbar = () => {
   console.log('rerender search');
   const [currentQuery, setCurrentQuery] = useState('');
   const router = useRouter();
+  const { themeType } = useThemeContext();
 
   const lastPage = useRef('/');
 
@@ -57,7 +61,9 @@ export const Searchbar = () => {
       "
       >
         <SvgIcon
-          className="h-6 w-6 fill-light sm:h-8 sm:w-8"
+          className={classNames('h-6 w-6 sm:h-8 sm:w-8', {
+            'fill-light': themeType === ThemeType.Dark,
+          })}
           viewBox="0 0 24 24"
         >
           {getIconByName(IconName.SEARCH)}
@@ -68,16 +74,13 @@ export const Searchbar = () => {
           placeholder="Search for movies or TV series"
           value={currentQuery}
           onChange={handleChangeQuery}
-          className="
-          w-full 
-          border-b 
-          border-b-dark 
-          bg-dark 
-          p-2 font-light 
-          text-light caret-primary 
-          outline-none 
-          placeholder:text-light placeholder:opacity-50 focus:border-b-grey
-        "
+          className={classNames(
+            'w-full border-b p-2 font-light text-light placeholder-dark caret-primary outline-none placeholder:opacity-50 focus:border-b-grey',
+            {
+              'border-b-dark bg-dark placeholder:text-light':
+                themeType === ThemeType.Dark,
+            },
+          )}
         />
       </label>
     </form>

@@ -110,12 +110,12 @@ export const TrendingCard: FC<Props> = ({
                 </div>
               </div>
 
-              <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
-                {title}
-              </h3>
-            </div>
-          </>
-        </div>
+            <h3 className='text-sm text-light sm:text-lg leading-[18px] sm:leading-6 font-medium'>
+              {title}
+            </h3>
+          </div>
+        </>
+      </div>
       </Link>
 
       <div
