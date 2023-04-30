@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { SvgIcon } from './SvgIcon';
+import classNames from 'classnames';
+import { useThemeContext } from '~/utils/ThemeContext';
+import { ThemeType } from '~/types/ThemeType';
 
 type Props = {
   imagesPaths: string[];
@@ -10,6 +13,7 @@ type Props = {
 
 export const MovieSlider = ({ imagesPaths }: Props) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { themeType } = useThemeContext();
 
   const setSlideTo0 = () => {
     setCurrentSlide(0);
@@ -75,18 +79,21 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
         </div>
 
         <button
-          className="
-            absolute bottom-0 left-0 top-0 flex
-            w-1/2 items-center justify-start bg-gradient-to-r
-            from-dark to-0% p-10 text-light
-            opacity-0 transition duration-500 hover:opacity-100
-          "
+          className={classNames(
+            "absolute bottom-0 left-0 top-0 flex w-1/2 items-center justify-start bg-gradient-to-r from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100",
+            {
+              'from-dark': themeType === ThemeType.Dark,
+            }
+          )}
           onClick={handleSlideLeft}
         >
           <SvgIcon
-            className="
-                h-10 w-10 -rotate-90 fill-light
-              "
+            className={classNames(
+              "h-10 w-10 -rotate-90",
+              {
+                'fill-light': themeType === ThemeType.Dark,
+              }
+            )}
             viewBox="5 5 38 38"
           >
             {getIconByName(IconName.ARROW_UP)}
@@ -94,18 +101,19 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
         </button>
 
         <button
-          className="
-            absolute bottom-0 right-0 top-0 flex
-            w-1/2 items-center justify-end bg-gradient-to-l
-            from-dark to-0% p-10 text-light
-            opacity-0 transition duration-500 hover:opacity-100
-          "
+          className={classNames(
+            "absolute bottom-0 right-0 top-0 flex w-1/2 items-center justify-end bg-gradient-to-l from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100",
+            {
+              'from-dark': themeType === ThemeType.Dark
+            }
+          )}
           onClick={handleSlideRight}
         >
           <SvgIcon
-            className="
-                h-10 w-10 rotate-90 fill-light
-              "
+            className={classNames(
+              "h-10 w-10 rotate-90",
+              { 'fill-light': themeType === ThemeType.Dark }
+            )}
             viewBox="5 5 38 38"
           >
             {getIconByName(IconName.ARROW_UP)}
@@ -114,13 +122,10 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
       </div>
 
       <div
-        className="
-        absolute bottom-0
-        left-0 right-0 hidden items-center 
-        justify-center gap-2 bg-gradient-to-t from-dark
-        to-10% pb-1 opacity-100
-        transition duration-500 sm:flex
-      "
+        className={classNames(
+          "absolute bottom-0 left-0 right-0 hidden items-center justify-center gap-2 bg-gradient-to-t from-[#fff] to-10% pb-1 opacity-100 transition duration-500 sm:flex",
+          { 'from-dark': themeType === ThemeType.Dark }
+        )}
       >
         {imagesPaths.map((path, index) => (
           <button

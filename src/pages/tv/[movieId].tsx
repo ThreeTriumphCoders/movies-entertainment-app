@@ -11,6 +11,8 @@ import { SvgIcon } from '~/components/SvgIcon';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName,getIconByName } from '~/utils/getIconByName';
 import { getImages,getMovie,getTrailerKey } from '~/utils/helpers';
 
@@ -23,6 +25,7 @@ const TVPage = () => {
   const movieId = query.movieId ? Number(query.movieId) : 0;
   const [tv, setTv] = useState<MovieType | null>(null);
   const [isPlayerOpened, setPlayerOpened] = useState(false);
+  const { themeType } = useThemeContext();
 
   const { isError: isMovieLoadingError } = useQuery({
     queryKey: [`${movieId}-tv`],
@@ -89,7 +92,12 @@ const TVPage = () => {
             <p>{date}</p>
             {separator}
             <div className="flex items-center gap-1">
-              <SvgIcon className="h-2.5 w-2.5 fill-light">
+              <SvgIcon 
+                className={classNames(
+                  "h-2.5 w-2.5 fill-light",
+                  { 'fill-semi-dark': themeType === ThemeType.Light }
+                )}
+              >
                 {getIconByName(IconName.TV)}
               </SvgIcon>
 
@@ -120,7 +128,6 @@ const TVPage = () => {
                 className="
                     mb-8 flex flex-col flex-wrap items-center
                     justify-between gap-[4%] gap-y-3 sm:flex-row
-
                   "
               >
                 <button
@@ -154,7 +161,7 @@ const TVPage = () => {
                   <button
                     className="
                       text-md relative flex h-10 w-full items-center justify-center gap-2
-                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-darktext-light
+                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-dark text-light
                       sm:w-[48%] lg:w-full 
                       xl:w-[48%]
                       "
@@ -168,7 +175,7 @@ const TVPage = () => {
                 )}
               </div>
 
-              <h3 className="mb-4 text-lg font-medium text-light">
+              <h3 className="mb-4 text-lg font-medium">
                 Description
               </h3>
 
@@ -225,7 +232,7 @@ const TVPage = () => {
               </div>
 
               <h3 className="mb-4 text-lg font-medium">Genres</h3>
-              <p className="mb-8 font-light text-light">
+              <p className="mb-8 font-light">
                 {tv.genres
                   .reduce((acc, genre) => {
                     return acc + genre.name + ', ';
@@ -234,17 +241,17 @@ const TVPage = () => {
               </p>
 
               <h3 className="mb-4 text-lg font-medium">Seasons</h3>
-              <table className='text-left w-3/4 sm:w-1/2 lg:w-full'>
+              <table className='text-left w-4/5 sm:w-2/3 lg:w-full'>
                 <tr className='text-sm'>
-                  <th className='pr-8'>Name</th>
+                  <th className='pr-3'>Name</th>
                   <th className='pr-3'>Series count</th>
                   <th>Release date</th>
                 </tr>
                 {tv.seasons?.map(season => (
-                  <tr key={season.id}>
-                    <td>{season.name}</td>
+                  <tr key={season.id} className='font-light'>
+                    <td className='pr-3'>{season.name}</td>
                     <td>{season.episode_count}</td>
-                    <td>{season.air_date.split('-').join('.')}</td>
+                    <td>{season.air_date ? season.air_date.split('-').join('.') : '-'}</td>
                   </tr>
                 ))}
               </table>
