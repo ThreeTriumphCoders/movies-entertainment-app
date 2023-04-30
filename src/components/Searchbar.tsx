@@ -6,14 +6,25 @@ import { SvgIcon } from './SvgIcon';
 
 export const Searchbar = () => {
   const [currentQuery, setCurrentQuery] = useState('');
+  const [lastPage, setLastPage] = useState('/');
   const router = useRouter();
 
   const handleRequest = _.debounce((param: string) => {
-    void router.push(`/search?params=${param}`);
-  }, 500);
+    if (!param) {
+      void router.push(lastPage);
+    } else {
+      void router.push(`/search?params=${param}`);
+    }
+  }, 1000);
 
   const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
+    handleRequest.cancel();
     setCurrentQuery(event.target.value);
+
+    if (!router.asPath.includes('/search')) {
+      setLastPage(router.asPath);
+    }
+
     handleRequest(event.target.value);
   };
 

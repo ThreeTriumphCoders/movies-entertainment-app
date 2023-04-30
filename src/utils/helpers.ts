@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { env } from '~/env.mjs';
 import { Category } from '~/types/Category.enum';
-import { type MovieType } from '~/types/Movie';
+import { type MoviesType, type MovieType } from '~/types/Movie';
 import {
   type ImagesAPIResponseType,
   type MoviesAPIResponseType,
@@ -73,19 +73,38 @@ export const getTrending = async (category: Category = Category.MOVIE) => {
   return results;
 };
 
-export const getSearchResult = async (query: string, page = 1) => {
-  const { results: moviesResults } = await get<MoviesAPIResponseType>(
-    `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/search/movie?${env.NEXT_PUBLIC_TMDB_API_KEY}&query=${query}&page=${page}`,
-  );
-  const { results: seriesResults } = await get<MoviesAPIResponseType>(
-    `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/search/tv?${env.NEXT_PUBLIC_TMDB_API_KEY}&query=${query}&page=${page}`,
-  );
+export type SearchResults = {
+  results: MoviesType;
+  total: number;
+};
 
-  const results = moviesResults
-    .concat(seriesResults)
+export const getSearchResult = async (
+  query: string,
+  page = 1,
+): Promise<SearchResults> => {
+  console.log(`doing request. page: ${page} query: ${query}`);
+
+  const { results: moviesResults, total_results: totalMovies = 0 } =
+    await get<MoviesAPIResponseType>(
+      `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/search/movie?${env.NEXT_PUBLIC_TMDB_API_KEY}&query=${query}&page=${page}`,
+    );
+  const { results: seriesResults, total_results: totalSeries = 0 } =
+    await get<MoviesAPIResponseType>(
+      `${env.NEXT_PUBLIC_TMDB_MOVIE_URL}/search/tv?${env.NEXT_PUBLIC_TMDB_API_KEY}&query=${query}&page=${page}`,
+    );
+
+  const movies = moviesResults.map((movie) => ({
+    ...movie,
+    media_type: 'movie',
+  }));
+  const series = seriesResults.map((serie) => ({ ...serie, media_type: 'tv' }));
+
+  const results = movies
+    .concat(series)
     .sort((a, b) => b.vote_count - a.vote_count);
 
-  console.log(results);
-
-  return results;
+  return {
+    results: results,
+    total: totalMovies + totalSeries,
+  };
 };

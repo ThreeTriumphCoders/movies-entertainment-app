@@ -48,13 +48,15 @@ export const MoviesList: FC<Props> = ({
                 name,
                 release_date,
                 first_air_date,
+                media_type,
               } = movie;
 
               const isBookmarked = isInBookmarks(id);
 
-              const type = category
-                ? category
-                : bookmarks.find(({ movieId }) => movieId === id)?.type;
+              let type = category ? category : media_type;
+
+              type = //! rewrite 56-60
+                bookmarks.find(({ movieId }) => movieId === id)?.type || type;
 
               return (
                 <MovieCard

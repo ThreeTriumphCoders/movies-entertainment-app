@@ -1,35 +1,74 @@
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MoviesList } from '~/components/MoviesList';
-import { type MoviesType } from '~/types/Movie';
-import { getSearchResult } from '~/utils/helpers';
+import { getSearchResult, type SearchResults } from '~/utils/helpers';
 
 const SearchPage = () => {
-  const router = useRouter();
+  const page = useRef(1);
   const { query } = useRouter();
-  const [movies, setMovies] = useState<MoviesType>([]);
+  const [results, setResults] = useState<SearchResults>({
+    results: [],
+    total: 0,
+  });
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     void router.push('/');
-  //   }, 3000);
-  // }, [router]);
+  console.log(results.results.length);
+
+  const { isLoading, isError, refetch } = useQuery({
+    queryKey: ['movies'],
+    queryFn: () => getSearchResult(query?.params || '', page.current),
+    onSuccess(data) {
+      setResults((prev) => ({
+        results: [...prev?.results, ...data.results],
+        total: data.total,
+      }));
+      page.current += 1;
+    },
+  });
+
+  const loadMoreResults = async () => {
+    await refetch();
+  };
+
+  const getMovies = async () => {
+    const moviesFromServer = await getSearchResult(query?.params || '', 1); //! change
+    console.log(moviesFromServer);
+
+    setResults(moviesFromServer);
+  };
 
   useEffect(() => {
-    const getMovies = async () => {
-      const moviesFromServer = await getSearchResult(query?.params || '', 2); //! change
+    void getMovies();
+    page.current = 1;
+  }, [query]);
 
-      console.log(moviesFromServer);
+  useEffect(() => {
+    const loadNewMovies = () => {
+      const { clientHeight, scrollHeight, scrollTop } =
+        document.documentElement;
 
-      setMovies(moviesFromServer);
+      const needLoad = scrollHeight - clientHeight - scrollTop < 1000;
+
+      if (needLoad) {
+        void loadMoreResults();
+      }
     };
 
-    getMovies().catch(console.error);
-  }, [query]);
+    window.addEventListener('scroll', loadNewMovies);
+
+    return () => {
+      window.removeEventListener('scroll', loadNewMovies);
+    };
+  }, []);
 
   return (
     <section>
-      <MoviesList movies={movies} title="Search results" />
+      <MoviesList
+        movies={results?.results || []}
+        title={`Found ${results?.total || 0} results for '${
+          query?.params || ''
+        }'`}
+      />
     </section>
   );
 };
