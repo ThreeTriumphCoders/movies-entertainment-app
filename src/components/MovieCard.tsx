@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
-import { type Category } from '~/types/Category.enum';
+import { Category } from '~/types/Category.enum';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { getImages, getTrailerKey } from '~/utils/helpers';
 import { Loader } from './Loader';
@@ -229,7 +229,7 @@ export const MovieCard: FC<Props> = ({
       </div>
 
       <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
-        <Link href={`/movie/${movieId}`}>{title}</Link>
+        <Link href={category === Category.MOVIE ? `/movie/${movieId}` : `/serie/${movieId}`}>{title}</Link>
       </h3>
     </div>
   );
