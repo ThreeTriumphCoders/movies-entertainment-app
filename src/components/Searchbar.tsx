@@ -8,11 +8,10 @@ import { IconName, getIconByName } from '~/utils/getIconByName';
 import { SvgIcon } from './SvgIcon';
 
 export const Searchbar = () => {
-  console.log('rerender search');
   const [currentQuery, setCurrentQuery] = useState('');
   const router = useRouter();
   const { themeType } = useThemeContext();
-
+  const initialQueryLoaded = useRef(false);
   const lastPage = useRef('/');
 
   const handleRequest = (param: string) => {
@@ -23,7 +22,7 @@ export const Searchbar = () => {
     }
   };
 
-  const debouncedRequest = useRef(_.debounce(handleRequest, 1000)).current;
+  const debouncedRequest = useRef(_.debounce(handleRequest, 700)).current;
 
   const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentQuery(event.target.value);
@@ -40,6 +39,18 @@ export const Searchbar = () => {
   useEffect(() => {
     if (!router.asPath.includes('/search')) {
       setCurrentQuery('');
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (!initialQueryLoaded.current) {
+      const query = router.query.params;
+
+      if (query) {
+        setCurrentQuery(JSON.stringify(query).slice(1, -1));
+
+        initialQueryLoaded.current = true;
+      }
     }
   }, [router]);
 

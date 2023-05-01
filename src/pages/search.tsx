@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { Loader } from '~/components/Loader';
 import { MoviesList } from '~/components/MoviesList';
 import { getSearchResult, type SearchResults } from '~/utils/helpers';
 
@@ -14,6 +15,7 @@ const SearchPage = () => {
   const page = useRef(1);
   const { query } = useRouter();
   const [results, setResults] = useState(defaultResults);
+  const [isLoaded, setLoaded] = useState(false);
   const attempsWithoutResult = useRef(0);
 
   const queryParams = Array.isArray(query.params)
@@ -51,12 +53,30 @@ const SearchPage = () => {
   };
 
   const loadFirstResults = async (queryParams = '') => {
-    const results = await getSearchResult(queryParams, 1);
+    const getResultsFromServer = async (attempt = 1): Promise<void> => {
+      console.log('calling function');
 
-    setResults(results);
+      if (attempt > 1) {
+        return;
+      }
+
+      const resultsFromServer = await getSearchResult(queryParams, 1);
+
+      if (resultsFromServer.results.length) {
+        setResults(resultsFromServer);
+        return;
+      } else {
+        return await getResultsFromServer(attempt + 1);
+      }
+    };
+
+    await getResultsFromServer();
+    setLoaded(true);
   };
 
   useEffect(() => {
+    setLoaded(false);
+
     page.current = 1;
     attempsWithoutResult.current = 0;
 
@@ -87,11 +107,14 @@ const SearchPage = () => {
     queryParams || 'your request'
   }'`;
 
+  const title = !isLoaded ? 'Searching for results...' : titleIfFound;
+
   return (
     <>
+      {!isLoaded && <Loader />}
       <MoviesList
         movies={results?.results || []}
-        title={isError ? 'Something went wrong.' : titleIfFound}
+        title={isError ? 'Something went wrong.' : title}
       />
     </>
   );
