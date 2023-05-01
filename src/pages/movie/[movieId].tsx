@@ -82,7 +82,10 @@ const MoviePage = () => {
     <>
       {!isMovieLoadingError && movie ? (
         <section>
-          <h1 className="mb-2 text-xl font-light text-light sm:mb-4 sm:text-3xl">
+          <h1
+            className={`mb-2 text-xl font-light sm:mb-4 sm:text-3xl
+          ${themeType === ThemeType.Dark ? 'text-light' : 'text-dark'}`}
+          >
             {movie.title}
           </h1>
 
