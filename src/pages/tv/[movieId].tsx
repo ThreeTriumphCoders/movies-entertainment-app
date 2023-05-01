@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback,useEffect,useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '~/components/Loader';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
@@ -13,8 +13,8 @@ import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
-import { IconName,getIconByName } from '~/utils/getIconByName';
-import { getImages,getMovie,getTrailerKey } from '~/utils/helpers';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
 const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
@@ -78,8 +78,6 @@ const TVPage = () => {
     ? tv.first_air_date.slice(0, 4)
     : 'No release date';
 
-
-  console.log(tv);
   return (
     <>
       {!isMovieLoadingError && tv ? (
@@ -92,11 +90,10 @@ const TVPage = () => {
             <p>{date}</p>
             {separator}
             <div className="flex items-center gap-1">
-              <SvgIcon 
-                className={classNames(
-                  "h-2.5 w-2.5 fill-light",
-                  { 'fill-semi-dark': themeType === ThemeType.Light }
-                )}
+              <SvgIcon
+                className={classNames('h-2.5 w-2.5 fill-light', {
+                  'fill-semi-dark': themeType === ThemeType.Light,
+                })}
               >
                 {getIconByName(IconName.TV)}
               </SvgIcon>
@@ -133,7 +130,7 @@ const TVPage = () => {
                 <button
                   className="
                     text-md relative flex h-10 w-full items-center justify-center gap-2
-                    rounded-lg bg-primary transition hover:bg-semi-dark text-light
+                    rounded-lg bg-primary text-light transition hover:bg-semi-dark
                     sm:w-[48%] lg:w-full
                     xl:w-[48%]
                     "
@@ -161,7 +158,7 @@ const TVPage = () => {
                   <button
                     className="
                       text-md relative flex h-10 w-full items-center justify-center gap-2
-                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-dark text-light
+                      rounded-lg  bg-[#ff0000] text-light transition hover:bg-semi-dark
                       sm:w-[48%] lg:w-full 
                       xl:w-[48%]
                       "
@@ -175,23 +172,19 @@ const TVPage = () => {
                 )}
               </div>
 
-              <h3 className="mb-4 text-lg font-medium">
-                Description
-              </h3>
+              <h3 className="mb-4 text-lg font-medium">Description</h3>
 
-              <p className="mb-8 font-light">{tv.overview || 'No description'}</p>
+              <p className="mb-8 font-light">
+                {tv.overview || 'No description'}
+              </p>
 
               <h3 className="mb-4 text-lg font-medium">Status</h3>
 
               <p className="mb-8 font-light">{tv.status}</p>
 
-              <h3 className="mb-4 text-lg font-medium">
-                Original language
-              </h3>
+              <h3 className="mb-4 text-lg font-medium">Original language</h3>
 
-              <p className="mb-8 font-light">
-                {tv.original_language}
-              </p>
+              <p className="mb-8 font-light">{tv.original_language}</p>
 
               <h3 className="mb-4 text-lg font-medium">Rating</h3>
 
@@ -206,9 +199,7 @@ const TVPage = () => {
                         'bg-[#E84545]': tv.vote_average < 5,
                       })}
                     />
-                    <p className="font-light">
-                      {tv.vote_average.toFixed(1)}
-                    </p>
+                    <p className="font-light">{tv.vote_average.toFixed(1)}</p>
                   </div>
                   <div>
                     {/* <div
@@ -241,17 +232,21 @@ const TVPage = () => {
               </p>
 
               <h3 className="mb-4 text-lg font-medium">Seasons</h3>
-              <table className='text-left w-4/5 sm:w-2/3 lg:w-full'>
-                <tr className='text-sm'>
-                  <th className='pr-3'>Name</th>
-                  <th className='pr-3'>Series count</th>
+              <table className="w-4/5 text-left sm:w-2/3 lg:w-full">
+                <tr className="text-sm">
+                  <th className="pr-3">Name</th>
+                  <th className="pr-3">Series count</th>
                   <th>Release date</th>
                 </tr>
-                {tv.seasons?.map(season => (
-                  <tr key={season.id} className='font-light'>
-                    <td className='pr-3'>{season.name}</td>
+                {tv.seasons?.map((season) => (
+                  <tr key={season.id} className="font-light">
+                    <td className="pr-3">{season.name}</td>
                     <td>{season.episode_count}</td>
-                    <td>{season.air_date ? season.air_date.split('-').join('.') : '-'}</td>
+                    <td>
+                      {season.air_date
+                        ? season.air_date.split('-').join('.')
+                        : '-'}
+                    </td>
                   </tr>
                 ))}
               </table>
