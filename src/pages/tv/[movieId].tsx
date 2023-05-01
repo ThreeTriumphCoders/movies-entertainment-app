@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '~/components/Loader';
@@ -103,20 +104,32 @@ const TVPage = () => {
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3 lg:grid-rows-2">
-            <div className="relative mb-8 overflow-hidden rounded-xl lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-              {moreImagePaths.length && !isImagesError ? (
-                <MovieSlider imagesPaths={...moreImagePaths} />
-              ) : (
+            <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
+              {moreImagePaths.length === 0 && (
                 <div
                   className="
                       absolute bottom-[1px] left-[1px] right-[1px]
                       top-[1px] flex items-center
                       justify-center bg-semi-dark text-2xl
-                      text-light
                     "
                 >
-                  No image
+                  {tv.poster_path ? (
+                    <Image
+                      className="object-contain transition-all duration-1000"
+                      alt="movie image"
+                      fill
+                      priority
+                      sizes={origin}
+                      src={`https://www.themoviedb.org/t/p/original${tv.poster_path}`}
+                    />
+                  ) : (
+                    <p>No image</p>
+                  )}
                 </div>
+              )}
+
+              {moreImagePaths.length !== 0 && !isImagesError && (
+                <MovieSlider imagesPaths={...moreImagePaths} />
               )}
             </div>
 

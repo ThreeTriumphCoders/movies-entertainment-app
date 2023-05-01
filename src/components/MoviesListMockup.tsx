@@ -1,8 +1,15 @@
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
+
 type Props = {
   title: string;
 };
 
 export const MoviesListMockup = ({ title }: Props) => {
+  const { themeType } = useThemeContext();
+
+  const bgColor = themeType === ThemeType.Dark ? 'bg-semi-dark' : 'bg-grey';
+
   return (
     <section className="mb-6 pb-8 sm:mb-10">
       <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
@@ -22,12 +29,18 @@ export const MoviesListMockup = ({ title }: Props) => {
               id="image-container"
               className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]"
             >
-              <div className="absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse  bg-semi-dark" />
+              <div
+                className={`${bgColor} animate-pulse} absolute bottom-[1px] left-[1px] right-[1px] top-[1px]`}
+              />
             </div>
 
-            <div className="mb-1 h-[14px] w-1/4 animate-pulse rounded-sm bg-semi-dark sm:h-4" />
+            <div
+              className={`${bgColor} mb-1 h-[14px] w-1/4 animate-pulse rounded-sm bg-semi-dark sm:h-4`}
+            />
 
-            <div className="h-[18px] w-2/3 animate-pulse rounded-sm bg-semi-dark sm:h-6" />
+            <div
+              className={`${bgColor} h-[18px] w-2/3 animate-pulse rounded-sm bg-semi-dark sm:h-6`}
+            />
           </div>
         ))}
       </div>

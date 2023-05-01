@@ -54,8 +54,6 @@ const SearchPage = () => {
 
   const loadFirstResults = async (queryParams = '') => {
     const getResultsFromServer = async (attempt = 1): Promise<void> => {
-      console.log('calling function');
-
       if (attempt > 1) {
         return;
       }

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '~/components/Loader';
@@ -106,19 +107,30 @@ const MoviePage = () => {
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3 lg:grid-rows-2">
-            <div className="relative mb-8 overflow-hidden rounded-xl lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-              {moreImagePaths.length && !isImagesError ? (
-                <MovieSlider imagesPaths={...moreImagePaths} />
-              ) : (
-                <div
-                  className="
+            <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
+              <div
+                className="
                       absolute bottom-[1px] left-[1px] right-[1px]
                       top-[1px] flex items-center
                       justify-center bg-semi-dark text-2xl
                     "
-                >
-                  No image
-                </div>
+              >
+                {movie.poster_path ? (
+                  <Image
+                    className="object-contain transition-all duration-1000"
+                    alt="movie image"
+                    fill
+                    priority
+                    sizes={origin}
+                    src={`https://www.themoviedb.org/t/p/original${movie.poster_path}`}
+                  />
+                ) : (
+                  <p>No image</p>
+                )}
+              </div>
+
+              {moreImagePaths.length !== 0 && !isImagesError && (
+                <MovieSlider imagesPaths={...moreImagePaths} />
               )}
             </div>
 
@@ -127,7 +139,6 @@ const MoviePage = () => {
                 className="
                     mb-8 flex flex-col flex-wrap items-center
                     justify-between gap-[4%] gap-y-3 sm:flex-row
-
                   "
               >
                 <button
@@ -147,14 +158,13 @@ const MoviePage = () => {
                   ) : (
                     <>
                       <SvgIcon
-                        className="h-5 w-5 fill-light"
-                        viewBox="0 0 20 20"
+                        className={`h-[32px] w-[32px] cursor-pointer  stroke-light stroke-[1.5] 
+                          ${isBookmarked ? 'fill-light' : 'fill-none'}`}
+                        viewBox="-10 -9 38 38"
                       >
                         {getIconByName(IconName.BOOKMARK)}
                       </SvgIcon>
-                      {isBookmarked
-                        ? 'Already in bookmarks'
-                        : 'Add to bookmarks'}
+                      {isBookmarked ? 'Іn bookmarks' : 'Bookmark'}
                     </>
                   )}
                 </button>
