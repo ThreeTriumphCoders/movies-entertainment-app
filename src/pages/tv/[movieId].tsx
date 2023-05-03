@@ -103,7 +103,7 @@ const TVPage = () => {
             </div>
           </div>
 
-          <div className="grid gap-x-12 lg:grid-cols-3 lg:grid-rows-2">
+          <div className="grid gap-x-12 lg:grid-cols-3">
             <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
               {moreImagePaths.length === 0 && (
                 <div
@@ -133,7 +133,7 @@ const TVPage = () => {
               )}
             </div>
 
-            <div className="mb-10 max-w-2xl lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3 lg:mb-0">
+            <div className="mb-10 max-w-2xl lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-7 lg:mb-0">
               <div
                 className="
                     mb-8 flex flex-col flex-wrap items-center
