@@ -124,7 +124,7 @@ const TVPage = () => {
                 )}
               </div>
 
-              <MovieInfo movie={tv} category={Category.MOVIE} />
+              <MovieInfo movie={tv} category={Category.TV} />
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
