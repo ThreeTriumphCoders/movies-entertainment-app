@@ -44,7 +44,7 @@ export const Navbar = () => {
           { 'bg-semi-dark': themeType === ThemeType.Dark },
         )}
       >
-        <div className="flex items-center justify-end gap-6 sm:gap-8 lg:flex-col">
+        <div className="flex items-center justify-end gap-4 sm:gap-8 lg:flex-col">
           <Link href="/">
             <SvgIcon
               className={classNames(
