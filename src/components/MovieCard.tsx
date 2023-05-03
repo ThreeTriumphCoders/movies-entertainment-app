@@ -158,7 +158,7 @@ export const MovieCard: FC<Props> = ({
                 fill
                 priority
                 sizes="(max-width: 640px) 50vw, 33vw"
-                src={`https://www.themoviedb.org/t/p/original${imagePath}`}
+                src={`https://www.themoviedb.org/t/p/w500${imagePath}`}
               />
             </div>
           )}
@@ -177,7 +177,7 @@ export const MovieCard: FC<Props> = ({
                 fill
                 priority
                 sizes="(max-width: 640px) 50vw, 33vw"
-                src={`https://www.themoviedb.org/t/p/original${path}`}
+                src={`https://www.themoviedb.org/t/p/w500${path}`}
               />
             ))}
 
