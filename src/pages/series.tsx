@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { uniqBy } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { LoadMoreButton } from '~/components/LoadMoreButton';
-import { Loader } from '~/components/Loader';
 import { MoviesList } from '~/components/MoviesList';
+import { MoviesListMockup } from '~/components/MoviesListMockup';
 import { Category } from '~/types/Category.enum';
 import { type MoviesType } from '~/types/Movie';
 import { getPopular } from '~/utils/helpers';
@@ -11,11 +12,13 @@ const SeriesPage = () => {
   const page = useRef(1);
   const [series, setSeries] = useState<MoviesType>([]);
 
-  const { isLoading, isError, refetch } = useQuery({
+  const { isFetching, isError, refetch } = useQuery({
     queryKey: ['series'],
     queryFn: () => getPopular(page.current, Category.TV),
     onSuccess(data) {
-      setSeries((prev) => [...prev, ...data]);
+      setSeries((prev) => {
+        return uniqBy([...prev, ...data], (elem) => elem.id);
+      });
       page.current += 1;
     },
   });
@@ -45,8 +48,8 @@ const SeriesPage = () => {
 
   return (
     <>
-      {isLoading ? (
-        <Loader />
+      {isFetching && series.length < 1 ? (
+        <MoviesListMockup title="Popular series" />
       ) : (
         <>
           <MoviesList
@@ -56,7 +59,7 @@ const SeriesPage = () => {
           />
 
           <LoadMoreButton
-            isLoading={isLoading}
+            isLoading={isFetching}
             onClick={() => void loadMoreSeries()}
           />
         </>
