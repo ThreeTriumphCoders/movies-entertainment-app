@@ -34,14 +34,13 @@ export const Navbar = () => {
     <div
       className="
       absolute left-0 right-0 
-      top-0 sm:left-6 sm:right-6 sm:py-6 
-      lg:fixed lg:bottom-0 lg:left-0 lg:top-0
-      lg:w-40 lg:p-8
+      top-0  sm:left-6 sm:right-6 sm:py-6  
+      lg:fixed lg:bottom-0 lg:left-0 lg:top-0 lg:w-40 lg:p-8
       "
     >
       <div
         className={classNames(
-          'flex h-full items-center justify-between bg-primary p-4 sm:rounded-xl lg:flex-col lg:rounded-[20px] lg:p-7',
+          'flex h-full items-center justify-between bg-primary p-4 transition-transform duration-300 sm:rounded-xl sm:hover:scale-[1.02] lg:flex-col lg:rounded-[20px] lg:p-7',
           { 'bg-semi-dark': themeType === ThemeType.Dark },
         )}
       >
