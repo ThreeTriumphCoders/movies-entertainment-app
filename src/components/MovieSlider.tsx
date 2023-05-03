@@ -155,7 +155,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
                 fill
                 priority
                 sizes="(max-width: 640px) 50vw, 33vw"
-                src={`https://www.themoviedb.org/t/p/original${path}`}
+                src={`https://www.themoviedb.org/t/p/w780${path}`}
               />
             </button>
           ))}

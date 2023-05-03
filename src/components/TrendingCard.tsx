@@ -90,7 +90,7 @@ export const TrendingCard: FC<Props> = ({
               fill
               priority
               sizes="(max-width: 640px) 50vw, 33vw"
-              src={`https://www.themoviedb.org/t/p/original${imagePath}`}
+              src={`https://www.themoviedb.org/t/p/w780${imagePath}`}
             />
 
             <div className="absolute bottom-2 left-2 rounded-md bg-dark bg-opacity-50 p-2">
