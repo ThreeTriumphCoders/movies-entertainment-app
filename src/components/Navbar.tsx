@@ -101,7 +101,7 @@ export const Navbar = () => {
             )}
           </button>
 
-          {sessionData && (
+          {sessionData?.user && (
             <div
               className={`
             absolute right-[13px] flex flex-nowrap items-center rounded-full text-dark
@@ -138,7 +138,7 @@ export const Navbar = () => {
 
           <button
             onClick={
-              sessionData
+              sessionData?.user
                 ? () => setIsSignOut((state) => !state)
                 : () => void router.push('/auth/signin')
             }
@@ -151,7 +151,7 @@ export const Navbar = () => {
                 },
               )}
             >
-              {sessionData ? (
+              {sessionData?.user ? (
                 <Image
                   src={sessionData?.user?.image ?? avatar}
                   alt={sessionData?.user?.name ?? 'user name'}
