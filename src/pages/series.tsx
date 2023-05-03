@@ -46,24 +46,20 @@ const SeriesPage = () => {
     };
   }, []);
 
-  return (
+  return isFetching && series.length < 1 ? (
+    <MoviesListMockup title="Popular series" />
+  ) : (
     <>
-      {isFetching && series.length < 1 ? (
-        <MoviesListMockup title="Popular series" />
-      ) : (
-        <>
-          <MoviesList
-            movies={isError ? [] : series}
-            title={isError ? 'Error! No series loaded :(' : 'Popular series'}
-            category={Category.TV}
-          />
+      <MoviesList
+        movies={isError ? [] : series}
+        title={isError ? 'Error! No series loaded :(' : 'Popular series'}
+        category={Category.TV}
+      />
 
-          <LoadMoreButton
-            isLoading={isFetching}
-            onClick={() => void loadMoreSeries()}
-          />
-        </>
-      )}
+      <LoadMoreButton
+        isLoading={isFetching}
+        onClick={() => void loadMoreSeries()}
+      />
     </>
   );
 };
