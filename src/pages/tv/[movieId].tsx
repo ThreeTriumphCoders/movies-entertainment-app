@@ -7,7 +7,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '~/components/Loader';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
+import { Rating } from '~/components/Rating';
 import { ReviewsSection } from '~/components/ReviewsSection';
+import { Separator } from '~/components/Separator';
 import { SvgIcon } from '~/components/SvgIcon';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
@@ -16,10 +18,6 @@ import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
-
-const separator = (
-  <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
-);
 
 const TVPage = () => {
   const { query } = useRouter();
@@ -89,7 +87,9 @@ const TVPage = () => {
 
           <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
             <p>{date}</p>
-            {separator}
+
+            <Separator />
+
             <div className="flex items-center gap-1">
               <SvgIcon
                 className={classNames('h-2.5 w-2.5 fill-light', {
@@ -197,42 +197,16 @@ const TVPage = () => {
 
               <h3 className="mb-4 text-lg font-medium">Original language</h3>
 
-              <p className="mb-8 font-light">{tv.original_language}</p>
+              <p className="mb-8 font-light">
+                {tv.original_language.toUpperCase()}
+              </p>
 
               <h3 className="mb-4 text-lg font-medium">Rating</h3>
 
-              <div className="mb-8 flex gap-3">
-                <div>
-                  <div className="flex items-center gap-1">
-                    <div
-                      className={classNames('h-2 w-2 rounded-full', {
-                        'bg-[#7ED061]': tv.vote_average > 7.4,
-                        'bg-[#FFF961]':
-                          tv.vote_average > 4.9 && tv.vote_average < 7.5,
-                        'bg-[#E84545]': tv.vote_average < 5,
-                      })}
-                    />
-                    <p className="font-light">{tv.vote_average.toFixed(1)}</p>
-                  </div>
-                  <div>
-                    {/* <div
-                        className={classNames(
-                          'w-2 h-2 rounded-full',
-                          {
-                            'bg-[#7ED061]': rating > 7.4,
-                            'bg-[#FFF961]': rating > 4.9 && rating < 7.5,
-                            'bg-[#E84545]': rating < 5,
-                          },
-                        )}
-                      />
-                      <p className="font-light text-light text-sm">9.0</p> */}
-                    <p className="font-light">No votes</p>
-                  </div>
-                </div>
-                <div>
-                  <p className="font-light">TMDB</p>
-                  <p className="font-light">Movies Ent.</p>
-                </div>
+              <div className="items-between mb-8 flex w-max flex-col">
+                <Rating title="TMDB" average={tv.vote_average} />
+
+                <Rating title="Movies Ent." average={0} />
               </div>
 
               <h3 className="mb-4 text-lg font-medium">Genres</h3>

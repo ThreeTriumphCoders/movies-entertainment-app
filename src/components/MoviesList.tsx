@@ -50,6 +50,8 @@ export const MoviesList: FC<Props> = ({
                 first_air_date,
                 media_type,
                 poster_path,
+                original_language,
+                vote_average,
               } = movie;
 
               const isBookmarked = isInBookmarks(id);
@@ -68,6 +70,8 @@ export const MoviesList: FC<Props> = ({
                   releaseDate={release_date || first_air_date}
                   categoryIcon={type as IconName}
                   category={type as Category}
+                  language={original_language}
+                  rating={vote_average}
                   playingId={playingId}
                   isBookmarkedInitial={isBookmarked}
                   onPlayingChange={setPlayingId}

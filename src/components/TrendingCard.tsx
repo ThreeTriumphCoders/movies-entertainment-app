@@ -3,10 +3,12 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect,useState,type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
-import { IconName,getIconByName } from '~/utils/getIconByName';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { Rating } from './Rating';
+import { Separator } from './Separator';
 import { SvgIcon } from './SvgIcon';
 
 type Props = {
@@ -16,14 +18,12 @@ type Props = {
   releaseDate?: string;
   categoryIcon?: IconName;
   category?: Category;
+  language?: string;
+  rating?: number;
   isBookmarkedInitial?: boolean;
   onBookmarksAdd?: (id: number, type: Category) => void;
   onBookmarksRemove?: (id: number) => void;
 };
-
-const separator = (
-  <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
-);
 
 export const TrendingCard: FC<Props> = ({
   movieId = 0,
@@ -32,6 +32,8 @@ export const TrendingCard: FC<Props> = ({
   releaseDate = '',
   categoryIcon = IconName.NONE,
   category = Category.MOVIE,
+  language,
+  rating,
   isBookmarkedInitial,
   onBookmarksAdd,
   onBookmarksRemove,
@@ -45,7 +47,6 @@ export const TrendingCard: FC<Props> = ({
   useEffect(() => {
     setIsBookmarked(isInBookmarks(movieId));
   }, [bookmarks]);
-
 
   const handleBookmarkClick = () => {
     if (
@@ -79,7 +80,9 @@ export const TrendingCard: FC<Props> = ({
   return (
     <div className="relative min-w-[230px] snap-start sm:min-w-[410px] lg:min-w-[470px]">
       <Link
-        href={category === Category.MOVIE ? `/movie/${movieId}` : `/tv/${movieId}`}
+        href={
+          category === Category.MOVIE ? `/movie/${movieId}` : `/tv/${movieId}`
+        }
         className="min-w-[230px] snap-start sm:min-w-[410px] lg:min-w-[470px]"
       >
         <div className="relative overflow-hidden rounded-lg pt-[50%]">
@@ -97,7 +100,7 @@ export const TrendingCard: FC<Props> = ({
               <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
                 <p>{releaseDate.slice(0, 4)}</p>
 
-                {separator}
+                <Separator />
 
                 <div className="flex items-center gap-1">
                   <SvgIcon className="h-2.5 w-2.5 fill-light">
@@ -108,14 +111,29 @@ export const TrendingCard: FC<Props> = ({
                     {categoryIcon === IconName.MOVIE ? 'Movie' : 'TV Serie'}
                   </p>
                 </div>
+
+                {language && (
+                  <>
+                    <Separator />
+                    <p>{language.toUpperCase()}</p>{' '}
+                  </>
+                )}
+
+                {rating && (
+                  <>
+                    <Separator />
+
+                    <Rating average={rating} />
+                  </>
+                )}
               </div>
 
-            <h3 className='text-sm text-light sm:text-lg leading-[18px] sm:leading-6 font-medium'>
-              {title}
-            </h3>
-          </div>
-        </>
-      </div>
+              <h3 className="text-sm font-medium leading-[18px] text-light sm:text-lg sm:leading-6">
+                {title}
+              </h3>
+            </div>
+          </>
+        </div>
       </Link>
 
       <div
