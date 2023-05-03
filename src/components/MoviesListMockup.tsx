@@ -30,7 +30,7 @@ export const MoviesListMockup = ({ title }: Props) => {
               className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]"
             >
               <div
-                className={`${bgColor} animate-pulse} absolute bottom-[1px] left-[1px] right-[1px] top-[1px]`}
+                className={`${bgColor} absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse`}
               />
             </div>
 

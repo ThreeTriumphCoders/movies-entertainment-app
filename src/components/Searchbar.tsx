@@ -40,9 +40,7 @@ export const Searchbar = () => {
     if (!router.asPath.includes('/search')) {
       setCurrentQuery('');
     }
-  }, [router]);
 
-  useEffect(() => {
     if (!initialQueryLoaded.current) {
       const query = router.query.params;
 
