@@ -23,7 +23,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Movies Entertainment</title>
+        <title>Movies Entertainment App</title>
         <meta
           name="description"
           content="Discover and enjoy your favorite movies and TV series with the Movies Entertainment App. Search, watch trailers, leave reviews, and add to your bookmarks. Start now!"
