@@ -6,7 +6,7 @@
 
 ## 🙌 Introduction
 
-The [Movies Entertainment App](https://ttc-entertainment-web-app.vercel.app/) is a full-stack movie and TV series entertainment application. The aim of this project was to practice full-stack development skills and to learn new interesting technologies. With this app, users can easily find a movie or TV series, watch a trailer, leave a comment, and add it to their bookmarks. They can also change the theme of the app.
+The [Movies Entertainment App](https://movies-entertainment-app-three-triump.netlify.app/) is a full-stack movie and TV series entertainment application. The aim of this project was to practice full-stack development skills and to learn new interesting technologies. With this app, users can easily find a movie or TV series, watch a trailer, leave a comment, and add it to their bookmarks. They can also change the theme of the app.
 
 ## 👀 Features
 
@@ -18,7 +18,7 @@ The [Movies Entertainment App](https://ttc-entertainment-web-app.vercel.app/) is
 
 ## 🌐 Preview
 
-To use the application, visit [Movies Entertainment App](https://ttc-entertainment-web-app.vercel.app/) and log in using your Google or Github account to access extra features like reviews and bookmarks.
+To use the application, visit [Movies Entertainment App](https://movies-entertainment-app-three-triump.netlify.app/) and log in using your Google or Github account to access extra features like reviews and bookmarks.
 
 ## 🚀 Technologies Used
 
