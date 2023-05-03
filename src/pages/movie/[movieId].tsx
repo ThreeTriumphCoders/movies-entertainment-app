@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useCallback,useEffect,useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Loader } from '~/components/Loader';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
@@ -13,8 +14,8 @@ import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
-import { IconName,getIconByName } from '~/utils/getIconByName';
-import { getImages,getMovie,getTrailerKey } from '~/utils/helpers';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
 const separator = (
   <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
@@ -82,19 +83,21 @@ const MoviePage = () => {
     <>
       {!isMovieLoadingError && movie ? (
         <section>
-          <h1 className="mb-2 text-xl font-light text-light sm:mb-4 sm:text-3xl">
-            {movie.name}
+          <h1
+            className={`mb-2 text-xl font-light sm:mb-4 sm:text-3xl
+          ${themeType === ThemeType.Dark ? 'text-light' : 'text-dark'}`}
+          >
+            {movie.title}
           </h1>
 
           <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
             <p>{date}</p>
             {separator}
             <div className="flex items-center gap-1">
-              <SvgIcon 
-                className={classNames(
-                  "h-2.5 w-2.5",
-                  { 'fill-light': themeType === ThemeType.Dark }
-                )}
+              <SvgIcon
+                className={classNames('h-2.5 w-2.5', {
+                  'fill-light': themeType === ThemeType.Dark,
+                })}
               >
                 {getIconByName(IconName.MOVIE)}
               </SvgIcon>
@@ -104,19 +107,30 @@ const MoviePage = () => {
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3 lg:grid-rows-2">
-            <div className="relative mb-8 overflow-hidden rounded-xl lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-              {moreImagePaths.length && !isImagesError ? (
-                <MovieSlider imagesPaths={...moreImagePaths} />
-              ) : (
-                <div
-                  className="
+            <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
+              <div
+                className="
                       absolute bottom-[1px] left-[1px] right-[1px]
                       top-[1px] flex items-center
                       justify-center bg-semi-dark text-2xl
                     "
-                >
-                  No image
-                </div>
+              >
+                {movie.poster_path ? (
+                  <Image
+                    className="object-contain transition-all duration-1000"
+                    alt="movie image"
+                    fill
+                    priority
+                    sizes={origin}
+                    src={`https://www.themoviedb.org/t/p/original${movie.poster_path}`}
+                  />
+                ) : (
+                  <p>No image</p>
+                )}
+              </div>
+
+              {moreImagePaths.length !== 0 && !isImagesError && (
+                <MovieSlider imagesPaths={...moreImagePaths} />
               )}
             </div>
 
@@ -125,13 +139,12 @@ const MoviePage = () => {
                 className="
                     mb-8 flex flex-col flex-wrap items-center
                     justify-between gap-[4%] gap-y-3 sm:flex-row
-
                   "
               >
                 <button
                   className="
                     text-md relative flex h-10 w-full items-center justify-center gap-2
-                    rounded-lg bg-primary transition hover:bg-semi-dark text-light
+                    rounded-lg bg-primary text-light transition hover:bg-semi-dark
                     sm:w-[48%] lg:w-full
                     xl:w-[48%]
                     "
@@ -145,12 +158,13 @@ const MoviePage = () => {
                   ) : (
                     <>
                       <SvgIcon
-                        className="h-5 w-5 fill-light"
-                        viewBox="0 0 20 20"
+                        className={`h-[32px] w-[32px] cursor-pointer  stroke-light stroke-[1.5] 
+                          ${isBookmarked ? 'fill-light' : 'fill-none'}`}
+                        viewBox="-10 -9 38 38"
                       >
                         {getIconByName(IconName.BOOKMARK)}
                       </SvgIcon>
-                      {isBookmarked ? 'Bookmarked' : 'Bookmark'}
+                      {isBookmarked ? 'Іn bookmarks' : 'Bookmark'}
                     </>
                   )}
                 </button>
@@ -159,7 +173,7 @@ const MoviePage = () => {
                   <button
                     className="
                       text-md relative flex h-10 w-full items-center justify-center gap-2
-                      rounded-lg  bg-[#ff0000] transition hover:bg-semi-dark text-light
+                      rounded-lg  bg-[#ff0000] text-light transition hover:bg-semi-dark
                       sm:w-[48%] lg:w-full 
                       xl:w-[48%]
                       "
@@ -173,9 +187,7 @@ const MoviePage = () => {
                 )}
               </div>
 
-              <h3 className="mb-4 text-lg font-medium">
-                Description
-              </h3>
+              <h3 className="mb-4 text-lg font-medium">Description</h3>
 
               <p className="mb-8 font-light">{movie.overview}</p>
 
@@ -183,13 +195,9 @@ const MoviePage = () => {
 
               <p className="mb-8 font-light">{movie.status}</p>
 
-              <h3 className="mb-4 text-lg font-medium">
-                Original language
-              </h3>
+              <h3 className="mb-4 text-lg font-medium">Original language</h3>
 
-              <p className="mb-8 font-light">
-                {movie.original_language}
-              </p>
+              <p className="mb-8 font-light">{movie.original_language}</p>
 
               <h3 className="mb-4 text-lg font-medium">Rating</h3>
 
@@ -229,7 +237,7 @@ const MoviePage = () => {
                 </div>
               </div>
 
-              <h3 className="mb-4 text-lg font-mediumt">Genres</h3>
+              <h3 className="font-mediumt mb-4 text-lg">Genres</h3>
               <p className="mb-8 font-light">
                 {movie.genres
                   .reduce((acc, genre) => {

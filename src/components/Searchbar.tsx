@@ -1,48 +1,97 @@
-import { type ChangeEvent, useState } from "react";
-import { SvgIcon } from "./SvgIcon";
-import { IconName, getIconByName } from "~/utils/getIconByName";
-import classNames from "classnames";
-import { useThemeContext } from "~/utils/ThemeContext";
-import { ThemeType } from "~/types/ThemeType";
+import classNames from 'classnames';
+import _ from 'lodash';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { SvgIcon } from './SvgIcon';
 
 export const Searchbar = () => {
-  const [query, setQuery] = useState('');
+  const [currentQuery, setCurrentQuery] = useState('');
+  const router = useRouter();
   const { themeType } = useThemeContext();
+  const initialQueryLoaded = useRef(false);
+  const lastPage = useRef('/');
+
+  const handleRequest = (param: string) => {
+    if (!param) {
+      void router.push(lastPage.current);
+    } else {
+      void router.push(`/search?params=${param}`);
+    }
+  };
+
+  const debouncedRequest = useRef(_.debounce(handleRequest, 700)).current;
 
   const handleChangeQuery = (event: ChangeEvent<HTMLInputElement>) => {
-    setQuery(event.target.value);
-  }
+    setCurrentQuery(event.target.value);
+
+    if (!router.asPath.includes('/search')) {
+      lastPage.current = router.asPath;
+    }
+
+    debouncedRequest.cancel();
+
+    debouncedRequest(event.target.value);
+  };
+
+  useEffect(() => {
+    if (!router.asPath.includes('/search')) {
+      setCurrentQuery('');
+    }
+
+    if (!initialQueryLoaded.current) {
+      const query = router.query.params;
+
+      if (query) {
+        setCurrentQuery(JSON.stringify(query).slice(1, -1));
+
+        initialQueryLoaded.current = true;
+      }
+    }
+  }, [router]);
 
   return (
-    <label 
-      className="
-        flex items-center gap-4 
-        sm:gap-6
-        py-4 sm:py-2 sm:mb-6 lg:pt-16
-        cursor-text 
-        sm:text-2xl
-      "
+    <form
+      action="get"
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleRequest(currentQuery);
+      }}
     >
-      <SvgIcon 
-        className={classNames(
-          "h-6 w-6 sm:h-8 sm:w-8",
-          { 'fill-light': themeType === ThemeType.Dark}
-        )} 
-        viewBox="0 0 24 24"
+      <label
+        className="
+        flex cursor-text items-center 
+        gap-4
+        py-4 sm:mb-6 sm:gap-6 sm:py-2
+        sm:text-2xl 
+        lg:pt-16
+      "
       >
-        {getIconByName(IconName.SEARCH)}
-      </SvgIcon>
+        <SvgIcon
+          className={classNames('h-6 w-6 sm:h-8 sm:w-8', {
+            'fill-light': themeType === ThemeType.Dark,
+          })}
+          viewBox="0 0 24 24"
+        >
+          {getIconByName(IconName.SEARCH)}
+        </SvgIcon>
 
-      <input 
-        type="text"
-        placeholder="Search for movies or TV series" 
-        value={query}
-        onChange={handleChangeQuery}
-        className={classNames(
-          "caret-primary p-2 w-full font-light text-light placeholder-dark placeholder:opacity-50 outline-none border-b focus:border-b-grey",
-          { 'bg-dark border-b-dark placeholder:text-light': themeType === ThemeType.Dark }
-        )}
-      />
-    </label>
-  )
+        <input
+          type="text"
+          placeholder="Search for movies or TV series"
+          value={currentQuery}
+          onChange={handleChangeQuery}
+          className={classNames(
+            'w-full border-b p-2 font-light text-light placeholder-dark caret-primary outline-none placeholder:opacity-50 focus:border-b-grey',
+            {
+              'border-b-dark bg-dark placeholder:text-light':
+                themeType === ThemeType.Dark,
+            },
+          )}
+        />
+      </label>
+    </form>
+  );
 };
