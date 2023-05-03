@@ -24,6 +24,12 @@ export const MovieSchema = z.object({
   status: z.string(),
   runtime: z.number(),
   origin_country: z.array(z.string()).optional(),
+  seasons: z.array(z.object({
+    air_date: z.string(),
+    episode_count: z.number(),
+    name: z.string(),
+    id: z.number(),
+  })).optional(),
 });
 export const MoviesSchema = z.array(MovieSchema);
 

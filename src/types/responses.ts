@@ -1,9 +1,10 @@
-import { z } from "zod";
-import { MoviesSchema } from "./Movie";
+import { z } from 'zod';
+import { MoviesSchema } from './Movie';
 
 export const MoviesAPIResponse = z.object({
   page: z.number(),
   results: MoviesSchema,
+  total_results: z.number().optional(),
 });
 
 export const VideoSchema = z.object({

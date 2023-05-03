@@ -79,7 +79,7 @@ export const TrendingCard: FC<Props> = ({
   return (
     <div className="relative min-w-[230px] snap-start sm:min-w-[410px] lg:min-w-[470px]">
       <Link
-        href={`/movie/${movieId}`}
+        href={category === Category.MOVIE ? `/movie/${movieId}` : `/tv/${movieId}`}
         className="min-w-[230px] snap-start sm:min-w-[410px] lg:min-w-[470px]"
       >
         <div className="relative overflow-hidden rounded-lg pt-[50%]">
@@ -110,12 +110,12 @@ export const TrendingCard: FC<Props> = ({
                 </div>
               </div>
 
-              <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
-                {title}
-              </h3>
-            </div>
-          </>
-        </div>
+            <h3 className='text-sm text-light sm:text-lg leading-[18px] sm:leading-6 font-medium'>
+              {title}
+            </h3>
+          </div>
+        </>
+      </div>
       </Link>
 
       <div

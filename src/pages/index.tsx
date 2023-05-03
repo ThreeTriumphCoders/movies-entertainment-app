@@ -2,17 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { MoviesList } from '~/components/MoviesList';
+import { MoviesListMockup } from '~/components/MoviesListMockup';
 import { TrendingList } from '~/components/TrendingList';
 import { Category } from '~/types/Category.enum';
 import { getPopular } from '~/utils/helpers';
 
+
+
 const Home: NextPage = () => {
-  const { data: popularMovies = [] } = useQuery({
+  const { data: popularMovies = [], isLoading: moviesLoading } = useQuery({
     queryKey: ['popularMovies'],
     queryFn: () => getPopular(1, Category.MOVIE),
   });
 
-  const { data: popularSeries = [] } = useQuery({
+  const { data: popularSeries = [], isLoading: seriesLoading } = useQuery({
     queryKey: ['popularSeries'],
     queryFn: () => getPopular(1, Category.TV),
   });
@@ -27,17 +30,25 @@ const Home: NextPage = () => {
 
       <TrendingList />
 
-      <MoviesList
-        movies={popularMovies.slice(0, 12)}
-        title="Popular movies"
-        category={Category.MOVIE}
-      />
+      {moviesLoading ? (
+        <MoviesListMockup title="Popular movies" />
+      ) : (
+        <MoviesList
+          movies={popularMovies.slice(0, 12)}
+          title="Popular movies"
+          category={Category.MOVIE}
+        />
+      )}
 
-      <MoviesList
-        movies={popularSeries.slice(0, 12)}
-        title="Popular series"
-        category={Category.TV}
-      />
+      {seriesLoading ? (
+        <MoviesListMockup title="Popular series" />
+      ) : (
+        <MoviesList
+          movies={popularSeries.slice(0, 12)}
+          title="Popular series"
+          category={Category.TV}
+        />
+      )}
 
       <footer className="flex w-full flex-col items-center justify-center">
         <p>

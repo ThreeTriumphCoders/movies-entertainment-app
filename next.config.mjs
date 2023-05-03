@@ -15,13 +15,14 @@ const config = {
    * @see https://github.com/vercel/next.js/issues/41980
    */
   i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
+    locales: ['en'],
+    defaultLocale: 'en',
   },
   fontLoaders: [
-    { loader: "@next/font/google", options: { subsets: ["latin"] } },
+    { loader: '@next/font/google', options: { subsets: ['latin'] } },
   ],
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',

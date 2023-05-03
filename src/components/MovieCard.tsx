@@ -4,11 +4,13 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect,useRef,useState,type FC } from 'react';
+import { useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
-import { type Category } from '~/types/Category.enum';
-import { IconName,getIconByName } from '~/utils/getIconByName';
-import { getImages,getTrailerKey } from '~/utils/helpers';
+import { Category } from '~/types/Category.enum';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { getImages, getTrailerKey } from '~/utils/helpers';
 import { Loader } from './Loader';
 import { SvgIcon } from './SvgIcon';
 
@@ -30,7 +32,7 @@ export const MovieCard: FC<Props> = ({
   movieId = 0,
   imagePath,
   title = 'No movie title',
-  releaseDate = 'No release date',
+  releaseDate,
   categoryIcon = IconName.MOVIE,
   category,
   playingId,
@@ -39,10 +41,12 @@ export const MovieCard: FC<Props> = ({
   onBookmarksAdd,
   onBookmarksRemove,
 }) => {
+  
+  const { themeType } = useThemeContext();
+
   const {
     data: trailerKey = '',
     refetch: loadTrailerKey,
-    isSuccess: isTrailerKeyLoaded,
   } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => getTrailerKey(movieId, category),
@@ -114,6 +118,11 @@ export const MovieCard: FC<Props> = ({
     }
   };
 
+  const year = useMemo(
+    () => (releaseDate ? releaseDate.slice(0, 4) : 'No release date'),
+    [releaseDate],
+  );
+
   return (
     <div
       className="min-w-[140px] sm:min-w-[180px] lg:min-w-[250px]"
@@ -133,13 +142,29 @@ export const MovieCard: FC<Props> = ({
                 absolute bottom-[1px] left-[1px] right-[1px] top-[1px] 
                 flex items-center
                 justify-center bg-semi-dark text-2xl
+                text-light
               "
             >
               No image
             </div>
           )}
 
+          {!isPlaying && imagePath && (
+            <div className="absolute bottom-0 left-0 right-0 top-0 bg-semi-dark">
+              <Image
+                className="object-contain"
+                alt="movie image"
+                onClick={() => onPlayingChange(movieId)}
+                fill
+                priority
+                sizes="(max-width: 640px) 50vw, 33vw"
+                src={`https://www.themoviedb.org/t/p/original${imagePath}`}
+              />
+            </div>
+          )}
+
           {!isPlaying &&
+            moreImagePaths.length > 0 &&
             moreImagePaths.map((path, index) => (
               <Image
                 key={path}
@@ -175,7 +200,7 @@ export const MovieCard: FC<Props> = ({
                   {getIconByName(IconName.PLAY)}
                 </SvgIcon>
 
-                <p>Play</p>
+                <p className="text-light">Play</p>
               </div>
             ) : (
               <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">
@@ -228,15 +253,19 @@ export const MovieCard: FC<Props> = ({
         </>
       </div>
 
-      <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
-        <p>{releaseDate.slice(0, 4)}</p>
+      <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:text-[13px] sm:leading-4">
+        <p>{year}</p>
 
         <p className="-translate-y-1/4 select-none font-semibold opacity-60">
           .
         </p>
 
         <div className="flex items-center gap-1">
-          <SvgIcon className="h-2.5 w-2.5 fill-light">
+          <SvgIcon
+            className={classNames('h-2.5 w-2.5 fill-light', {
+              'fill-semi-dark': themeType === ThemeType.Light,
+            })}
+          >
             {getIconByName(categoryIcon)}
           </SvgIcon>
 
@@ -245,7 +274,13 @@ export const MovieCard: FC<Props> = ({
       </div>
 
       <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
-        <Link href={`/movie/${movieId}`}>{title}</Link>
+        <Link
+          href={
+            category === Category.MOVIE ? `/movie/${movieId}` : `/tv/${movieId}`
+          }
+        >
+          {title}
+        </Link>
       </h3>
     </div>
   );
