@@ -4,13 +4,13 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState, type FC } from 'react';
+import { useEffect,useMemo,useRef,useState,type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
-import { IconName, getIconByName } from '~/utils/getIconByName';
-import { getImages, getTrailerKey } from '~/utils/helpers';
+import { IconName,getIconByName } from '~/utils/getIconByName';
+import { getImages,getTrailerKey } from '~/utils/helpers';
 import { Loader } from './Loader';
 import { SvgIcon } from './SvgIcon';
 
@@ -47,6 +47,7 @@ export const MovieCard: FC<Props> = ({
   const {
     data: trailerKey = '',
     refetch: loadTrailerKey,
+    isSuccess: isTrailerKeyLoaded,
   } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => getTrailerKey(movieId, category),
@@ -188,7 +189,7 @@ export const MovieCard: FC<Props> = ({
               opacity-0 transition-opacity hover:opacity-100
             "
           >
-            {trailerKey ? (
+            {isTrailerKeyLoaded && trailerKey ? (
               <div
                 className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg transition hover:bg-opacity-50"
                 onClick={() => onPlayingChange(movieId)}
