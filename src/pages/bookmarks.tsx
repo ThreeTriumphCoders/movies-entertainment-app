@@ -49,7 +49,7 @@ const BookmarksPage = () => {
   return (
     <section>
       {isFetching ? (
-        <MoviesListMockup title={'Loading bookmarks'} />
+        <MoviesListMockup title={'Bookmarks'} />
       ) : (
         <MoviesList
           title={isError || !movies.length ? 'No Bookmarks yet' : 'Bookmarks'}
