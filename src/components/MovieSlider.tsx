@@ -75,7 +75,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
                     fill
                     priority
                     sizes={origin}
-                    src={`https://www.themoviedb.org/t/p/w780${path}`}
+                    src={`https://www.themoviedb.org/t/p/original${path}`}
                   />
                 </div>
               ))}
