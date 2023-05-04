@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { type FC } from 'react';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
@@ -20,14 +19,21 @@ export const MoviePoster: FC<Props> = ({ poster_path }) => {
           `}
     >
       {poster_path ? (
-        <Image
-          className="object-contain transition-all duration-1000"
-          alt="movie image"
-          fill
-          priority
-          sizes={origin}
-          src={`https://www.themoviedb.org/t/p/original${poster_path}`}
-        />
+        <picture>
+          <source
+            media="(max-width: 799px)"
+            srcSet={`https://www.themoviedb.org/t/p/w500${poster_path}`}
+          />
+          <source
+            media="(max-width: 1023px)"
+            srcSet={`https://www.themoviedb.org/t/p/w780${poster_path}`}
+          />
+          <img
+            className="object-contain transition-all duration-1000"
+            alt="movie image"
+            src={`https://www.themoviedb.org/t/p/original${poster_path}`}
+          />
+        </picture>
       ) : (
         <p>No image</p>
       )}

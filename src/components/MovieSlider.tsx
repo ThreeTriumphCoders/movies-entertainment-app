@@ -81,14 +81,21 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
             {imagesPaths &&
               imagesPaths.map((path) => (
                 <div key={path} className="relative min-h-full min-w-full">
-                  <Image
-                    className="object-cover transition-all duration-1000"
-                    alt="movie image"
-                    fill
-                    priority
-                    sizes={origin}
-                    src={`https://www.themoviedb.org/t/p/original${path}`}
-                  />
+                  <picture>
+                    <source
+                      media="(max-width: 799px)"
+                      srcSet={`https://www.themoviedb.org/t/p/w500${path}`}
+                    />
+                    <source
+                      media="(max-width: 1023px)"
+                      srcSet={`https://www.themoviedb.org/t/p/w780${path}`}
+                    />
+                    <img
+                      className="object-cover w-full transition-all duration-1000"
+                      alt="movie image"
+                      src={`https://www.themoviedb.org/t/p/original${path}`}
+                    />
+                  </picture>
                 </div>
               ))}
           </div>
@@ -190,7 +197,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
                 fill
                 priority
                 sizes="(max-width: 640px) 50vw, 33vw"
-                src={`https://www.themoviedb.org/t/p/w780${path}`}
+                src={`https://www.themoviedb.org/t/p/w300${path}`}
               />
             </button>
           ))}
