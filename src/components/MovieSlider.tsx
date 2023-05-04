@@ -91,7 +91,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
                       srcSet={`https://www.themoviedb.org/t/p/w780${path}`}
                     />
                     <img
-                      className="object-cover w-full transition-all duration-1000"
+                      className="m-auto h-full object-contain transition-all duration-1000"
                       alt="movie image"
                       src={`https://www.themoviedb.org/t/p/original${path}`}
                     />

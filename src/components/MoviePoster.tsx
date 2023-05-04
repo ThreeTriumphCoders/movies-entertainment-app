@@ -29,7 +29,7 @@ export const MoviePoster: FC<Props> = ({ poster_path }) => {
             srcSet={`https://www.themoviedb.org/t/p/w780${poster_path}`}
           />
           <img
-            className="object-contain transition-all duration-1000"
+            className="m-auto h-full object-contain transition-all duration-1000"
             alt="movie image"
             src={`https://www.themoviedb.org/t/p/original${poster_path}`}
           />
