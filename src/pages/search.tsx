@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { Loader } from '~/components/Loader';
 import { MoviesList } from '~/components/MoviesList';
 import { MoviesListMockup } from '~/components/MoviesListMockup';
 import { getSearchResult, type SearchResults } from '~/utils/helpers';
@@ -22,7 +23,7 @@ const SearchPage = () => {
     ? query.params[0]
     : query.params;
 
-  const { isError, refetch } = useQuery({
+  const { isError, refetch, isFetching } = useQuery({
     queryKey: ['movies'],
     queryFn: () => {
       return getSearchResult(queryParams || '', page.current);
@@ -109,11 +110,21 @@ const SearchPage = () => {
 
   return (
     <>
-      {!isLoaded && <MoviesListMockup title={title} />}
-      <MoviesList
-        movies={results?.results || []}
-        title={isError ? 'Something went wrong.' : title}
-      />
+      {!isLoaded ? (
+        <MoviesListMockup title={title} />
+      ) : (
+        <>
+          <MoviesList
+            movies={results?.results || []}
+            title={isError ? 'Something went wrong.' : title}
+          />
+          {isFetching && (
+            <div className="relative h-10">
+              <Loader />
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 };
