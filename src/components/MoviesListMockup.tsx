@@ -13,7 +13,9 @@ export const MoviesListMockup = ({ title }: Props) => {
   return (
     <section className="mb-6 pb-8 sm:mb-10">
       {title && (
-        <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
+        <h2 className="mb-6 text-xl font-light sm:text-[32px] lg:mb-10">
+          {title}
+        </h2>
       )}
 
       <div
@@ -37,11 +39,11 @@ export const MoviesListMockup = ({ title }: Props) => {
             </div>
 
             <div
-              className={`${bgColor} mb-1 h-[14px] w-1/4 animate-pulse rounded-sm bg-semi-dark sm:h-4`}
+              className={`${bgColor} mb-1 h-[14px] w-3/4 animate-pulse rounded-sm sm:h-4`}
             />
 
             <div
-              className={`${bgColor} h-[18px] w-2/3 animate-pulse rounded-sm bg-semi-dark sm:h-6`}
+              className={`${bgColor} h-[18px] w-2/4 animate-pulse rounded-sm sm:h-6`}
             />
           </div>
         ))}

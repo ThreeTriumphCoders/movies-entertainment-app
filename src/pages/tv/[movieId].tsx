@@ -14,7 +14,6 @@ import { TrailerButton } from '~/components/TrailerButton';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
-import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName } from '~/utils/getIconByName';
 import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
@@ -23,7 +22,6 @@ const TVPage = () => {
   const movieId = query.movieId ? Number(query.movieId) : 0;
   const [tv, setTv] = useState<MovieType | null>(null);
   const [isPlayerOpened, setPlayerOpened] = useState(false);
-  const { themeType } = useThemeContext();
 
   const { isError: isMovieLoadingError } = useQuery({
     queryKey: [`${movieId}-tv`],

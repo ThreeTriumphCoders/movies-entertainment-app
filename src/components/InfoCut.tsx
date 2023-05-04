@@ -7,7 +7,7 @@ import { Separator } from './Separator';
 import { SvgIcon } from './SvgIcon';
 
 type Props = {
-  year: string;
+  year?: string;
   icon: IconName;
   language?: string;
   rating?: number;
@@ -31,13 +31,17 @@ export const InfoCut: FC<Props> = ({
 
   return (
     <div
-      className={`mb-1 flex gap-1 text-[11px] font-light leading-[14px] opacity-75 sm:text-[13px] sm:leading-4 ${
+      className={`mb-1 flex gap-1 text-[11px] font-light leading-[14px] opacity-75  sm:text-[13px] sm:leading-4 ${
         isColorDark ? 'text-dark' : 'text-light'
       }`}
     >
-      <p>{year}</p>
+      {year && (
+        <>
+          <p>{year}</p>
 
-      <Separator />
+          <Separator />
+        </>
+      )}
 
       <div className="flex items-center gap-1">
         <SvgIcon
@@ -46,7 +50,7 @@ export const InfoCut: FC<Props> = ({
           {getIconByName(icon)}
         </SvgIcon>
 
-        <p>{icon === IconName.MOVIE ? 'Movie' : 'TV Serie'}</p>
+        <p>{icon === IconName.MOVIE ? 'Movie' : 'Serie'}</p>
       </div>
 
       {language && (

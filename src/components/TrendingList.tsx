@@ -151,7 +151,7 @@ export const TrendingList = () => {
     <>
       {!isMoviesError && !isSeriesError && (
         <section className="relative mb-12 sm:mb-16 lg:pl-0">
-          <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">
+          <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10 font-light">
             Trending last week
           </h2>
 
@@ -202,7 +202,8 @@ export const TrendingList = () => {
 
           <div
             className={classNames(
-              'pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l from-[#fff] to-0%',
+              'pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l to-0%',
+              { 'from-light': themeType === ThemeType.Light },
               { 'from-dark': themeType === ThemeType.Dark },
             )}
           />

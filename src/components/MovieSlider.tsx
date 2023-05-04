@@ -59,8 +59,9 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
   const width = slideRef.current?.clientWidth || 0;
   const translateWidth = currentSlide * width;
-
   const hasOneImage = imagesPaths.length <= 1;
+  const placeholderBgColor =
+    themeType === ThemeType.Dark ? 'bg-semi-dark' : 'bg-grey';
 
   return (
     <>
@@ -73,19 +74,28 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
               transform: `translateX(-${translateWidth}px)`,
             }}
           >
-            <div className="absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse bg-semi-dark" />
+            <div
+              className={`${placeholderBgColor} absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse transition-colors duration-500`}
+            />
 
             {imagesPaths &&
               imagesPaths.map((path) => (
                 <div key={path} className="relative min-h-full min-w-full">
-                  <Image
-                    className="object-cover transition-all duration-1000"
-                    alt="movie image"
-                    fill
-                    priority
-                    sizes={origin}
-                    src={`https://www.themoviedb.org/t/p/original${path}`}
-                  />
+                  <picture>
+                    <source
+                      media="(max-width: 799px)"
+                      srcSet={`https://www.themoviedb.org/t/p/w500${path}`}
+                    />
+                    <source
+                      media="(max-width: 1023px)"
+                      srcSet={`https://www.themoviedb.org/t/p/w780${path}`}
+                    />
+                    <img
+                      className="m-auto h-full object-contain transition-all duration-1000"
+                      alt="movie image"
+                      src={`https://www.themoviedb.org/t/p/original${path}`}
+                    />
+                  </picture>
                 </div>
               ))}
           </div>
@@ -101,7 +111,10 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
           <>
             <button
               className={classNames(
-                'absolute bottom-0 left-0 top-0 hidden w-1/2 items-center justify-start bg-gradient-to-r from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100 sm:flex',
+                'absolute bottom-0 left-0 top-0 hidden w-1/2 items-center justify-start bg-gradient-to-r to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100 sm:flex',
+                {
+                  'from-light': themeType === ThemeType.Light,
+                },
                 {
                   'from-dark': themeType === ThemeType.Dark,
                 },
@@ -109,9 +122,15 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
               onClick={handleSlideLeft}
             >
               <SvgIcon
-                className={classNames('h-10 w-10 -rotate-90', {
-                  'fill-light': themeType === ThemeType.Dark,
-                })}
+                className={classNames(
+                  'h-10 w-10 -rotate-90',
+                  {
+                    'fill-light': themeType === ThemeType.Dark,
+                  },
+                  {
+                    'fill-semi-dark': themeType === ThemeType.Light,
+                  },
+                )}
                 viewBox="5 5 38 38"
               >
                 {getIconByName(IconName.ARROW_UP)}
@@ -120,7 +139,10 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
             <button
               className={classNames(
-                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100 sm:flex',
+                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l to-0% p-10 opacity-0 hover:opacity-100 sm:flex',
+                {
+                  'from-light': themeType === ThemeType.Light,
+                },
                 {
                   'from-dark': themeType === ThemeType.Dark,
                 },
@@ -128,9 +150,15 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
               onClick={handleSlideRight}
             >
               <SvgIcon
-                className={classNames('h-10 w-10 rotate-90', {
-                  'fill-light': themeType === ThemeType.Dark,
-                })}
+                className={classNames(
+                  'h-10 w-10 rotate-90',
+                  {
+                    'fill-light': themeType === ThemeType.Dark,
+                  },
+                  {
+                    'fill-semi-dark': themeType === ThemeType.Light,
+                  },
+                )}
                 viewBox="5 5 38 38"
               >
                 {getIconByName(IconName.ARROW_UP)}
@@ -143,8 +171,13 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
       {!hasOneImage && (
         <div
           className={classNames(
-            'absolute bottom-0 left-0 right-0 hidden items-center justify-center gap-2 bg-gradient-to-t from-[#fff] to-10% pb-1 opacity-100 transition duration-500 sm:flex',
-            { 'from-dark': themeType === ThemeType.Dark },
+            'absolute bottom-0 left-0 right-0 hidden items-center justify-center gap-2 bg-gradient-to-t to-10% pb-1 opacity-100 sm:flex',
+            {
+              'from-light': themeType === ThemeType.Light,
+            },
+            {
+              'from-dark': themeType === ThemeType.Dark,
+            },
           )}
         >
           {imagesPaths.map((path, index) => (
@@ -164,7 +197,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
                 fill
                 priority
                 sizes="(max-width: 640px) 50vw, 33vw"
-                src={`https://www.themoviedb.org/t/p/w780${path}`}
+                src={`https://www.themoviedb.org/t/p/w300${path}`}
               />
             </button>
           ))}

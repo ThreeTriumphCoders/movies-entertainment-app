@@ -32,7 +32,7 @@ export const MovieInfo: FC<Props> = ({ movie, category, rating }) => {
         <Rating title="Movies Ent." average={rating} />
       </div>
 
-      <h3 className="font-medium mb-4 text-lg">Genres</h3>
+      <h3 className="mb-4 text-lg font-medium">Genres</h3>
       <p className="mb-8 font-light">
         {movie.genres
           .reduce((acc, genre) => {

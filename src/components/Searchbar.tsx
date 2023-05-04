@@ -84,9 +84,13 @@ export const Searchbar = () => {
           value={currentQuery}
           onChange={handleChangeQuery}
           className={classNames(
-            'w-full border-b p-2 font-light text-light placeholder-dark caret-primary outline-none placeholder:opacity-50 focus:border-b-grey',
+            'w-full border-b border-opacity-0 p-2 font-light placeholder-dark caret-primary outline-none  placeholder:opacity-50 focus:border-b-grey',
             {
-              'border-b-dark bg-dark placeholder:text-light':
+              'border-b-light bg-light text-dark placeholder:text-dark':
+                themeType === ThemeType.Light,
+            },
+            {
+              'border-b-dark bg-dark text-light placeholder:text-light':
                 themeType === ThemeType.Dark,
             },
           )}
