@@ -59,7 +59,7 @@ export const Navbar = () => {
             </SvgIcon>
           </Link>
 
-          <ul className="flex gap-2 sm:gap-4 lg:flex-col">
+          <ul className="absolute left-1/2 flex -translate-x-1/2 gap-2 sm:gap-4 lg:relative lg:flex-col">
             <li>
               <NavbarLink href="/">{getIconByName(IconName.HOME)}</NavbarLink>
             </li>

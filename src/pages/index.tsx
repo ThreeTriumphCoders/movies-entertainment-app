@@ -7,8 +7,6 @@ import { TrendingList } from '~/components/TrendingList';
 import { Category } from '~/types/Category.enum';
 import { getPopular } from '~/utils/helpers';
 
-
-
 const Home: NextPage = () => {
   const { data: popularMovies = [], isLoading: moviesLoading } = useQuery({
     queryKey: ['popularMovies'],

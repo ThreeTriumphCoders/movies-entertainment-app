@@ -1,7 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { BookmarkButton } from '~/components/BookmarkButton';
@@ -12,19 +10,13 @@ import { MoviePoster } from '~/components/MoviePoster';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
 import { ReviewsSection } from '~/components/ReviewsSection';
-import { SvgIcon } from '~/components/SvgIcon';
 import { TrailerButton } from '~/components/TrailerButton';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
-import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
-import { IconName, getIconByName } from '~/utils/getIconByName';
+import { IconName } from '~/utils/getIconByName';
 import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
-
-const separator = (
-  <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
-);
 
 const TVPage = () => {
   const { query } = useRouter();
@@ -92,11 +84,11 @@ const TVPage = () => {
             {tv.name}
           </h1>
 
-          <div className='mb-2'>
-            <InfoCut year={date} type='TV Serie' icon={IconName.TV} />
+          <div className="mb-2">
+            <InfoCut year={date} icon={IconName.TV} />
           </div>
 
-          <div className="grid gap-x-12 lg:grid-cols-3 lg:grid-rows-2">
+          <div className="grid gap-x-12 lg:grid-cols-3">
             <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
               <MoviePoster poster_path={tv.poster_path} />
 
@@ -105,7 +97,7 @@ const TVPage = () => {
               )}
             </div>
 
-            <div className="mb-10 max-w-2xl lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-3 lg:mb-0">
+            <div className="mb-10 max-w-2xl lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-7 lg:mb-0">
               <div
                 className="
                     mb-8 flex flex-col flex-wrap items-center
@@ -119,9 +111,7 @@ const TVPage = () => {
                   movieId={movieId}
                 />
 
-                {trailerKey && (
-                  <TrailerButton handlePopup={handlePopup} />
-                )}
+                {trailerKey && <TrailerButton handlePopup={handlePopup} />}
               </div>
 
               <MovieInfo movie={tv} category={Category.TV} />

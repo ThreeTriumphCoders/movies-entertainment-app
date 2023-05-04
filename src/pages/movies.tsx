@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { uniqBy } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { LoadMoreButton } from '~/components/LoadMoreButton';
-import { Loader } from '~/components/Loader';
 import { MoviesList } from '~/components/MoviesList';
+import { MoviesListMockup } from '~/components/MoviesListMockup';
 import { Category } from '~/types/Category.enum';
 import { type MoviesType } from '~/types/Movie';
 import { getPopular } from '~/utils/helpers';
@@ -11,11 +12,13 @@ const MoviesPage = () => {
   const page = useRef(1);
   const [movies, setMovies] = useState<MoviesType>([]);
 
-  const { isLoading, isError, refetch } = useQuery({
+  const { isError, refetch, isFetching } = useQuery({
     queryKey: ['movies'],
     queryFn: () => getPopular(page.current, Category.MOVIE),
     onSuccess(data) {
-      setMovies((prev) => [...prev, ...data]);
+      setMovies((prev) => {
+        return uniqBy([...prev, ...data], (elem) => elem.id);
+      });
       page.current += 1;
     },
   });
@@ -43,24 +46,20 @@ const MoviesPage = () => {
     };
   }, []);
 
-  return (
+  return isFetching && movies.length < 1 ? (
+    <MoviesListMockup title="Popular movies" />
+  ) : (
     <>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <MoviesList
-            movies={isError ? [] : movies}
-            title={isError ? 'Error! No movies loaded :(' : 'Popular movies'}
-            category={Category.MOVIE}
-          />
+      <MoviesList
+        movies={isError ? [] : movies}
+        title={isError ? 'Error! No movies loaded :(' : 'Popular movies'}
+        category={Category.MOVIE}
+      />
 
-          <LoadMoreButton
-            isLoading={isLoading}
-            onClick={() => void loadMoreMovies()}
-          />
-        </>
-      )}
+      <LoadMoreButton
+        isLoading={isFetching}
+        onClick={() => void loadMoreMovies()}
+      />
     </>
   );
 };

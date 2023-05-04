@@ -4,13 +4,13 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect,useMemo,useRef,useState,type FC } from 'react';
+import { useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
-import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
-import { IconName,getIconByName } from '~/utils/getIconByName';
-import { getImages,getTrailerKey } from '~/utils/helpers';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { getImages, getTrailerKey } from '~/utils/helpers';
+import { InfoCut } from './InfoCut';
 import { Loader } from './Loader';
 import { SvgIcon } from './SvgIcon';
 
@@ -21,6 +21,8 @@ type Props = {
   releaseDate?: string;
   categoryIcon: IconName;
   category: Category;
+  language: string;
+  rating: number;
   playingId: number;
   isBookmarkedInitial: boolean;
   onPlayingChange: (id: number) => void;
@@ -35,13 +37,14 @@ export const MovieCard: FC<Props> = ({
   releaseDate,
   categoryIcon = IconName.MOVIE,
   category,
+  language,
+  rating,
   playingId,
   isBookmarkedInitial,
   onPlayingChange,
   onBookmarksAdd,
   onBookmarksRemove,
 }) => {
-  
   const { themeType } = useThemeContext();
 
   const {
@@ -254,25 +257,12 @@ export const MovieCard: FC<Props> = ({
         </>
       </div>
 
-      <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:text-[13px] sm:leading-4">
-        <p>{year}</p>
-
-        <p className="-translate-y-1/4 select-none font-semibold opacity-60">
-          .
-        </p>
-
-        <div className="flex items-center gap-1">
-          <SvgIcon
-            className={classNames('h-2.5 w-2.5 fill-light', {
-              'fill-semi-dark': themeType === ThemeType.Light,
-            })}
-          >
-            {getIconByName(categoryIcon)}
-          </SvgIcon>
-
-          <p>{categoryIcon === IconName.MOVIE ? 'Movie' : 'TV Serie'}</p>
-        </div>
-      </div>
+      <InfoCut
+        year={year}
+        icon={categoryIcon}
+        language={language}
+        rating={rating}
+      />
 
       <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
         <Link

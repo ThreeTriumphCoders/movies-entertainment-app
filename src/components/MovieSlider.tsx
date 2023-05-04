@@ -19,33 +19,42 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
     setCurrentSlide(0);
   };
 
+  const intervalId = useRef<NodeJS.Timer>();
+
   useEffect(() => {
     window.addEventListener('resize', setSlideTo0);
-    const swipeInterval = setInterval(handleSlideRight, 10000);
+    intervalId.current = setInterval(handleSlideRight, 10000);
 
     return () => {
       window.removeEventListener('resize', setSlideTo0);
-      clearInterval(swipeInterval);
+      clearInterval(intervalId.current);
     };
-  });
+  }, []);
 
   const lastIndex = imagesPaths.length - 1;
   const slideRef = useRef<HTMLDivElement>(null);
 
   const handleSlideRight = () => {
-    setCurrentSlide((prev) => (currentSlide === lastIndex ? 0 : prev + 1));
+    setCurrentSlide((prev) => (prev === lastIndex ? 0 : prev + 1));
   };
 
   const handleSlideLeft = () => {
-    setCurrentSlide((prev) => (currentSlide === 0 ? lastIndex : prev - 1));
+    setCurrentSlide((prev) => (prev === 0 ? lastIndex : prev - 1));
   };
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => handleSlideRight(),
-    onSwipedRight: () => handleSlideLeft(),
+    onSwipedLeft: () => {
+      handleSlideRight();
+      clearInterval(intervalId.current);
+    },
+    onSwipedRight: () => {
+      handleSlideLeft();
+      clearInterval(intervalId.current);
+    },
     delta: 10,
     swipeDuration: 1000,
     preventScrollOnSwipe: true,
+    trackMouse: true,
   });
 
   const width = slideRef.current?.clientWidth || 0;
@@ -92,7 +101,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
           <>
             <button
               className={classNames(
-                'absolute bottom-0 left-0 top-0 flex w-1/2 items-center justify-start bg-gradient-to-r from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100',
+                'absolute bottom-0 left-0 top-0 hidden w-1/2 items-center justify-start bg-gradient-to-r from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100 sm:flex',
                 {
                   'from-dark': themeType === ThemeType.Dark,
                 },
@@ -111,7 +120,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
             <button
               className={classNames(
-                'absolute bottom-0 right-0 top-0 flex w-1/2 items-center justify-end bg-gradient-to-l from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100',
+                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100 sm:flex',
                 {
                   'from-dark': themeType === ThemeType.Dark,
                 },

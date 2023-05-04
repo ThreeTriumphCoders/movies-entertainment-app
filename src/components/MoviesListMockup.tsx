@@ -2,7 +2,7 @@ import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
 
 type Props = {
-  title: string;
+  title?: string;
 };
 
 export const MoviesListMockup = ({ title }: Props) => {
@@ -12,7 +12,9 @@ export const MoviesListMockup = ({ title }: Props) => {
 
   return (
     <section className="mb-6 pb-8 sm:mb-10">
-      <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
+      {title && (
+        <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
+      )}
 
       <div
         className="

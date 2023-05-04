@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { Loader } from '~/components/Loader';
 import { MoviesList } from '~/components/MoviesList';
+import { MoviesListMockup } from '~/components/MoviesListMockup';
 import { getSearchResult, type SearchResults } from '~/utils/helpers';
 
 const defaultResults: SearchResults = {
@@ -109,7 +109,7 @@ const SearchPage = () => {
 
   return (
     <>
-      {!isLoaded && <Loader />}
+      {!isLoaded && <MoviesListMockup title={title} />}
       <MoviesList
         movies={results?.results || []}
         title={isError ? 'Something went wrong.' : title}

@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
+import classNames from 'classnames';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType, type MoviesType } from '~/types/Movie';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
 import { type IconName } from '~/utils/getIconByName';
 import { getTrending } from '~/utils/helpers';
 import { TrendingCard } from './TrendingCard';
-import classNames from 'classnames';
-import { useThemeContext } from '~/utils/ThemeContext';
-import { ThemeType } from '~/types/ThemeType';
 
 export const TrendingList = () => {
   const { themeType } = useThemeContext();
@@ -169,6 +169,8 @@ export const TrendingList = () => {
                     release_date,
                     first_air_date,
                     media_type,
+                    original_language,
+                    vote_average,
                   } = movie;
                   const isBookmarked = isInBookmarks(id);
 
@@ -184,6 +186,8 @@ export const TrendingList = () => {
                       title={title || name}
                       releaseDate={release_date || first_air_date}
                       category={type as Category}
+                      language={original_language}
+                      rating={vote_average}
                       categoryIcon={type as IconName}
                       isBookmarkedInitial={isBookmarked}
                       onBookmarksAdd={handleAddToBookmarks}
@@ -196,10 +200,10 @@ export const TrendingList = () => {
                 ))}
           </div>
 
-          <div 
+          <div
             className={classNames(
-              "pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l from-[#fff] to-0%",
-              { 'from-dark': themeType === ThemeType.Dark }
+              'pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l from-[#fff] to-0%',
+              { 'from-dark': themeType === ThemeType.Dark },
             )}
           />
         </section>
