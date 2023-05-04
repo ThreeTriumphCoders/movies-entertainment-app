@@ -75,7 +75,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
             }}
           >
             <div
-              className={`${placeholderBgColor} absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse `}
+              className={`${placeholderBgColor} absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse transition-colors duration-500`}
             />
 
             {imagesPaths &&
@@ -94,7 +94,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
           </div>
 
           <div
-            className={`absolute bottom-0 left-0 right-0 top-0 rounded-lg border-2  ${
+            className={`absolute bottom-0 left-0 right-0 top-0 rounded-lg border-2 ${
               themeType === ThemeType.Dark ? 'border-dark' : 'border-light'
             }`}
           />
@@ -132,7 +132,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
             <button
               className={classNames(
-                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l to-0% p-10 opacity-0 transition duration-500 hover:opacity-100 sm:flex',
+                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l to-0% p-10 opacity-0 hover:opacity-100 sm:flex',
                 {
                   'from-light': themeType === ThemeType.Light,
                 },
@@ -164,17 +164,22 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
       {!hasOneImage && (
         <div
           className={classNames(
-            'absolute bottom-0 left-0 right-0 hidden items-center justify-center gap-2 pb-1 sm:flex lg:pb-2',
+            'absolute bottom-0 left-0 right-0 hidden items-center justify-center gap-2 bg-gradient-to-t to-10% pb-1 opacity-100 sm:flex',
+            {
+              'from-light': themeType === ThemeType.Light,
+            },
+            {
+              'from-dark': themeType === ThemeType.Dark,
+            },
           )}
         >
           {imagesPaths.map((path, index) => (
             <button
               key={path}
               className={classNames(
-                'relative h-10 w-20 border-none transition-all',
+                'relative h-10 w-20 border-none transition-transform',
                 {
-                  '-translate-y-1 scale-110 lg:-translate-y-2':
-                    currentSlide === index,
+                  '-translate-y-1 scale-110': currentSlide === index,
                 },
               )}
               onClick={() => setCurrentSlide(index)}
