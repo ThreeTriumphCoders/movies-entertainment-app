@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { InfoCut } from './InfoCut';
 import { SvgIcon } from './SvgIcon';
@@ -39,6 +41,7 @@ export const TrendingCard: FC<Props> = ({
 }) => {
   const { data: sessionData } = useSession();
   const router = useRouter();
+  const { themeType } = useThemeContext();
 
   const [isBookmarked, setIsBookmarked] = useState(isBookmarkedInitial);
   const { currentId, bookmarks, isInBookmarks } = useBookmarksContext();
@@ -66,11 +69,15 @@ export const TrendingCard: FC<Props> = ({
     }
   };
 
+  const bgColor = themeType === ThemeType.Dark ? 'bg-semi-dark' : 'bg-grey';
+
   if (!movieId) {
     return (
       <div className="min-w-[230px] snap-start sm:min-w-[410px] lg:min-w-[470px]">
         <div className="relative overflow-hidden rounded-lg pt-[50%]">
-          <div className="absolute bottom-0 left-0 right-0 top-0 animate-pulse bg-semi-dark" />
+          <div
+            className={`${bgColor} absolute bottom-0 left-0 right-0 top-0 animate-pulse`}
+          />
         </div>
       </div>
     );
@@ -97,7 +104,7 @@ export const TrendingCard: FC<Props> = ({
 
             <div className="absolute bottom-2 left-2 rounded-md bg-dark bg-opacity-50 p-2">
               <InfoCut
-                year={releaseDate.slice(0, 4)}
+                year={releaseDate ? releaseDate.slice(0, 4) : ''}
                 icon={categoryIcon}
                 language={language}
                 rating={rating}

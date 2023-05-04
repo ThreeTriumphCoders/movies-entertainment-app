@@ -20,13 +20,14 @@ export const Layout: React.FC<Props> = ({ children }) => {
       return;
     }
 
-    document.documentElement.style.setProperty('--MyBackColor', 'transparent');
+    document.documentElement.style.setProperty('--MyBackColor', '#F5F5F5');
   }, [themeType]);
 
   return (
     <main
       className={classNames(
-        'min-h-screen px-4 pb-8 pt-16 font-body selection:bg-primary selection:text-dark sm:px-6 sm:pt-[116px] lg:pl-40 lg:pt-0',
+        'min-h-screen px-4 pb-8 pt-16 font-body  selection:bg-primary selection:text-dark sm:px-6 sm:pt-[116px] lg:pl-40 lg:pt-0',
+        { 'bg-light text-dark': themeType === ThemeType.Light },
         { 'bg-dark text-light': themeType === ThemeType.Dark },
       )}
     >

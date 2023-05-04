@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { uniqBy } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { LoadMoreButton } from '~/components/LoadMoreButton';
 import { MoviesList } from '~/components/MoviesList';
 import { MoviesListMockup } from '~/components/MoviesListMockup';
 import { Category } from '~/types/Category.enum';
@@ -49,18 +48,11 @@ const SeriesPage = () => {
   return isFetching && series.length < 1 ? (
     <MoviesListMockup title="Popular series" />
   ) : (
-    <>
-      <MoviesList
-        movies={isError ? [] : series}
-        title={isError ? 'Error! No series loaded :(' : 'Popular series'}
-        category={Category.TV}
-      />
-
-      <LoadMoreButton
-        isLoading={isFetching}
-        onClick={() => void loadMoreSeries()}
-      />
-    </>
+    <MoviesList
+      movies={isError ? [] : series}
+      title={isError ? 'Error! No series loaded :(' : 'Popular series'}
+      category={Category.TV}
+    />
   );
 };
 
