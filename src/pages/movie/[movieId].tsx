@@ -1,22 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
-import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
+import { BookmarkButton } from '~/components/BookmarkButton';
+import { InfoCut } from '~/components/InfoCut';
 import { Loader } from '~/components/Loader';
+import { MovieInfo } from '~/components/MovieInfo';
+import { MoviePoster } from '~/components/MoviePoster';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
-import { Rating } from '~/components/Rating';
 import { ReviewsSection } from '~/components/ReviewsSection';
-import { Separator } from '~/components/Separator';
-import { SvgIcon } from '~/components/SvgIcon';
+import { TrailerButton } from '~/components/TrailerButton';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
-import { IconName, getIconByName } from '~/utils/getIconByName';
+import { IconName } from '~/utils/getIconByName';
 import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
 const MoviePage = () => {
@@ -88,46 +88,13 @@ const MoviePage = () => {
             {movie.title}
           </h1>
 
-          <div className="mb-2 flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
-            <p>{date}</p>
-
-            <Separator />
-            
-            <div className="flex items-center gap-1">
-              <SvgIcon
-                className={classNames('h-2.5 w-2.5', {
-                  'fill-light': themeType === ThemeType.Dark,
-                })}
-              >
-                {getIconByName(IconName.MOVIE)}
-              </SvgIcon>
-
-              <p>Movie</p>
-            </div>
+          <div className="mb-2">
+            <InfoCut year={date} type="Movie" icon={IconName.MOVIE} />
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3">
             <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-              <div
-                className="
-                      absolute bottom-[1px] left-[1px] right-[1px]
-                      top-[1px] flex items-center
-                      justify-center bg-semi-dark text-2xl
-                    "
-              >
-                {movie.poster_path ? (
-                  <Image
-                    className="object-contain transition-all duration-1000"
-                    alt="movie image"
-                    fill
-                    priority
-                    sizes={origin}
-                    src={`https://www.themoviedb.org/t/p/original${movie.poster_path}`}
-                  />
-                ) : (
-                  <p>No image</p>
-                )}
-              </div>
+              <MoviePoster poster_path={movie.poster_path} />
 
               {moreImagePaths.length !== 0 && !isImagesError && (
                 <MovieSlider imagesPaths={...moreImagePaths} />
@@ -141,85 +108,17 @@ const MoviePage = () => {
                     justify-between gap-[4%] gap-y-3 sm:flex-row
                   "
               >
-                <button
-                  className="
-                    text-md relative flex h-10 w-full items-center justify-center gap-2
-                    rounded-lg bg-primary text-light transition hover:bg-semi-dark
-                    sm:w-[48%] lg:w-full
-                    xl:w-[48%]
-                    "
-                  onClick={handleBookmarkClick}
-                  disabled={currentId === movieId}
-                >
-                  {currentId === movieId ? (
-                    <>
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-light border-b-primary"></div>
-                    </>
-                  ) : (
-                    <>
-                      <SvgIcon
-                        className={`h-[32px] w-[32px] cursor-pointer  stroke-light stroke-[1.5] 
-                          ${isBookmarked ? 'fill-light' : 'fill-none'}`}
-                        viewBox="-10 -9 38 38"
-                      >
-                        {getIconByName(IconName.BOOKMARK)}
-                      </SvgIcon>
-                      {isBookmarked ? 'Іn bookmarks' : 'Bookmark'}
-                    </>
-                  )}
-                </button>
+                <BookmarkButton
+                  isBookmarked={isBookmarked}
+                  handleBookmarkClick={handleBookmarkClick}
+                  currentId={currentId}
+                  movieId={movieId}
+                />
 
-                {trailerKey && (
-                  <button
-                    className="
-                      text-md relative flex h-10 w-full items-center justify-center gap-2
-                      rounded-lg  bg-[#ff0000] text-light transition hover:bg-semi-dark
-                      sm:w-[48%] lg:w-full 
-                      xl:w-[48%]
-                      "
-                    onClick={handlePopup}
-                  >
-                    <SvgIcon className="h-7 w-7 fill-light" viewBox="0 0 32 32">
-                      {getIconByName(IconName.YT)}
-                    </SvgIcon>
-                    Watch&nbsp;trailer
-                  </button>
-                )}
+                {trailerKey && <TrailerButton handlePopup={handlePopup} />}
               </div>
 
-              <h3 className="mb-4 text-lg font-medium">Description</h3>
-
-              <p className="mb-8 font-light">{movie.overview}</p>
-
-              <h3 className="mb-4 text-lg font-medium">Status</h3>
-
-              <p className="mb-8 font-light">{movie.status}</p>
-
-              <h3 className="mb-4 text-lg font-medium">Original language</h3>
-
-              <p className="mb-8 font-light">
-                {movie.original_language.toUpperCase()}
-              </p>
-
-              <h3 className="mb-4 text-lg font-medium">Rating</h3>
-
-              <div className="items-between mb-8 flex w-max flex-col">
-                <Rating title="TMDB" average={movie.vote_average} />
-
-                <Rating title="Movies Ent." average={0} />
-              </div>
-
-              <h3 className="font-mediumt mb-4 text-lg">Genres</h3>
-              <p className="mb-8 font-light">
-                {movie.genres
-                  .reduce((acc, genre) => {
-                    return acc + genre.name + ', ';
-                  }, '')
-                  .slice(0, -2)}
-              </p>
-
-              <h3 className="mb-4 text-lg font-medium">Duration</h3>
-              <p className="font-light">{movie.runtime} min.</p>
+              <MovieInfo movie={movie} category={Category.MOVIE} />
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
