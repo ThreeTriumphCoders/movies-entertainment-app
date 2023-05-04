@@ -1,20 +1,65 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import avatar from '../../public/images/avatar.svg';
 import { useSession } from 'next-auth/react';
 import classNames from 'classnames';
 import { useThemeContext } from '~/utils/ThemeContext';
 import { ThemeType } from '~/types/ThemeType';
+import { useRouter } from 'next/router';
+import { api } from '~/utils/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { getQueryKey } from '@trpc/react-query';
+import { Review } from '@prisma/client';
 
-export const ReviewForm = () => {
+type Props = {
+  movieId: number;
+  setTempReview: Dispatch<SetStateAction<Review | null>>;
+}
+
+export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
   const [query, setQuery] = useState('');
+  const [rate, setRate] = useState(10);
   const [isFocused, setIsFocused] = useState(false);
   const { data: sessionData } = useSession();
   const { themeType } = useThemeContext();
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
+  const reviewListKey = getQueryKey(api.review.getAll);
+  const createReview = api.review.create.useMutation({
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: reviewListKey });
+      setTempReview(null);
+    },
+  });
+  
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (!sessionData?.user) {
+      void router.push('/auth/signin');
+
+      return;
+    }
+
+    setTempReview({
+      id: '0',
+      movieId,
+      userId: sessionData.user.id,
+      rating: rate,
+      text: query,
+      createdAt: new Date(),
+    })
+
+    createReview.mutate({
+      movieId,
+      text: query,
+      rating: rate,
+    })
+
     setQuery('');
+    setRate(0);
   };
 
   return (
@@ -59,13 +104,9 @@ export const ReviewForm = () => {
               'bg-dark': themeType === ThemeType.Dark
             }
           )}
+          value={rate}
+          onChange={(e) => setRate(Number(e.target.value))}
         >
-          <option
-            disabled 
-            selected
-          >
-            Rate
-          </option>
           {Array.from({ length: 10 }, (_, i) => i + 1).map(rate => (
             <option key={rate}>
               {rate}

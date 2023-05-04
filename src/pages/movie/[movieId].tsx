@@ -16,6 +16,7 @@ import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
+import { api } from '~/utils/api';
 import { IconName } from '~/utils/getIconByName';
 import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
@@ -52,6 +53,8 @@ const MoviePage = () => {
     addToBookmarks,
     deleteFromBookmarks,
   } = useBookmarksContext();
+
+  const { data: reviews = [], refetch, isError } = api.review.getAll.useQuery({ movieId });
 
   useEffect(() => {
     setIsBookmarked(isInBookmarks(movieId));
@@ -122,7 +125,7 @@ const MoviePage = () => {
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
-              <ReviewsSection />
+              <ReviewsSection reviews={reviews} movieId={movieId} />
             </div>
           </div>
 
