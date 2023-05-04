@@ -10,6 +10,7 @@ import { api } from '~/utils/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { getQueryKey } from '@trpc/react-query';
 import { Review } from '@prisma/client';
+import { string } from 'zod';
 
 type Props = {
   movieId: number;
@@ -18,8 +19,10 @@ type Props = {
 
 export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
   const [query, setQuery] = useState('');
-  const [rate, setRate] = useState(10);
+  const [rate, setRate] = useState<number | string>('Rate');
   const [isFocused, setIsFocused] = useState(false);
+  const [isSelectError, setIsSelectError] = useState(false);
+  const [isInputError, setIsInputError] = useState(false);
   const { data: sessionData } = useSession();
   const { themeType } = useThemeContext();
   const router = useRouter();
@@ -43,29 +46,43 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
       return;
     }
 
-    setTempReview({
-      id: '0',
-      movieId,
-      userId: sessionData.user.id,
-      rating: rate,
-      text: query,
-      createdAt: new Date(),
-    })
+    if (!query) {
+      setIsInputError(true);
 
-    createReview.mutate({
-      movieId,
-      text: query,
-      rating: rate,
-    })
+      return;
+    }
 
-    setQuery('');
-    setRate(0);
+    if (typeof rate === 'string') {
+      setIsSelectError(true);
+
+      return
+    }
+
+    if (typeof rate === 'number') {
+      setTempReview({
+        id: '0',
+        movieId,
+        userId: sessionData.user.id,
+        rating: rate,
+        text: query,
+        createdAt: new Date(),
+      })
+  
+      createReview.mutate({
+        movieId,
+        text: query,
+        rating: rate,
+      })
+  
+      setQuery('');
+      setRate(0);
+    }
   };
 
   return (
     <form className='sm:mb-12 mb-8' onSubmit={handleSubmit}>
       <label className='mr-4 sm:mr-6 relative'>
-        <div 
+        <div
           className={classNames(
             "w-6 h-6 sm:w-9 sm:h-9 bg-primary rounded-full border-light border absolute bottom-0 overflow-hidden opacity-0 transition-opacity",
             { 'opacity-100': isFocused || query }
@@ -83,12 +100,16 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
           type="text"
           placeholder="Add a review"
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setIsInputError(false);
+          }}
           className={classNames(
             'caret-primary outline-none border-b border-b-grey focus:border-b-primary placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-4/5 font-body font-light',
             { 
               'pl-9 sm:pl-14': query,
-              'bg-dark': themeType === ThemeType.Dark
+              'bg-dark': themeType === ThemeType.Dark,
+              'border-b-[#E84545] focus:border-b-[#E84545]': isInputError,
             }
           )}
           onFocus={() => setIsFocused(true)}
@@ -101,12 +122,19 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
           className={classNames(
             'outline-none border-b border-b-grey focus:border-b-primary w-12 h-12 font-light text-sm',
             {
-              'bg-dark': themeType === ThemeType.Dark
+              'bg-dark': themeType === ThemeType.Dark,
+              'border-b-[#E84545] focus:border-b-[#E84545]': isSelectError,
             }
           )}
           value={rate}
-          onChange={(e) => setRate(Number(e.target.value))}
+          onChange={(e) => {
+            setRate(Number(e.target.value));
+            setIsSelectError(false);
+          }}
         >
+          <option selected disabled>
+            Rate
+          </option>
           {Array.from({ length: 10 }, (_, i) => i + 1).map(rate => (
             <option key={rate}>
               {rate}

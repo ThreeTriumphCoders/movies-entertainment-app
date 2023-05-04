@@ -80,6 +80,10 @@ const MoviePage = () => {
     ? movie.release_date.slice(0, 4)
     : 'No release date';
 
+  const rating = reviews.reduce((acc, review) => {
+    return acc + review.rating;
+  }, 0) / reviews.length || 0;
+
   return (
     <>
       {!isMovieLoadingError && movie ? (
@@ -121,7 +125,7 @@ const MoviePage = () => {
                 {trailerKey && <TrailerButton handlePopup={handlePopup} />}
               </div>
 
-              <MovieInfo movie={movie} category={Category.MOVIE} />
+              <MovieInfo movie={movie} category={Category.MOVIE} rating={rating} />
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
