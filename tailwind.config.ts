@@ -11,10 +11,14 @@ export default {
       'semi-dark': '#343434',
     },
     fontFamily: {
-      display: 'var(--display-font)',
-      body: 'var(--body-font)',
+      sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
     },
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'arrow-up': "url('~/public/images/arrowUp.svg')",
+        'arrow-hover': "url('~/public/images/arrowUpHover.svg')",
+      },
+    },
   },
   plugins: [],
 } satisfies Config;

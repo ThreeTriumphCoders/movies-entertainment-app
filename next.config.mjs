@@ -18,9 +18,6 @@ const config = {
     locales: ['en'],
     defaultLocale: 'en',
   },
-  fontLoaders: [
-    { loader: '@next/font/google', options: { subsets: ['latin'] } },
-  ],
   images: {
     unoptimized: true,
     remotePatterns: [
