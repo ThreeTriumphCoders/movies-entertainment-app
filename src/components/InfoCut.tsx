@@ -1,38 +1,68 @@
-import classNames from "classnames";
-import { SvgIcon } from "./SvgIcon";
-import { useThemeContext } from "~/utils/ThemeContext";
-import { ThemeType } from "~/types/ThemeType";
-import { IconName, getIconByName } from "~/utils/getIconByName";
-import { FC } from "react";
-
-const separator = (
-  <p className="-translate-y-1/4 select-none font-semibold opacity-60">.</p>
-);
+import { type FC } from 'react';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { Rating } from './Rating';
+import { Separator } from './Separator';
+import { SvgIcon } from './SvgIcon';
 
 type Props = {
   year: string;
-  type: string;
   icon: IconName;
-}
+  language?: string;
+  rating?: number;
+  textColor?: 'dark' | 'light';
+};
 
-export const InfoCut: FC<Props> = ({ year, type, icon }) => {
+export const InfoCut: FC<Props> = ({
+  year,
+  icon,
+  language,
+  rating,
+  textColor,
+}) => {
   const { themeType } = useThemeContext();
 
+  let isColorDark = themeType === ThemeType.Light;
+
+  if (textColor) {
+    isColorDark = textColor === 'dark';
+  }
+
   return (
-    <div className="flex gap-1.5 text-[11px] font-light leading-[14px] opacity-75 sm:mb-4 sm:text-[13px] sm:leading-4">
+    <div
+      className={`mb-1 flex gap-1 text-[11px] font-light leading-[14px] opacity-75 sm:text-[13px] sm:leading-4 ${
+        isColorDark ? 'text-dark' : 'text-light'
+      }`}
+    >
       <p>{year}</p>
-      {separator}
+
+      <Separator />
+
       <div className="flex items-center gap-1">
         <SvgIcon
-          className={classNames('h-2.5 w-2.5', {
-            'fill-light': themeType === ThemeType.Dark,
-          })}
+          className={`h-2.5 w-2.5  ${isColorDark ? 'fill-dark' : 'fill-light'}`}
         >
           {getIconByName(icon)}
         </SvgIcon>
 
-        <p>{type}</p>
+        <p>{icon === IconName.MOVIE ? 'Movie' : 'TV Serie'}</p>
       </div>
+
+      {language && (
+        <>
+          <Separator />
+          <p>{language.toUpperCase()}</p>{' '}
+        </>
+      )}
+
+      {rating && (
+        <>
+          <Separator />
+
+          <Rating average={rating} />
+        </>
+      )}
     </div>
   );
-}
+};

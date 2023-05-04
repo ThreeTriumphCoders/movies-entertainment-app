@@ -7,8 +7,7 @@ import { useEffect, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { IconName, getIconByName } from '~/utils/getIconByName';
-import { Rating } from './Rating';
-import { Separator } from './Separator';
+import { InfoCut } from './InfoCut';
 import { SvgIcon } from './SvgIcon';
 
 type Props = {
@@ -97,36 +96,13 @@ export const TrendingCard: FC<Props> = ({
             />
 
             <div className="absolute bottom-2 left-2 rounded-md bg-dark bg-opacity-50 p-2">
-              <div className="mb-1 flex gap-1.5 text-[11px] font-light leading-[14px] text-light opacity-75 sm:text-[13px] sm:leading-4">
-                <p>{releaseDate.slice(0, 4)}</p>
-
-                <Separator />
-
-                <div className="flex items-center gap-1">
-                  <SvgIcon className="h-2.5 w-2.5 fill-light">
-                    {getIconByName(categoryIcon)}
-                  </SvgIcon>
-
-                  <p>
-                    {categoryIcon === IconName.MOVIE ? 'Movie' : 'TV Serie'}
-                  </p>
-                </div>
-
-                {language && (
-                  <>
-                    <Separator />
-                    <p>{language.toUpperCase()}</p>{' '}
-                  </>
-                )}
-
-                {rating && (
-                  <>
-                    <Separator />
-
-                    <Rating average={rating} />
-                  </>
-                )}
-              </div>
+              <InfoCut
+                year={releaseDate.slice(0, 4)}
+                icon={categoryIcon}
+                language={language}
+                rating={rating}
+                textColor={'light'}
+              />
 
               <h3 className="text-sm font-medium leading-[18px] text-light sm:text-lg sm:leading-6">
                 {title}

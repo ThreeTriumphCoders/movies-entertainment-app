@@ -7,13 +7,11 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
-import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { getImages, getTrailerKey } from '~/utils/helpers';
+import { InfoCut } from './InfoCut';
 import { Loader } from './Loader';
-import { Rating } from './Rating';
-import { Separator } from './Separator';
 import { SvgIcon } from './SvgIcon';
 
 type Props = {
@@ -259,31 +257,12 @@ export const MovieCard: FC<Props> = ({
         </>
       </div>
 
-      <div className="mb-1 flex gap-1 text-[11px] font-light leading-[14px] opacity-75 sm:text-[13px] sm:leading-4">
-        <p>{year}</p>
-
-        <Separator />
-
-        <div className="flex items-center gap-1">
-          <SvgIcon
-            className={classNames('h-2.5 w-2.5 fill-light', {
-              'fill-semi-dark': themeType === ThemeType.Light,
-            })}
-          >
-            {getIconByName(categoryIcon)}
-          </SvgIcon>
-
-          <p>{categoryIcon === IconName.MOVIE ? 'Movie' : 'Serie'}</p>
-        </div>
-
-        <Separator />
-
-        <p>{language.toUpperCase()}</p>
-
-        <Separator />
-
-        <Rating average={rating} />
-      </div>
+      <InfoCut
+        year={year}
+        icon={categoryIcon}
+        language={language}
+        rating={rating}
+      />
 
       <h3 className="text-sm font-medium leading-[18px] sm:text-lg sm:leading-6">
         <Link

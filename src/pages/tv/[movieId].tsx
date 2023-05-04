@@ -85,7 +85,7 @@ const TVPage = () => {
           </h1>
 
           <div className="mb-2">
-            <InfoCut year={date} type="TV Serie" icon={IconName.TV} />
+            <InfoCut year={date} icon={IconName.TV} />
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3">

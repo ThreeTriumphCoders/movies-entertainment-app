@@ -89,7 +89,7 @@ const MoviePage = () => {
           </h1>
 
           <div className="mb-2">
-            <InfoCut year={date} type="Movie" icon={IconName.MOVIE} />
+            <InfoCut year={date} icon={IconName.MOVIE} />
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3">

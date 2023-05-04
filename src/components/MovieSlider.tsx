@@ -23,7 +23,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
   useEffect(() => {
     window.addEventListener('resize', setSlideTo0);
-    intervalId.current = setInterval(handleSlideRight, 1000);
+    intervalId.current = setInterval(handleSlideRight, 10000);
 
     return () => {
       window.removeEventListener('resize', setSlideTo0);
