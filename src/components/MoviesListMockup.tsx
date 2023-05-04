@@ -13,7 +13,9 @@ export const MoviesListMockup = ({ title }: Props) => {
   return (
     <section className="mb-6 pb-8 sm:mb-10">
       {title && (
-        <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10">{title}</h2>
+        <h2 className="mb-6 text-xl font-light sm:text-[32px] lg:mb-10">
+          {title}
+        </h2>
       )}
 
       <div
