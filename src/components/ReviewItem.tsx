@@ -12,6 +12,7 @@ import { IconName, getIconByName } from '~/utils/getIconByName';
 import { useSession } from 'next-auth/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getQueryKey } from '@trpc/react-query';
+import { EditReviewForm } from './EditReviewForm';
 
 const getReviewTime = (date: Date) => {
   const day = date.getDate();
@@ -57,6 +58,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
 
   const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault();
+    setSetting(false);
 
     if (newText === text && newRate === rating) {
       setIsEditing(false);
@@ -93,36 +95,27 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
       </div>
       <article
         className={classNames(
-          'bg-grey bg-opacity-40 w-4/5 sm:w-2/3 lg:w-3/4 rounded-lg px-3.5 py-4 sm:px-6 sm:py-5 relative',
-          { 'bg-semi-dark': themeType === ThemeType.Dark }
+          'bg-grey bg-opacity-40 w-4/5 sm:w-2/3 lg:w-3/4 rounded-lg px-3.5 py-4 sm:px-6 sm:py-5 relative text-dark',
+          { 
+            'bg-semi-dark text-light': themeType === ThemeType.Dark
+          }
         )}
+        onClick={(e) => e.stopPropagation()}
       >
         {isEditing
           ? (
-            <form onSubmit={handleUpdate}>
-              <input
-                value={newText}
-                onChange={(e) => {
-                  setNewText(e.target.value);
-                  setNewTextError(false);
-                }}
-                className={classNames(
-                  'bg-semi-dark bg-opacity-0 w-4/5 border-b border-b-grey pb-1 mr-5 caret-primary outline-none focus:border-b-primary',
-                  { 'border-b-[#E84545] focus:border-b-[#E84545]': newTextError }
-                )}
-              />
-              <select
-                value={newRate}
-                onChange={(e) => setNewRate(Number(e.target.value))}
-                className='bg-semi-dark bg-opacity-0 border-b border-b-grey pb-1 outline-none focus:border-b-primary'
-              >
-                {Array.from({ length: 10 }, (_, i) => i + 1).map(rate => (
-                  <option className='bg-semi-dark' key={rate}>
-                    {rate}
-                  </option>
-                ))}
-              </select>
-            </form>
+            <EditReviewForm
+              handleUpdate={handleUpdate}
+              newText={newText}
+              setNewText={setNewText}
+              newTextError={newTextError}
+              setNewTextError={setNewTextError}
+              newRate={newRate}
+              setNewRate={setNewRate}
+              setIsEditing={setIsEditing}
+              rating={rating}
+              text={text}
+            />
           )
           : (
             <>
@@ -132,12 +125,17 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
 
               <button
                 className={classNames(
-                  'absolute right-0 top-1 opacity-50 hover:opacity-100',
+                  'absolute right-0 top-1 opacity-70 hover:opacity-100',
                   { 'hidden': userData?.name !== sessionData?.user.name}
                 )}
                 onMouseEnter={() => setSetting(true)}
               >
-                <SvgIcon className='w-5 h-5 fill-light'>
+                <SvgIcon 
+                  className={classNames(
+                    'w-5 h-5 fill-dark',
+                    { 'fill-light': themeType === ThemeType.Dark }
+                  )}
+                >
                   {getIconByName(IconName.SETTINGS)}
                 </SvgIcon>
               </button>
@@ -165,14 +163,32 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
 
               {isSetting && (
                 <div
-                  className='absolute -right-[90px] top-0 bg-semi-dark w-max py-1 px-5 rounded-lg flex flex-col gap-1 text-center font-light text-sm'
+                  className={classNames(
+                    'absolute right-0 -top-14 sm:-right-[90px] sm:top-0 bg-semi-dark w-max py-1 px-5 rounded-lg flex flex-col gap-1 text-center font-light text-sm',
+                    { 'bg-[#DADADA]': themeType === ThemeType.Light }
+                  )}
                   onMouseLeave={() => setSetting(false)}
                 >
-                  <p className='hover:text-primary cursor-pointer' onClick={() => handleDelete()}>
+                  <p 
+                    className={classNames(
+                      'hover:text-primary cursor-pointer text-dark',
+                      { 'text-light': themeType === ThemeType.Dark }
+                    )}
+                    onClick={() => handleDelete()}
+                  >
                     Delete
                   </p>
 
-                  <p className='hover:text-primary cursor-pointer' onClick={() => setIsEditing(true)}>
+                  <p
+                    className={classNames(
+                      'hover:text-primary cursor-pointer text-dark',
+                      { 'text-light': themeType === ThemeType.Dark }
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsEditing(true);
+                    }}
+                  >
                     Change
                   </p>
                 </div>

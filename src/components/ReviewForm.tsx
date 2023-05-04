@@ -75,12 +75,12 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
       })
   
       setQuery('');
-      setRate(0);
+      setRate('Rate');
     }
   };
 
   return (
-    <form className='sm:mb-12 mb-8' onSubmit={handleSubmit}>
+    <form className='sm:mb-12 mb-8' onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()}>
       <label className='mr-4 sm:mr-6 relative'>
         <div
           className={classNames(
@@ -105,11 +105,12 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
             setIsInputError(false);
           }}
           className={classNames(
-            'caret-primary outline-none border-b border-b-grey focus:border-b-primary placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-4/5 font-body font-light',
+            'caret-primary outline-none border-b bg-dark border-b-[#E84545] focus:border-b-[#E84545] placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-4/5 font-body font-light text-dark',
             { 
               'pl-9 sm:pl-14': query,
-              'bg-dark': themeType === ThemeType.Dark,
-              'border-b-[#E84545] focus:border-b-[#E84545]': isInputError,
+              'bg-light': themeType === ThemeType.Light,
+              'text-light': themeType === ThemeType.Dark,
+              'border-b-grey focus:border-b-primary': !isInputError,
             }
           )}
           onFocus={() => setIsFocused(true)}
@@ -120,10 +121,11 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
       <label>
         <select
           className={classNames(
-            'outline-none border-b border-b-grey focus:border-b-primary w-12 h-12 font-light text-sm',
+            'outline-none bg-dark border-b border-b-[#E84545] focus:border-b-[#E84545] w-14 h-12 font-light text-sm text-dark',
             {
-              'bg-dark': themeType === ThemeType.Dark,
-              'border-b-[#E84545] focus:border-b-[#E84545]': isSelectError,
+              'bg-light': themeType === ThemeType.Light,
+              'text-light': themeType === ThemeType.Dark,
+              'border-b-grey focus:border-b-primary': !isSelectError,
             }
           )}
           value={rate}
