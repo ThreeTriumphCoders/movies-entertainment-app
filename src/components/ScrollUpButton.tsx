@@ -1,11 +1,14 @@
-import classNames from "classnames";
-import { useEffect, useState } from "react";
-import { SvgIcon } from "./SvgIcon";
-import { IconName, getIconByName } from "~/utils/getIconByName";
+import classNames from 'classnames';
+import { useEffect, useState } from 'react';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { SvgIcon } from './SvgIcon';
 
 export const ScrollUpButton = () => {
   const [isEnabled, setIsEnabled] = useState(false);
-  
+  const { themeType } = useThemeContext();
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -23,18 +26,25 @@ export const ScrollUpButton = () => {
   }, []);
 
   return (
-    <button 
+    <button
       type="button"
       className={classNames(
-        "fixed bottom-10 right-10 w-12 h-12 transition-all",
+        'fixed bottom-10 right-10 h-12 w-12 transition-all',
         {
-          'scale-0': !isEnabled, 
-        }
+          'scale-0': !isEnabled,
+        },
       )}
       onClick={() => window.scrollTo(0, 0)}
     >
-      <SvgIcon 
-        className="h-12 w-12 rounded-full bg-semi-dark opacity-60 hover:opacity-100 hover:bg-primary transition-colors fill-dark" 
+      <SvgIcon
+        className={classNames(
+          'h-12 w-12 rounded-full opacity-60 transition hover:bg-primary hover:opacity-100 ',
+          {
+            'bg-semi-dark bg-opacity-50 fill-light':
+              themeType === ThemeType.Light,
+          },
+          { 'bg-semi-dark fill-dark': themeType === ThemeType.Dark },
+        )}
         viewBox="0 0 48 48"
       >
         {getIconByName(IconName.ARROW_UP)}

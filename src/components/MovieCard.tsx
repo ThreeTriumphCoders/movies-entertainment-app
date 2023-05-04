@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
+import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { getImages, getTrailerKey } from '~/utils/helpers';
@@ -45,8 +46,6 @@ export const MovieCard: FC<Props> = ({
   onBookmarksAdd,
   onBookmarksRemove,
 }) => {
-  const { themeType } = useThemeContext();
-
   const {
     data: trailerKey = '',
     refetch: loadTrailerKey,
@@ -71,6 +70,7 @@ export const MovieCard: FC<Props> = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isPlaying = playingId === movieId;
   const intervalRef = useRef<NodeJS.Timer | null>(null);
+  const { themeType } = useThemeContext();
 
   const changeCurrentImageIndex = () => {
     setCurrentImageIndex((index) =>
@@ -123,9 +123,12 @@ export const MovieCard: FC<Props> = ({
   };
 
   const year = useMemo(
-    () => (releaseDate ? releaseDate.slice(0, 4) : 'No release date'),
+    () => (releaseDate ? releaseDate.slice(0, 4) : ''),
     [releaseDate],
   );
+
+  const placeholderBgColor =
+    themeType === ThemeType.Dark ? 'bg-semi-dark' : 'bg-grey';
 
   return (
     <div
@@ -142,19 +145,19 @@ export const MovieCard: FC<Props> = ({
 
           {!imagePath && (
             <div
-              className="
+              className={` ${placeholderBgColor}
                 absolute bottom-[1px] left-[1px] right-[1px] top-[1px] 
-                flex items-center
-                justify-center bg-semi-dark text-2xl
-                text-light
-              "
+                flex items-center justify-center text-2xl text-light
+              `}
             >
               No image
             </div>
           )}
 
           {!isPlaying && imagePath && (
-            <div className="absolute bottom-0 left-0 right-0 top-0 bg-semi-dark">
+            <div
+              className={`absolute bottom-0 left-0 right-0 top-0 ${placeholderBgColor}`}
+            >
               <Image
                 className="object-contain"
                 alt="movie image"

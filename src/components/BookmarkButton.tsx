@@ -1,13 +1,13 @@
-import { IconName, getIconByName } from "~/utils/getIconByName";
-import { SvgIcon } from "./SvgIcon";
-import { FC } from "react";
+import { type FC } from 'react';
+import { IconName, getIconByName } from '~/utils/getIconByName';
+import { SvgIcon } from './SvgIcon';
 
 type Props = {
   isBookmarked: boolean;
   handleBookmarkClick: () => void;
   currentId: number | null;
   movieId: number;
-}
+};
 
 export const BookmarkButton: FC<Props> = ({
   isBookmarked,
@@ -44,4 +44,4 @@ export const BookmarkButton: FC<Props> = ({
       )}
     </button>
   );
-}
+};

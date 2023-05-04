@@ -37,11 +37,11 @@ export const MoviesListMockup = ({ title }: Props) => {
             </div>
 
             <div
-              className={`${bgColor} mb-1 h-[14px] w-1/4 animate-pulse rounded-sm bg-semi-dark sm:h-4`}
+              className={`${bgColor} mb-1 h-[14px] w-3/4 animate-pulse rounded-sm sm:h-4`}
             />
 
             <div
-              className={`${bgColor} h-[18px] w-2/3 animate-pulse rounded-sm bg-semi-dark sm:h-6`}
+              className={`${bgColor} h-[18px] w-2/4 animate-pulse rounded-sm sm:h-6`}
             />
           </div>
         ))}

@@ -59,8 +59,9 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
   const width = slideRef.current?.clientWidth || 0;
   const translateWidth = currentSlide * width;
-
   const hasOneImage = imagesPaths.length <= 1;
+  const placeholderBgColor =
+    themeType === ThemeType.Dark ? 'bg-semi-dark' : 'bg-grey';
 
   return (
     <>
@@ -73,7 +74,9 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
               transform: `translateX(-${translateWidth}px)`,
             }}
           >
-            <div className="absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse bg-semi-dark" />
+            <div
+              className={`${placeholderBgColor} absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse `}
+            />
 
             {imagesPaths &&
               imagesPaths.map((path) => (
@@ -91,7 +94,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
           </div>
 
           <div
-            className={`absolute bottom-0 left-0 right-0 top-0 rounded-lg border-2 ${
+            className={`absolute bottom-0 left-0 right-0 top-0 rounded-lg border-2  ${
               themeType === ThemeType.Dark ? 'border-dark' : 'border-light'
             }`}
           />
@@ -101,7 +104,10 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
           <>
             <button
               className={classNames(
-                'absolute bottom-0 left-0 top-0 hidden w-1/2 items-center justify-start bg-gradient-to-r from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100 sm:flex',
+                'absolute bottom-0 left-0 top-0 hidden w-1/2 items-center justify-start bg-gradient-to-r to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100 sm:flex',
+                {
+                  'from-light': themeType === ThemeType.Light,
+                },
                 {
                   'from-dark': themeType === ThemeType.Dark,
                 },
@@ -109,9 +115,15 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
               onClick={handleSlideLeft}
             >
               <SvgIcon
-                className={classNames('h-10 w-10 -rotate-90', {
-                  'fill-light': themeType === ThemeType.Dark,
-                })}
+                className={classNames(
+                  'h-10 w-10 -rotate-90',
+                  {
+                    'fill-light': themeType === ThemeType.Dark,
+                  },
+                  {
+                    'fill-semi-dark': themeType === ThemeType.Light,
+                  },
+                )}
                 viewBox="5 5 38 38"
               >
                 {getIconByName(IconName.ARROW_UP)}
@@ -120,7 +132,10 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
             <button
               className={classNames(
-                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l from-[#fff] to-0% p-10 text-light opacity-0 transition duration-500 hover:opacity-100 sm:flex',
+                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l to-0% p-10 opacity-0 transition duration-500 hover:opacity-100 sm:flex',
+                {
+                  'from-light': themeType === ThemeType.Light,
+                },
                 {
                   'from-dark': themeType === ThemeType.Dark,
                 },
@@ -128,9 +143,15 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
               onClick={handleSlideRight}
             >
               <SvgIcon
-                className={classNames('h-10 w-10 rotate-90', {
-                  'fill-light': themeType === ThemeType.Dark,
-                })}
+                className={classNames(
+                  'h-10 w-10 rotate-90',
+                  {
+                    'fill-light': themeType === ThemeType.Dark,
+                  },
+                  {
+                    'fill-semi-dark': themeType === ThemeType.Light,
+                  },
+                )}
                 viewBox="5 5 38 38"
               >
                 {getIconByName(IconName.ARROW_UP)}
@@ -143,17 +164,17 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
       {!hasOneImage && (
         <div
           className={classNames(
-            'absolute bottom-0 left-0 right-0 hidden items-center justify-center gap-2 bg-gradient-to-t from-[#fff] to-10% pb-1 opacity-100 transition duration-500 sm:flex',
-            { 'from-dark': themeType === ThemeType.Dark },
+            'absolute bottom-0 left-0 right-0 hidden items-center justify-center gap-2 pb-1 sm:flex lg:pb-2',
           )}
         >
           {imagesPaths.map((path, index) => (
             <button
               key={path}
               className={classNames(
-                'relative h-10 w-20 border-none transition-transform',
+                'relative h-10 w-20 border-none transition-all',
                 {
-                  '-translate-y-1 scale-110': currentSlide === index,
+                  '-translate-y-1 scale-110 lg:-translate-y-2':
+                    currentSlide === index,
                 },
               )}
               onClick={() => setCurrentSlide(index)}

@@ -1,18 +1,23 @@
-import Image from "next/image";
-import { FC } from "react";
+import Image from 'next/image';
+import { type FC } from 'react';
+import { ThemeType } from '~/types/ThemeType';
+import { useThemeContext } from '~/utils/ThemeContext';
 
 type Props = {
   poster_path: string;
-}
+};
 
 export const MoviePoster: FC<Props> = ({ poster_path }) => {
+  const { themeType } = useThemeContext();
+
+  const bgColor = themeType === ThemeType.Dark ? 'bg-semi-dark' : 'bg-grey';
+
   return (
     <div
-      className="
-            absolute bottom-[1px] left-[1px] right-[1px]
-            top-[1px] flex items-center
-            justify-center bg-semi-dark text-2xl
-          "
+      className={`${bgColor}
+            absolute bottom-[1px] left-[1px] right-[1px] top-[1px]
+            text-2xl 
+          `}
     >
       {poster_path ? (
         <Image
@@ -28,4 +33,4 @@ export const MoviePoster: FC<Props> = ({ poster_path }) => {
       )}
     </div>
   );
-}
+};

@@ -33,14 +33,14 @@ export const Navbar = () => {
   return (
     <div
       className="
-      fixed left-0 right-0 z-10
-      top-0 sm:left-6 sm:right-6 sm:py-6
-      lg:bottom-0 lg:left-0 lg:top-0 lg:w-40 lg:p-8
+      absolute left-0 right-0 top-0
+      z-10 sm:left-6 sm:right-6 sm:py-6
+      lg:fixed lg:bottom-0 lg:left-0 lg:top-0 lg:w-40 lg:p-8
       "
     >
       <div
         className={classNames(
-          'flex h-full items-center justify-between bg-primary p-4 transition-transform duration-300 sm:rounded-xl lg:flex-col sm:hover:scale-[1.02] lg:rounded-[20px] lg:p-7',
+          'flex h-full items-center justify-between bg-primary p-4 transition duration-500 sm:rounded-xl sm:hover:scale-[1.02] sm:hover:shadow-md lg:flex-col lg:rounded-[20px] lg:p-7',
           { 'bg-semi-dark': themeType === ThemeType.Dark },
         )}
       >
@@ -84,11 +84,11 @@ export const Navbar = () => {
         </div>
 
         <div className="flex items-center justify-center gap-2 sm:gap-4 lg:flex-col">
-          <div className='relative'>
+          <div className="relative">
             {sessionData?.user && (
               <div
                 className={`
-              absolute -right-1 -bottom-1 flex flex-nowrap items-center rounded-full text-dark
+              absolute -bottom-1 -right-1 flex flex-nowrap items-center rounded-full text-dark
               transition-all lg:-left-1 lg:items-start lg:justify-center
               ${
                 themeType === ThemeType.Dark
@@ -121,7 +121,7 @@ export const Navbar = () => {
             )}
 
             <button
-            className='block'
+              className="block"
               onClick={
                 sessionData?.user
                   ? () => setIsSignOut((state) => !state)
@@ -144,7 +144,7 @@ export const Navbar = () => {
                   />
                 ) : (
                   <SvgIcon
-                    className={classNames('px-1 pt-1 fill-light', {
+                    className={classNames('fill-light px-1 pt-1', {
                       'fill-semi-dark': themeType === ThemeType.Dark,
                     })}
                     viewBox="0 0 24 24"
@@ -162,12 +162,18 @@ export const Navbar = () => {
             onClick={handleThemeChange}
           >
             {themeType === ThemeType.Dark && (
-              <SvgIcon className="w-5 h-5 fill-grey transition hover:fill-primary sm:w-6 sm:h-6" viewBox='0 0 21 22'>
+              <SvgIcon
+                className="h-5 w-5 fill-grey transition hover:fill-primary sm:h-6 sm:w-6"
+                viewBox="0 0 21 22"
+              >
                 {getIconByName(IconName.MOON)}
               </SvgIcon>
             )}
             {themeType === ThemeType.Light && (
-              <SvgIcon className="h-5 w-5 fill-light transition hover:fill-semi-dark sm:h-6 sm:w-6" viewBox='0 0 21 22'>
+              <SvgIcon
+                className="h-5 w-5 fill-light transition hover:fill-semi-dark sm:h-6 sm:w-6"
+                viewBox="0 0 21 22"
+              >
                 {getIconByName(IconName.SUN)}
               </SvgIcon>
             )}
