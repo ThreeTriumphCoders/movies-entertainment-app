@@ -16,6 +16,10 @@ export const Rating = ({ title, average }: Props) => {
       {title && <p className="font-light">{title}</p>}
 
       <div className="flex items-center gap-1">
+        <p className="font-light">
+          {(Math.round(average * 10) / 10).toFixed(1)}
+        </p>
+
         <div
           className={classNames('h-2 w-2 rounded-full', {
             'bg-grey': (average === 0 || !average) && !isThemeDark,
@@ -25,9 +29,6 @@ export const Rating = ({ title, average }: Props) => {
             'bg-[#E84545]': average < 5,
           })}
         />
-        <p className="font-light">
-          {(Math.round(average * 10) / 10).toFixed(1)}
-        </p>
       </div>
     </div>
   );

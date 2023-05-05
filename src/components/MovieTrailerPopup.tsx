@@ -28,7 +28,7 @@ export const MovieTrailerPopup = ({ trailerKey, onClose }: Props) => {
 
         <iframe
           className="absolute top-0 h-full w-full"
-          src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
+          src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen

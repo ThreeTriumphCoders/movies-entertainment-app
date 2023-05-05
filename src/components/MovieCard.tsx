@@ -138,10 +138,10 @@ export const MovieCard: FC<Props> = ({
     >
       <div
         id="image-container"
-        className="relative mb-2 overflow-hidden rounded-lg pt-[56.25%]"
+        className="relative mb-2 select-none overflow-hidden rounded-lg pt-[56.25%]"
       >
         <>
-          <div className="absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse  bg-semi-dark" />
+          <div className="absolute bottom-[1px] left-[1px] right-[1px] top-[1px] animate-pulse bg-semi-dark" />
 
           {!imagePath && (
             <div
@@ -191,11 +191,11 @@ export const MovieCard: FC<Props> = ({
           <div
             className="
               absolute bottom-0 left-0 right-0 top-0
-              flex items-center justify-center bg-dark bg-opacity-50
-              opacity-0 transition-opacity hover:opacity-100
+              flex items-center justify-center bg-dark
+              bg-opacity-50 opacity-0 transition-opacity hover:opacity-100
             "
           >
-            {isTrailerKeyLoaded && trailerKey ? (
+            {isTrailerKeyLoaded && trailerKey && (
               <div
                 className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg transition hover:bg-opacity-50"
                 onClick={() => onPlayingChange(movieId)}
@@ -209,9 +209,11 @@ export const MovieCard: FC<Props> = ({
 
                 <p className="text-light">Play</p>
               </div>
-            ) : (
+            )}
+
+            {isTrailerKeyLoaded && !trailerKey && (
               <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">
-                <p className="text-medium">No trailer</p>
+                <p className="text-medium  text-light">No trailer</p>
               </div>
             )}
           </div>

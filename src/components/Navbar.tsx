@@ -34,7 +34,7 @@ export const Navbar = () => {
     <div
       className="
       absolute left-0 right-0 top-0
-      z-10 sm:left-6 sm:right-6 sm:py-6
+      sm:left-6 sm:right-6 sm:py-6
       lg:fixed lg:bottom-0 lg:left-0 lg:top-0 lg:w-40 lg:p-8
       "
     >
