@@ -83,12 +83,12 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
                 <div key={path} className="relative min-h-full min-w-full">
                   <picture>
                     <source
-                      media="(max-width: 799px)"
-                      srcSet={`https://www.themoviedb.org/t/p/w500${path}`}
+                      media="(max-width: 500px)"
+                      srcSet={`https://www.themoviedb.org/t/p/w780${path}`}
                     />
                     <source
                       media="(max-width: 1023px)"
-                      srcSet={`https://www.themoviedb.org/t/p/w780${path}`}
+                      srcSet={`https://www.themoviedb.org/t/p/w1280${path}`}
                     />
                     <img
                       className="m-auto h-full object-contain transition-all duration-1000"
