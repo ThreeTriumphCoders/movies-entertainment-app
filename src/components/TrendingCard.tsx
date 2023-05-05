@@ -65,7 +65,7 @@ export const TrendingCard: FC<Props> = ({
         setIsBookmarked(true);
       }
     } else {
-      void router.push('/signin');
+      void router.push('/auth/signin');
     }
   };
 
