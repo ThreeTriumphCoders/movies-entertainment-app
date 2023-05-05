@@ -82,7 +82,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
   return (
     <section
       className={classNames(
-        'flex items-center gap-2.5 sm:gap-5',
+        'flex items-start gap-2.5 sm:gap-5',
         { 'opacity-50 pointer-events-none': isDeleteLoading || isChangeLoading }
       )}
     >
@@ -100,7 +100,6 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
             'bg-primary': review.userId === sessionData?.user.id
           }
         )}
-        onMouseLeave={() => setSetting(false)}
       >
         {isEditing
           ? (
@@ -122,7 +121,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
               <h5 className='absolute left-3 top-3 sm:left-4 text-xs sm:text-sm'>
                 {userData?.name || 'Anonymus'}
               </h5>
-              <p className='font-light text-xs sm:text-sm text-clip overflow-x-hidden'>
+              <p className='font-light text-sm sm:text-base text-clip overflow-x-hidden'>
                 {text}
               </p>
 
@@ -143,7 +142,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
                 </SvgIcon>
               </button>
 
-              <div className='flex items-center gap-1 sm:gap-2 absolute right-4 bottom-3'>
+              <div className='flex items-center gap-1 sm:gap-2 absolute right-4 bottom-2'>
                 <div className='flex items-center gap-1'>
                   <div 
                     className={classNames(

@@ -35,27 +35,15 @@ export const EditReviewForm: FC<Props> = ({
 
   useAutosizeTextArea(textAreaRef.current, newText);
 
-  const disableEditing = () => {
-    setIsEditing(false);
-    setNewRate(rating);
-    setNewText(text);
-  };
-
   useEffect(() => {
     if (textAreaRef.current !== null) {
       textAreaRef.current.focus();
-    }
-
-    document.addEventListener('click', disableEditing);
-
-    return () => {
-      document.removeEventListener('click', disableEditing);
     }
   }, [])
 
   return (
     <form 
-      className='font-light flex items-end' 
+      className='font-light flex flex-col gap-1 items-end' 
       onSubmit={handleUpdate} 
       onClick={(e) => e.stopPropagation()}
     >
@@ -68,38 +56,40 @@ export const EditReviewForm: FC<Props> = ({
           setNewTextError(false);
         }}
         className={classNames(
-          'bg-semi-dark bg-opacity-0 w-3/4 border-b border-b-grey mr-5 caret-primary outline-none resize-none overflow-hidden focus:border-b-primary',
+          'bg-semi-dark bg-opacity-0 w-full border-b border-b-grey mb-2 caret-primary outline-none resize-none overflow-hidden focus:border-b-primary',
           { 'border-b-[#E84545] focus:border-b-[#E84545]': newTextError }
         )}
         onFocus={() => setNewText(state => state + ' ')}
       />
 
-      <select
-        value={newRate}
-        onChange={(e) => setNewRate(Number(e.target.value))}
-        className={classNames(
-          'mr-5 bg-light bg-opacity-0 border-b border-b-grey pb-1 outline-none focus:border-b-primary',
-        )}
-      >
-        {Array.from({ length: 10 }, (_, i) => i + 1).map(rate => (
-          <option 
-            className={themeType === ThemeType.Light ? 'bg-grey' : 'bg-semi-dark'}
-            key={rate}
-          >
-            {rate}
-          </option>
-        ))}
-      </select>
+      <div>
+        <select
+          value={newRate}
+          onChange={(e) => setNewRate(Number(e.target.value))}
+          className={classNames(
+            'mr-5 bg-light bg-opacity-0 border-b border-b-grey pb-1 outline-none focus:border-b-primary',
+          )}
+        >
+          {Array.from({ length: 10 }, (_, i) => i + 1).map(rate => (
+            <option 
+              className={themeType === ThemeType.Light ? 'bg-grey' : 'bg-semi-dark'}
+              key={rate}
+            >
+              {rate}
+            </option>
+          ))}
+        </select>
 
-      <button
-        type='submit'
-        className={classNames(
-          ' px-2 sm:px-3 py-1 font-light text-sm sm:text-base text-dark border border-dark rounded-lg hover:bg-primary transition',
-          { 'text-light border-light': themeType === ThemeType.Dark }
-        )}
-      >
-        Send
-      </button>
+        <button
+          type='submit'
+          className={classNames(
+            ' px-2 sm:px-3 py-1 font-light text-sm sm:text-base text-dark border border-dark rounded-lg hover:bg-primary transition',
+            { 'text-light border-light': themeType === ThemeType.Dark }
+          )}
+        >
+          Send
+        </button>
+      </div>
     </form>
   );
 }
