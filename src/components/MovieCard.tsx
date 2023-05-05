@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState, type FC } from 'react';
-import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { Category } from '~/types/Category.enum';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
@@ -159,7 +159,7 @@ export const MovieCard: FC<Props> = ({
               className={`absolute bottom-0 left-0 right-0 top-0 ${placeholderBgColor}`}
             >
               <img
-                className="object-contain m-auto h-full"
+                className="m-auto h-full object-contain"
                 alt="movie image"
                 onClick={() => onPlayingChange(movieId)}
                 sizes="(max-width: 640px) 50vw, 33vw"

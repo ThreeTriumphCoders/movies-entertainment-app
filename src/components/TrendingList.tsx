@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef } from 'react';
-import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { Category } from '~/types/Category.enum';
 import { type MovieType, type MoviesType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';

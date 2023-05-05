@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { Layout } from '~/components/Layout';
-import { BookmarksContextProvider } from '~/contexts/useBookmarks';
+import { BookmarksContextProvider } from '~/contexts/useBookmarksContext';
 import '~/styles/globals.css';
 import { ThemeProvider } from '~/utils/ThemeContext';
 

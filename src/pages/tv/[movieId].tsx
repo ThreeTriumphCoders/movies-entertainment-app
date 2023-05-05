@@ -11,7 +11,7 @@ import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
 import { ReviewsSection } from '~/components/ReviewsSection';
 import { TrailerButton } from '~/components/TrailerButton';
-import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { useThemeContext } from '~/utils/ThemeContext';
@@ -53,7 +53,11 @@ const TVPage = () => {
     deleteFromBookmarks,
   } = useBookmarksContext();
 
-  const { data: reviews = [], refetch, isError } = api.review.getAll.useQuery({ movieId });
+  const {
+    data: reviews = [],
+    refetch,
+    isError,
+  } = api.review.getAll.useQuery({ movieId });
 
   useEffect(() => {
     setIsBookmarked(isInBookmarks(movieId));
@@ -79,9 +83,10 @@ const TVPage = () => {
     ? tv.first_air_date.slice(0, 4)
     : 'No release date';
 
-  const rating = reviews.reduce((acc, review) => {
-    return acc + review.rating;
-  }, 0) / reviews.length || 0;
+  const rating =
+    reviews.reduce((acc, review) => {
+      return acc + review.rating;
+    }, 0) / reviews.length || 0;
 
   return (
     <>
@@ -141,4 +146,3 @@ const TVPage = () => {
 };
 
 export default TVPage;
-

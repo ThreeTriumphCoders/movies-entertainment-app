@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { type Category } from '~/types/Category.enum';
 import { type MoviesType } from '~/types/Movie';
 import { type IconName } from '~/utils/getIconByName';
@@ -30,7 +30,9 @@ export const MoviesList: FC<Props> = ({
 
   return (
     <section className="mb-6 pb-8 sm:mb-10">
-      <h2 className="mb-6 font-light text-xl sm:text-[32px] lg:mb-10">{title}</h2>
+      <h2 className="mb-6 text-xl font-light sm:text-[32px] lg:mb-10">
+        {title}
+      </h2>
 
       <div
         className="
