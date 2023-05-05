@@ -16,6 +16,7 @@ import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
+import { api } from '~/utils/api';
 import { IconName } from '~/utils/getIconByName';
 import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
@@ -56,6 +57,8 @@ const MoviePage = () => {
     deleteFromBookmarks,
   } = useBookmarksContext();
 
+  const { data: reviews = [], refetch, isError } = api.review.getAll.useQuery({ movieId });
+
   useEffect(() => {
     setIsBookmarked(isInBookmarks(movieId));
   }, [bookmarks, movieId, isInBookmarks]);
@@ -79,6 +82,10 @@ const MoviePage = () => {
   const date = movie?.release_date
     ? movie.release_date.slice(0, 4)
     : 'No release date';
+
+  const rating = reviews.reduce((acc, review) => {
+    return acc + review.rating;
+  }, 0) / reviews.length || 0;
 
   return (
     <>
@@ -122,11 +129,11 @@ const MoviePage = () => {
                 {trailerKey && <TrailerButton handlePopup={handlePopup} />}
               </div>
 
-              <MovieInfo movie={movie} category={Category.MOVIE} />
+              <MovieInfo movie={movie} category={Category.MOVIE} rating={rating} />
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
-              <ReviewsSection />
+              <ReviewsSection reviews={reviews} movieId={movieId} />
             </div>
           </div>
 

@@ -6,9 +6,10 @@ import { Rating } from './Rating';
 type Props = {
   movie: MovieType;
   category: Category;
+  rating: number;
 };
 
-export const MovieInfo: FC<Props> = ({ movie, category }) => {
+export const MovieInfo: FC<Props> = ({ movie, category, rating }) => {
   return (
     <>
       <h3 className="mb-4 text-lg font-medium">Description</h3>
@@ -28,7 +29,7 @@ export const MovieInfo: FC<Props> = ({ movie, category }) => {
       <div className="items-between mb-8 flex w-max flex-col">
         <Rating title="TMDB" average={movie.vote_average} />
 
-        <Rating title="Movies Ent." average={0} />
+        <Rating title="Movies Ent." average={rating} />
       </div>
 
       <h3 className="mb-4 text-lg font-medium">Genres</h3>

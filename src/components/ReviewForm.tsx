@@ -1,26 +1,90 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import avatar from '../../public/images/avatar.svg';
 import { useSession } from 'next-auth/react';
 import classNames from 'classnames';
 import { useThemeContext } from '~/utils/ThemeContext';
 import { ThemeType } from '~/types/ThemeType';
+import { useRouter } from 'next/router';
+import { api } from '~/utils/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { getQueryKey } from '@trpc/react-query';
+import { Review } from '@prisma/client';
+import { string } from 'zod';
+import { SvgIcon } from './SvgIcon';
+import { IconName, getIconByName } from '~/utils/getIconByName';
 
-export const ReviewForm = () => {
+type Props = {
+  movieId: number;
+  setTempReview: Dispatch<SetStateAction<Review | null>>;
+}
+
+export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
   const [query, setQuery] = useState('');
+  const [rate, setRate] = useState<number | string>('Rate');
   const [isFocused, setIsFocused] = useState(false);
+  const [isSelectError, setIsSelectError] = useState(false);
+  const [isInputError, setIsInputError] = useState(false);
   const { data: sessionData } = useSession();
   const { themeType } = useThemeContext();
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
+  const reviewListKey = getQueryKey(api.review.getAll);
+  const { mutate: createReview, isLoading } = api.review.create.useMutation({
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: reviewListKey });
+      setTempReview(null);
+    },
+  });
+  
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setQuery('');
+
+    if (!sessionData?.user) {
+      void router.push('/auth/signin');
+
+      return;
+    }
+
+    if (!query) {
+      setIsInputError(true);
+
+      return;
+    }
+
+    if (typeof rate === 'string') {
+      setIsSelectError(true);
+
+      return
+    }
+
+    if (typeof rate === 'number') {
+      setTempReview({
+        id: '0',
+        movieId,
+        userId: sessionData.user.id,
+        rating: rate,
+        text: query,
+        createdAt: new Date(),
+      })
+  
+      createReview({
+        movieId,
+        text: query,
+        rating: rate,
+      })
+  
+      setQuery('');
+      setRate('Rate');
+    }
   };
 
   return (
-    <form className='sm:mb-12 mb-8' onSubmit={handleSubmit}>
+    <form className='sm:mb-12 mb-8' onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()}>
       <label className='mr-4 sm:mr-6 relative'>
-        <div 
+        <div
           className={classNames(
             "w-6 h-6 sm:w-9 sm:h-9 bg-primary rounded-full border-light border absolute bottom-0 overflow-hidden opacity-0 transition-opacity",
             { 'opacity-100': isFocused || query }
@@ -38,12 +102,18 @@ export const ReviewForm = () => {
           type="text"
           placeholder="Add a review"
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          disabled={isLoading}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setIsInputError(false);
+          }}
           className={classNames(
-            'caret-primary outline-none border-b border-b-grey focus:border-b-primary placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-4/5 font-body font-light',
+            'mb-3 caret-primary outline-none border-b bg-dark border-b-[#E84545] focus:border-b-[#E84545] placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-4/5 font-body font-light text-dark',
             { 
               'pl-9 sm:pl-14': query,
-              'bg-dark': themeType === ThemeType.Dark
+              'bg-light': themeType === ThemeType.Light,
+              'text-light': themeType === ThemeType.Dark,
+              'border-b-grey focus:border-b-primary': !isInputError,
             }
           )}
           onFocus={() => setIsFocused(true)}
@@ -54,16 +124,21 @@ export const ReviewForm = () => {
       <label>
         <select
           className={classNames(
-            'outline-none border-b border-b-grey focus:border-b-primary w-12 h-12 font-light text-sm',
+            'outline-none bg-dark border-b border-b-[#E84545] focus:border-b-[#E84545] w-14 h-12 font-light text-sm text-dark',
             {
-              'bg-dark': themeType === ThemeType.Dark
+              'bg-light': themeType === ThemeType.Light,
+              'text-light': themeType === ThemeType.Dark,
+              'border-b-grey focus:border-b-primary': !isSelectError,
             }
           )}
+          value={rate}
+          disabled={isLoading}
+          onChange={(e) => {
+            setRate(Number(e.target.value));
+            setIsSelectError(false);
+          }}
         >
-          <option
-            disabled 
-            selected
-          >
+          <option selected disabled>
             Rate
           </option>
           {Array.from({ length: 10 }, (_, i) => i + 1).map(rate => (
@@ -73,6 +148,16 @@ export const ReviewForm = () => {
           ))}
         </select>
       </label>
+
+      <button
+        type='submit'
+        className={classNames(
+          'block px-3 sm:px-5 py-1 font-light text-sm sm:text-base text-dark border border-grey rounded-lg hover:bg-primary transition',
+          { 'text-light border-light': themeType === ThemeType.Dark }
+        )}
+      >
+        Send
+      </button>
     </form>
   );
 }

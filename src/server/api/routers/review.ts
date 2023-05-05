@@ -14,6 +14,9 @@ export const reviewRouter = createTRPCRouter({
         where: {
           movieId: input.movieId,
         },
+        orderBy: {
+          createdAt: 'desc',
+        }
       });
     }),
 
@@ -45,4 +48,24 @@ export const reviewRouter = createTRPCRouter({
         },
       });
     }),
+
+    change: protectedProcedure
+      .input(
+        z.object({ 
+          id: z.string(), 
+          text: z.string(), 
+          rating: z.number() 
+        })
+      )
+      .mutation(({ ctx, input }) => {
+        return ctx.prisma.review.update({
+          data: {
+            text: input.text,
+            rating: input.rating,
+          },
+          where: {
+            id: input.id,
+          },
+        });
+      }),
 });

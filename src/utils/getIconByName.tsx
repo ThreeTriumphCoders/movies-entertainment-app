@@ -14,6 +14,8 @@ export enum IconName {
   CLOSE = 'Close',
   YT = 'YouTube',
   EXIT = 'Logout',
+  SETTINGS = 'Settings',
+  SEND = 'Send',
 }
 
 export const getIconByName = (name: IconName) => {
@@ -90,6 +92,20 @@ export const getIconByName = (name: IconName) => {
     case IconName.EXIT: // viewBox 0 0 24 24
       return (
         <path d="M14 4h3.5c3.058 0 3 4 3 8s.058 8-3 8H14M3 12h12M3 12l4-4m-4 4 4 4" />
+      );
+
+    case IconName.SETTINGS:
+      return (
+        <path
+          d="M10 10.833a.833.833 0 1 0 0-1.666.833.833 0 0 0 0 1.666ZM10 5a.833.833 0 1 0 0-1.667A.833.833 0 0 0 10 5ZM10 16.667A.833.833 0 1 0 10 15a.833.833 0 0 0 0 1.667Z"
+        />
+      );
+
+    case IconName.SEND:
+      return (
+        <path 
+          d="M31.113 16.97H15.557M31.113 16.97 12.02 26.164l3.535-9.192-3.535-9.193 19.092 9.193Z"
+        />
       );
 
     default:
