@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { MoviesList } from '~/components/MoviesList';
-import { MoviesListMockup } from '~/components/MoviesListMockup';
-import { TrendingList } from '~/components/TrendingList';
+import { Movies } from '~/components/Movies';
+import { MoviesMockup } from '~/components/MoviesMockup';
+import { Trending } from '~/components/Trending';
 import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
 
@@ -29,12 +29,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <TrendingList />
+      <Trending />
 
       {moviesLoading ? (
-        <MoviesListMockup title="Popular movies" />
+        <MoviesMockup title="Popular movies" />
       ) : (
-        <MoviesList
+        <Movies
           movies={popularMovies.slice(0, 12)}
           title="Popular movies"
           category={Category.MOVIE}
@@ -42,9 +42,9 @@ const Home: NextPage = () => {
       )}
 
       {seriesLoading ? (
-        <MoviesListMockup title="Popular series" />
+        <MoviesMockup title="Popular series" />
       ) : (
-        <MoviesList
+        <Movies
           movies={popularSeries.slice(0, 12)}
           title="Popular series"
           category={Category.TV}
