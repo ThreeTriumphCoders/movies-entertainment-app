@@ -14,6 +14,8 @@ import { TrailerButton } from '~/components/TrailerButton';
 import { useBookmarksContext } from '~/contexts/useBookmarks';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
+import { useThemeContext } from '~/utils/ThemeContext';
+import { api } from '~/utils/api';
 import { IconName } from '~/utils/getIconByName';
 import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
@@ -22,6 +24,7 @@ const TVPage = () => {
   const movieId = query.movieId ? Number(query.movieId) : 0;
   const [tv, setTv] = useState<MovieType | null>(null);
   const [isPlayerOpened, setPlayerOpened] = useState(false);
+  const { themeType } = useThemeContext();
 
   const { isError: isMovieLoadingError } = useQuery({
     queryKey: [`${movieId}-tv`],
@@ -50,6 +53,8 @@ const TVPage = () => {
     deleteFromBookmarks,
   } = useBookmarksContext();
 
+  const { data: reviews = [], refetch, isError } = api.review.getAll.useQuery({ movieId });
+
   useEffect(() => {
     setIsBookmarked(isInBookmarks(movieId));
   }, [bookmarks, movieId, isInBookmarks]);
@@ -73,6 +78,10 @@ const TVPage = () => {
   const date = tv?.first_air_date
     ? tv.first_air_date.slice(0, 4)
     : 'No release date';
+
+  const rating = reviews.reduce((acc, review) => {
+    return acc + review.rating;
+  }, 0) / reviews.length || 0;
 
   return (
     <>
@@ -112,11 +121,11 @@ const TVPage = () => {
                 {trailerKey && <TrailerButton handlePopup={handlePopup} />}
               </div>
 
-              <MovieInfo movie={tv} category={Category.TV} />
+              <MovieInfo movie={tv} category={Category.TV} rating={rating} />
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
-              <ReviewsSection />
+              <ReviewsSection reviews={reviews} movieId={movieId} />
             </div>
           </div>
 
