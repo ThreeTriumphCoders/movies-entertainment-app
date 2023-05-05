@@ -19,9 +19,8 @@ export const BookmarkButton: FC<Props> = ({
     <button
       className="
         text-md relative flex h-10 w-full items-center justify-center gap-2
-        rounded-lg bg-primary text-light transition hover:bg-semi-dark
-        sm:w-[48%] lg:w-full
-        xl:w-[48%]
+        rounded-lg bg-primary bg-opacity-75 text-light transition hover:bg-opacity-100
+        sm:w-[48%] lg:w-full xl:w-[48%]
         "
       onClick={handleBookmarkClick}
       disabled={currentId === movieId}

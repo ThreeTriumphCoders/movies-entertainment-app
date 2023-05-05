@@ -139,7 +139,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
             <button
               className={classNames(
-                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l to-0% p-10 opacity-0 hover:opacity-100 sm:flex',
+                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l to-0% p-10 opacity-0 transition duration-500 hover:opacity-100 sm:flex',
                 {
                   'from-light': themeType === ThemeType.Light,
                 },
