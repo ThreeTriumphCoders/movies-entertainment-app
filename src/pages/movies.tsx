@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { uniqBy } from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect,useRef,useState } from 'react';
 import { MoviesList } from '~/components/MoviesList';
 import { MoviesListMockup } from '~/components/MoviesListMockup';
+import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
 import { type MoviesType } from '~/types/Movie';
-import { getPopular } from '~/utils/helpers';
 
 const MoviesPage = () => {
   const page = useRef(1);
@@ -13,7 +13,7 @@ const MoviesPage = () => {
 
   const { isError, refetch, isFetching } = useQuery({
     queryKey: ['movies'],
-    queryFn: () => getPopular(page.current, Category.MOVIE),
+    queryFn: () => MovieDB.getInstance().getPopular(page.current, Category.MOVIE),
     onSuccess(data) {
       setMovies((prev) => {
         return uniqBy([...prev, ...data], (elem) => elem.id);

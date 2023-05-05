@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect,useMemo,useRef } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarksContext';
+import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
-import { type MovieType, type MoviesType } from '~/types/Movie';
+import { type MovieType,type MoviesType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
 import { type IconName } from '~/utils/getIconByName';
-import { getTrending } from '~/utils/helpers';
 import { TrendingCard } from './TrendingCard';
 
 export const TrendingList = () => {
@@ -16,12 +16,12 @@ export const TrendingList = () => {
 
   const { isError: isMoviesError, data: trendingMovies = [] } = useQuery({
     queryKey: ['trendingMovies'],
-    queryFn: () => getTrending(Category.MOVIE),
+    queryFn: () => MovieDB.getInstance().getTrending(Category.MOVIE),
   });
 
   const { isError: isSeriesError, data: trendingSeries = [] } = useQuery({
     queryKey: ['trendingSeries'],
-    queryFn: () => getTrending(Category.TV),
+    queryFn: () => MovieDB.getInstance().getTrending(Category.TV),
   });
 
   const trendings: MoviesType = useMemo(() => {

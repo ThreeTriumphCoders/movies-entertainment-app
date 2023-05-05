@@ -29,8 +29,14 @@ export const ImagesAPIResponse = z.object({
   backdrops: ImagesSchema,
 });
 
+export const SearchAPIResponse = z.object({
+  total: z.number(),
+  results: MoviesSchema,
+});
+
 export type MoviesAPIResponseType = z.infer<typeof MoviesAPIResponse>;
 export type VideoType = z.infer<typeof VideoSchema>;
 export type VideosAPIResponseType = z.infer<typeof VideosAPIResponse>;
 export type ImageType = z.infer<typeof ImageSchema>;
 export type ImagesAPIResponseType = z.infer<typeof ImagesAPIResponse>;
+export type SearchAPIResponseType = z.infer<typeof SearchAPIResponse>;

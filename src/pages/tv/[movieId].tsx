@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback,useEffect,useState } from 'react';
 import { BookmarkButton } from '~/components/BookmarkButton';
 import { InfoCut } from '~/components/InfoCut';
 import { Loader } from '~/components/Loader';
@@ -12,12 +12,12 @@ import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
 import { ReviewsSection } from '~/components/ReviewsSection';
 import { TrailerButton } from '~/components/TrailerButton';
 import { useBookmarksContext } from '~/contexts/useBookmarksContext';
+import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { useThemeContext } from '~/utils/ThemeContext';
 import { api } from '~/utils/api';
 import { IconName } from '~/utils/getIconByName';
-import { getImages, getMovie, getTrailerKey } from '~/utils/helpers';
 
 const TVPage = () => {
   const { query } = useRouter();
@@ -28,18 +28,18 @@ const TVPage = () => {
 
   const { isError: isMovieLoadingError } = useQuery({
     queryKey: [`${movieId}-tv`],
-    queryFn: () => getMovie(movieId, Category.TV),
+    queryFn: () => MovieDB.getInstance().getMovie(movieId, Category.TV),
     onSuccess: (data) => setTv(data),
   });
 
   const { data: trailerKey = '' } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
-    queryFn: () => getTrailerKey(movieId, Category.TV),
+    queryFn: () => MovieDB.getInstance().getTrailerKey(movieId, Category.TV),
   });
 
   const { isError: isImagesError, data: moreImagePaths = [] } = useQuery({
     queryKey: [`${String(movieId)}-images`],
-    queryFn: () => getImages(movieId, Category.TV),
+    queryFn: () => MovieDB.getInstance().getImages(movieId, Category.TV),
   });
 
   const { data: sessionData } = useSession();

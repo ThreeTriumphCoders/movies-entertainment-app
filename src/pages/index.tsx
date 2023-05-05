@@ -4,18 +4,18 @@ import Head from 'next/head';
 import { MoviesList } from '~/components/MoviesList';
 import { MoviesListMockup } from '~/components/MoviesListMockup';
 import { TrendingList } from '~/components/TrendingList';
+import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
-import { getPopular } from '~/utils/helpers';
 
 const Home: NextPage = () => {
   const { data: popularMovies = [], isLoading: moviesLoading } = useQuery({
     queryKey: ['popularMovies'],
-    queryFn: () => getPopular(1, Category.MOVIE),
+    queryFn: () => MovieDB.getInstance().getPopular(1, Category.MOVIE),
   });
 
   const { data: popularSeries = [], isLoading: seriesLoading } = useQuery({
     queryKey: ['popularSeries'],
-    queryFn: () => getPopular(1, Category.TV),
+    queryFn: () => MovieDB.getInstance().getPopular(1, Category.TV),
   });
 
   return (

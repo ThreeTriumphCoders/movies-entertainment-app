@@ -4,13 +4,13 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState, type FC } from 'react';
+import { useEffect,useMemo,useRef,useState,type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarksContext';
+import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';
-import { IconName, getIconByName } from '~/utils/getIconByName';
-import { getImages, getTrailerKey } from '~/utils/helpers';
+import { IconName,getIconByName } from '~/utils/getIconByName';
 import { InfoCut } from './InfoCut';
 import { Loader } from './Loader';
 import { SvgIcon } from './SvgIcon';
@@ -52,7 +52,7 @@ export const MovieCard: FC<Props> = ({
     isSuccess: isTrailerKeyLoaded,
   } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
-    queryFn: () => getTrailerKey(movieId, category),
+    queryFn: () => MovieDB.getInstance().getTrailerKey(movieId, category),
     enabled: false,
   });
 
@@ -63,7 +63,7 @@ export const MovieCard: FC<Props> = ({
     isSuccess: isImagesLoaded,
   } = useQuery({
     queryKey: [`${movieId}-images`],
-    queryFn: () => getImages(movieId, category),
+    queryFn: () => MovieDB.getInstance().getImages(movieId, category),
     enabled: false,
   });
 

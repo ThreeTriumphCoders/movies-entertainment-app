@@ -1,13 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect,useRef,useState } from 'react';
 import { Loader } from '~/components/Loader';
 import { MoviesList } from '~/components/MoviesList';
 import { MoviesListMockup } from '~/components/MoviesListMockup';
-import { getSearchResult, type SearchResults } from '~/utils/helpers';
+import { MovieDB } from '~/controllers/movieDB';
+import { type SearchAPIResponseType } from '~/types/responses';
 
-const defaultResults: SearchResults = {
+const defaultResults: SearchAPIResponseType = {
   results: [],
   total: 0,
 };
@@ -26,7 +27,10 @@ const SearchPage = () => {
   const { isError, refetch, isFetching } = useQuery({
     queryKey: ['movies'],
     queryFn: () => {
-      return getSearchResult(queryParams || '', page.current);
+      return MovieDB.getInstance().getSearchResult(
+        queryParams || '',
+        page.current,
+      );
     },
     onSuccess(data) {
       setResults((prev) => {
@@ -59,7 +63,7 @@ const SearchPage = () => {
         return;
       }
 
-      const resultsFromServer = await getSearchResult(queryParams, 1);
+      const resultsFromServer = await MovieDB.getInstance().getSearchResult(queryParams, 1);
 
       if (resultsFromServer.results.length) {
         setResults(resultsFromServer);

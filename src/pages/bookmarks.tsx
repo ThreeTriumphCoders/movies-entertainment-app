@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect,useState } from 'react';
 import { MoviesList } from '~/components/MoviesList';
 import { MoviesListMockup } from '~/components/MoviesListMockup';
 import { useBookmarksContext } from '~/contexts/useBookmarksContext';
+import { MovieDB } from '~/controllers/movieDB';
 import { type Category } from '~/types/Category.enum';
 import { type MoviesType } from '~/types/Movie';
-import { getMovie } from '~/utils/helpers';
 
 const BookmarksPage = () => {
   const { bookmarks } = useBookmarksContext();
@@ -36,7 +36,7 @@ const BookmarksPage = () => {
     queryFn: () =>
       Promise.all(
         bookmarks.map(({ movieId, type }) =>
-          getMovie(movieId, type as Category),
+          MovieDB.getInstance().getMovie(movieId, type as Category),
         ),
       ),
     onSuccess: (data) => setMovies(data),
