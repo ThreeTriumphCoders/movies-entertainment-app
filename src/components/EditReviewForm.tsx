@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
 import { ThemeType } from "~/types/ThemeType";
 import { useThemeContext } from "~/utils/ThemeContext";
 
@@ -30,6 +30,8 @@ export const EditReviewForm: FC<Props> = ({
 }) => {
   const { themeType } = useThemeContext();
 
+  const inputField = useRef<HTMLInputElement>(null);
+
   const disableEditing = () => {
     setIsEditing(false);
     setNewRate(rating);
@@ -37,6 +39,10 @@ export const EditReviewForm: FC<Props> = ({
   };
 
   useEffect(() => {
+    if (inputField.current !== null) {
+      inputField.current.focus();
+    }
+
     document.addEventListener('click', disableEditing);
 
     return () => {
@@ -45,9 +51,14 @@ export const EditReviewForm: FC<Props> = ({
   }, [])
 
   return (
-    <form className='font-light' onSubmit={handleUpdate}>
+    <form 
+      className='font-light' 
+      onSubmit={handleUpdate} 
+      onClick={(e) => e.stopPropagation()}
+    >
       <input
         value={newText}
+        ref={inputField}
         onChange={(e) => {
           setNewText(e.target.value);
           setNewTextError(false);

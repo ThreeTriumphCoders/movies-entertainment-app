@@ -85,7 +85,6 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
         'flex items-center gap-2.5 sm:gap-5',
         { 'opacity-50 pointer-events-none': isDeleteLoading || isChangeLoading }
       )}
-      onMouseLeave={() => setSetting(false)}
     >
       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-full border-light border overflow-hidden relative">
         <Image
@@ -100,7 +99,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
             'bg-semi-dark text-light': themeType === ThemeType.Dark
           }
         )}
-        onClick={(e) => e.stopPropagation()}
+        onMouseLeave={() => setSetting(false)}
       >
         {isEditing
           ? (
@@ -128,7 +127,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
                   'absolute right-0 top-1 opacity-70 hover:opacity-100',
                   { 'hidden': userData?.name !== sessionData?.user.name}
                 )}
-                onMouseEnter={() => setSetting(true)}
+                onClick={() => setSetting(true)}
               >
                 <SvgIcon 
                   className={classNames(
@@ -164,12 +163,12 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
               {isSetting && (
                 <div
                   className={classNames(
-                    'absolute right-0 -top-14 sm:-right-[90px] sm:top-0 bg-semi-dark w-max py-1 px-5 rounded-lg flex flex-col gap-1 text-center font-light text-sm',
-                    { 'bg-[#DADADA]': themeType === ThemeType.Light }
+                    'absolute right-0 -top-14 sm:-right-[90px] sm:top-0 bg-[#DADADA] w-max py-1 px-5 rounded-lg flex flex-col gap-1 text-center font-light text-sm',
+                    { 'bg-semi-dark': themeType === ThemeType.Dark }
                   )}
                   onMouseLeave={() => setSetting(false)}
                 >
-                  <p 
+                  <p
                     className={classNames(
                       'hover:text-primary cursor-pointer text-dark',
                       { 'text-light': themeType === ThemeType.Dark }
@@ -185,8 +184,11 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
                       { 'text-light': themeType === ThemeType.Dark }
                     )}
                     onClick={(e) => {
-                      e.stopPropagation();
+                      if (!isEditing) {
+                        e.stopPropagation();
+                      }
                       setIsEditing(true);
+                      setSetting(false);
                     }}
                   >
                     Change
