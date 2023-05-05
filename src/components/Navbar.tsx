@@ -48,9 +48,12 @@ export const Navbar = () => {
           <Link href="/">
             <SvgIcon
               className={classNames(
-                'h-6 w-6 fill-primary transition hover:opacity-75 sm:h-8 sm:w-8',
+                'h-8 w-8 transition hover:opacity-75',
                 {
-                  'fill-semi-dark': themeType === ThemeType.Light,
+                  'fill-primary': themeType === ThemeType.Dark,
+                },
+                {
+                  'fill-light': themeType === ThemeType.Light,
                 },
               )}
               viewBox="0 0 32 26"
@@ -59,7 +62,7 @@ export const Navbar = () => {
             </SvgIcon>
           </Link>
 
-          <ul className="absolute left-1/2 flex -translate-x-1/2 gap-2 sm:gap-4 lg:relative lg:flex-col">
+          <ul className="left-1/2 flex gap-1 min-[370px]:absolute min-[370px]:-translate-x-1/2 min-[370px]:gap-2 sm:gap-4 lg:relative lg:flex-col">
             <li>
               <NavbarLink href="/">{getIconByName(IconName.HOME)}</NavbarLink>
             </li>
@@ -97,7 +100,7 @@ export const Navbar = () => {
               }
               ${
                 isSignOut
-                  ? 'h-8 w-32 scale-100 pr-8 opacity-100 sm:h-10 sm:w-36 lg:h-24 lg:w-12 lg:pr-0'
+                  ? 'h-10 w-32 scale-100 pr-8 opacity-100 sm:w-36 lg:h-24 lg:w-12 lg:pr-0'
                   : 'h-10 w-4 scale-0 pr-0 opacity-0 lg:w-12'
               }`}
               >
@@ -130,7 +133,7 @@ export const Navbar = () => {
             >
               <div
                 className={classNames(
-                  'relative h-6 w-6 overflow-hidden rounded-full border border-light bg-primary sm:h-8 sm:w-8 lg:h-10 lg:w-10',
+                  'relative h-8 w-8 overflow-hidden rounded-full border border-light bg-primary sm:h-8 sm:w-8 lg:h-10 lg:w-10',
                   {
                     'bg-semi-dark': themeType === ThemeType.Light,
                   },
@@ -163,7 +166,7 @@ export const Navbar = () => {
           >
             {themeType === ThemeType.Dark && (
               <SvgIcon
-                className="h-5 w-5 fill-grey transition hover:fill-primary sm:h-6 sm:w-6"
+                className="h-6 w-6 fill-grey transition hover:fill-primary sm:h-6 sm:w-6"
                 viewBox="0 0 21 22"
               >
                 {getIconByName(IconName.MOON)}
@@ -171,7 +174,7 @@ export const Navbar = () => {
             )}
             {themeType === ThemeType.Light && (
               <SvgIcon
-                className="h-5 w-5 fill-light transition hover:fill-semi-dark sm:h-6 sm:w-6"
+                className="h-6 w-6 fill-light transition hover:fill-semi-dark sm:h-6 sm:w-6"
                 viewBox="0 0 21 22"
               >
                 {getIconByName(IconName.SUN)}

@@ -31,7 +31,7 @@ export const InfoCut: FC<Props> = ({
 
   return (
     <div
-      className={`mb-1 flex gap-1 text-[11px] font-light leading-[14px] opacity-75  sm:text-[13px] sm:leading-4 ${
+      className={`mb-1 flex gap-1 text-[11px] font-light leading-[14px] opacity-75 min-[370px]:gap-1.5  sm:text-[13px] sm:leading-4 ${
         isColorDark ? 'text-dark' : 'text-light'
       }`}
     >

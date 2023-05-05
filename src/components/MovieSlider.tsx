@@ -83,12 +83,12 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
                 <div key={path} className="relative min-h-full min-w-full">
                   <picture>
                     <source
-                      media="(max-width: 799px)"
-                      srcSet={`https://www.themoviedb.org/t/p/w500${path}`}
+                      media="(max-width: 500px)"
+                      srcSet={`https://www.themoviedb.org/t/p/w780${path}`}
                     />
                     <source
                       media="(max-width: 1023px)"
-                      srcSet={`https://www.themoviedb.org/t/p/w780${path}`}
+                      srcSet={`https://www.themoviedb.org/t/p/w1280${path}`}
                     />
                     <img
                       className="m-auto h-full object-contain transition-all duration-1000"
@@ -139,7 +139,7 @@ export const MovieSlider = ({ imagesPaths }: Props) => {
 
             <button
               className={classNames(
-                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l to-0% p-10 opacity-0 hover:opacity-100 sm:flex',
+                'absolute bottom-0 right-0 top-0 hidden w-1/2 items-center justify-end bg-gradient-to-l to-0% p-10 opacity-0 transition duration-500 hover:opacity-100 sm:flex',
                 {
                   'from-light': themeType === ThemeType.Light,
                 },

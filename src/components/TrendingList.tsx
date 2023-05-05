@@ -150,7 +150,7 @@ export const TrendingList = () => {
   return (
     <>
       {!isMoviesError && !isSeriesError && (
-        <section className="relative mb-12 sm:mb-16 lg:pl-0">
+        <section className="relative mb-10 sm:mb-16 lg:pl-0">
           <h2 className="mb-6 text-xl font-light sm:text-[32px] lg:mb-10">
             Trending last week
           </h2>
