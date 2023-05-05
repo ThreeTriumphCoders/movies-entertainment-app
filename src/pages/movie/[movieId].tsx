@@ -1,22 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback,useEffect,useState } from 'react';
-import { BookmarkButton } from '~/components/BookmarkButton';
-import { InfoCut } from '~/components/InfoCut';
+import { useCallback, useEffect, useState } from 'react';
+import { BookmarkButton } from '~/components/Buttons/BookmarkButton';
+import { Details } from '~/components/Details';
 import { Loader } from '~/components/Loader';
 import { MovieInfo } from '~/components/MovieInfo';
 import { MoviePoster } from '~/components/MoviePoster';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
-import { ReviewsSection } from '~/components/ReviewsSection';
-import { TrailerButton } from '~/components/TrailerButton';
+import { Reviews } from '~/components/Reviews';
+import { TrailerButton } from '~/components/Buttons/TrailerButton';
 import { useBookmarksContext } from '~/contexts/useBookmarksContext';
+import { useThemeContext } from '~/contexts/useThemeContext';
 import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
-import { useThemeContext } from '~/contexts/useThemeContext';
 import { api } from '~/utils/api';
 import { IconName } from '~/utils/getIconByName';
 
@@ -57,11 +57,7 @@ const MoviePage = () => {
     deleteFromBookmarks,
   } = useBookmarksContext();
 
-  const {
-    data: reviews = [],
-    refetch,
-    isError,
-  } = api.review.getAll.useQuery({ movieId });
+  const { data: reviews = [] } = api.review.getAll.useQuery({ movieId });
 
   useEffect(() => {
     setIsBookmarked(isInBookmarks(movieId));
@@ -104,7 +100,7 @@ const MoviePage = () => {
           </h1>
 
           <div className="mb-2">
-            <InfoCut year={date} icon={IconName.MOVIE} />
+            <Details year={date} icon={IconName.MOVIE} />
           </div>
 
           <div className="grid gap-x-12 lg:grid-cols-3">
@@ -141,7 +137,7 @@ const MoviePage = () => {
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">
-              <ReviewsSection reviews={reviews} movieId={movieId} />
+              <Reviews reviews={reviews} movieId={movieId} />
             </div>
           </div>
 

@@ -26,12 +26,12 @@ export const useBookmarks = () => {
   const addToBookmarks = useCallback((movieId: number, type: Category) => {
     setCurrentId(movieId);
     createBookmark.mutate({ movieId, type });
-  }, []);
+  }, [createBookmark]);
 
   const deleteFromBookmarks = useCallback((movieId: number) => {
     setCurrentId(movieId);
     deleteBookmark.mutate({ movieId });
-  }, []);
+  }, [deleteBookmark]);
 
   const isInBookmarks = useCallback(
     (movieId: number) => {
