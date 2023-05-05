@@ -37,13 +37,13 @@ export const ReviewsSection = ({ reviews, movieId }: ReviewsSectionProps) => {
         <ReviewForm movieId={movieId} setTempReview={setTempReview} />
       )}
 
-      <ReviewList reviews={reviews} />
-      
       {tempReview && (
-        <div className='mt-8 pointer-events-none opacity-50'>
+        <div className='mb-8 pointer-events-none opacity-50'>
           <ReviewItem review={tempReview} />
         </div>
       )}
+
+      <ReviewList reviews={reviews} />
     </section>
   );
 }
