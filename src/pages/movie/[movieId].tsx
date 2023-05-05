@@ -11,7 +11,7 @@ import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
 import { ReviewsSection } from '~/components/ReviewsSection';
 import { TrailerButton } from '~/components/TrailerButton';
-import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
@@ -57,7 +57,11 @@ const MoviePage = () => {
     deleteFromBookmarks,
   } = useBookmarksContext();
 
-  const { data: reviews = [], refetch, isError } = api.review.getAll.useQuery({ movieId });
+  const {
+    data: reviews = [],
+    refetch,
+    isError,
+  } = api.review.getAll.useQuery({ movieId });
 
   useEffect(() => {
     setIsBookmarked(isInBookmarks(movieId));
@@ -83,9 +87,10 @@ const MoviePage = () => {
     ? movie.release_date.slice(0, 4)
     : 'No release date';
 
-  const rating = reviews.reduce((acc, review) => {
-    return acc + review.rating;
-  }, 0) / reviews.length || 0;
+  const rating =
+    reviews.reduce((acc, review) => {
+      return acc + review.rating;
+    }, 0) / reviews.length || 0;
 
   return (
     <>
@@ -104,10 +109,9 @@ const MoviePage = () => {
 
           <div className="grid gap-x-12 lg:grid-cols-3">
             <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-
               {moreImagePaths.length !== 0 && !isImagesError ? (
                 <MovieSlider imagesPaths={...moreImagePaths} />
-                ) : (
+              ) : (
                 <MoviePoster poster_path={movie.poster_path} />
               )}
             </div>
@@ -129,7 +133,11 @@ const MoviePage = () => {
                 {trailerKey && <TrailerButton handlePopup={handlePopup} />}
               </div>
 
-              <MovieInfo movie={movie} category={Category.MOVIE} rating={rating} />
+              <MovieInfo
+                movie={movie}
+                category={Category.MOVIE}
+                rating={rating}
+              />
             </div>
 
             <div className="lg:col-start-1 lg:col-end-3 lg:row-start-2 lg:row-end-3">

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState, type FC } from 'react';
-import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { Category } from '~/types/Category.enum';
 import { ThemeType } from '~/types/ThemeType';
 import { useThemeContext } from '~/utils/ThemeContext';

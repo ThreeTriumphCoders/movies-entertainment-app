@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef } from 'react';
-import { useBookmarksContext } from '~/contexts/useBookmarks';
+import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { Category } from '~/types/Category.enum';
 import { type MovieType, type MoviesType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
@@ -151,7 +151,7 @@ export const TrendingList = () => {
     <>
       {!isMoviesError && !isSeriesError && (
         <section className="relative mb-12 sm:mb-16 lg:pl-0">
-          <h2 className="mb-6 text-xl sm:text-[32px] lg:mb-10 font-light">
+          <h2 className="mb-6 text-xl font-light sm:text-[32px] lg:mb-10">
             Trending last week
           </h2>
 
