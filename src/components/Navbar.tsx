@@ -40,7 +40,7 @@ export const Navbar = () => {
     >
       <div
         className={classNames(
-          'flex h-full items-center justify-between bg-primary p-4 transition duration-500 sm:rounded-xl sm:hover:scale-[1.02] sm:hover:shadow-md lg:flex-col lg:rounded-[20px] lg:p-7',
+          'flex h-full items-center justify-between bg-primary p-4 transition duration-500 sm:rounded-xl sm:hover:shadow-md lg:flex-col lg:rounded-[20px] lg:p-7',
           { 'bg-semi-dark': themeType === ThemeType.Dark },
         )}
       >
