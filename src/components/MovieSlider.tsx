@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
+import { useThemeContext } from '~/contexts/useThemeContext';
 import { ThemeType } from '~/types/ThemeType';
-import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { SvgIcon } from './SvgIcon';
 

@@ -1,6 +1,6 @@
 import { type FC } from 'react';
+import { useThemeContext } from '~/contexts/useThemeContext';
 import { ThemeType } from '~/types/ThemeType';
-import { useThemeContext } from '~/utils/ThemeContext';
 
 type Props = {
   poster_path: string;

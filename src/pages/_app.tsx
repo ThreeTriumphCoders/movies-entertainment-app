@@ -9,8 +9,8 @@ import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { Layout } from '~/components/Layout';
 import { BookmarksContextProvider } from '~/contexts/useBookmarksContext';
+import { ThemeProvider } from '~/contexts/useThemeContext';
 import '~/styles/globals.css';
-import { ThemeProvider } from '~/utils/ThemeContext';
 
 const queryClient = new QueryClient();
 

@@ -1,6 +1,6 @@
 import classNames from 'classnames';
+import { useThemeContext } from '~/contexts/useThemeContext';
 import { ThemeType } from '~/types/ThemeType';
-import { useThemeContext } from '~/utils/ThemeContext';
 
 export const Loader = () => {
   const { themeType } = useThemeContext();

@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useThemeContext } from '~/contexts/useThemeContext';
 import { ThemeType } from '~/types/ThemeType';
-import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { SvgIcon } from './SvgIcon';
 

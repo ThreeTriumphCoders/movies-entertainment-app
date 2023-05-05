@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import { useThemeContext } from '~/contexts/useThemeContext';
 import { ThemeType } from '~/types/ThemeType';
-import { useThemeContext } from '~/utils/ThemeContext';
 import { IconName, getIconByName } from '~/utils/getIconByName';
 import { SvgIcon } from './SvgIcon';
 

@@ -1,13 +1,12 @@
 import { type Review } from '@prisma/client';
-import { ReviewForm } from './ReviewForm';
-import { ReviewList } from './ReviewList';
-import { useState } from 'react';
-import { ReviewItem } from './ReviewItem';
-import { Loader } from './Loader';
-import { useThemeContext } from '~/utils/ThemeContext';
 import classNames from 'classnames';
-import { ThemeType } from '~/types/ThemeType';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { useThemeContext } from '~/contexts/useThemeContext';
+import { ThemeType } from '~/types/ThemeType';
+import { ReviewForm } from './ReviewForm';
+import { ReviewItem } from './ReviewItem';
+import { ReviewList } from './ReviewList';
 
 interface ReviewsSectionProps {
   reviews: Review[];
@@ -19,16 +18,15 @@ export const ReviewsSection = ({ reviews, movieId }: ReviewsSectionProps) => {
   const { themeType } = useThemeContext();
   const { data: sessionData } = useSession();
 
-  const userIds = reviews.map(review => review.userId);
+  const userIds = reviews.map((review) => review.userId);
   const currentId = sessionData?.user.id || '';
 
   return (
     <section>
-      <h2 
-        className={classNames(
-          'sm:text-2xl text-lg text-dark mb-5 sm:mb-8',
-          { 'text-light': themeType === ThemeType.Dark }
-        )}
+      <h2
+        className={classNames('mb-5 text-lg text-dark sm:mb-8 sm:text-2xl', {
+          'text-light': themeType === ThemeType.Dark,
+        })}
       >
         Reviews
       </h2>
@@ -38,7 +36,7 @@ export const ReviewsSection = ({ reviews, movieId }: ReviewsSectionProps) => {
       )}
 
       {tempReview && (
-        <div className='mb-8 pointer-events-none opacity-50'>
+        <div className="pointer-events-none mb-8 opacity-50">
           <ReviewItem review={tempReview} />
         </div>
       )}
@@ -46,4 +44,4 @@ export const ReviewsSection = ({ reviews, movieId }: ReviewsSectionProps) => {
       <ReviewList reviews={reviews} />
     </section>
   );
-}
+};

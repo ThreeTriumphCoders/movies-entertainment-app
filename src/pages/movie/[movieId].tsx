@@ -16,7 +16,7 @@ import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
 import { type MovieType } from '~/types/Movie';
 import { ThemeType } from '~/types/ThemeType';
-import { useThemeContext } from '~/utils/ThemeContext';
+import { useThemeContext } from '~/contexts/useThemeContext';
 import { api } from '~/utils/api';
 import { IconName } from '~/utils/getIconByName';
 

@@ -1,8 +1,14 @@
-import classNames from "classnames";
-import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
-import { ThemeType } from "~/types/ThemeType";
-import { useThemeContext } from "~/utils/ThemeContext";
-import useAutosizeTextArea from "~/utils/useResizaTextArea";
+import classNames from 'classnames';
+import {
+  useEffect,
+  useRef,
+  type Dispatch,
+  type FC,
+  type SetStateAction,
+} from 'react';
+import { useThemeContext } from '~/contexts/useThemeContext';
+import { ThemeType } from '~/types/ThemeType';
+import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 
 type Props = {
   handleUpdate: (e: React.FormEvent) => void;
@@ -15,7 +21,7 @@ type Props = {
   setIsEditing: Dispatch<SetStateAction<boolean>>;
   rating: number;
   text: string;
-}
+};
 
 export const EditReviewForm: FC<Props> = ({
   handleUpdate,
@@ -59,7 +65,7 @@ export const EditReviewForm: FC<Props> = ({
           'bg-semi-dark bg-opacity-0 w-full border-b border-b-grey mb-2 caret-primary outline-none resize-none overflow-hidden focus:border-b-primary',
           { 'border-b-[#E84545] focus:border-b-[#E84545]': newTextError }
         )}
-        onFocus={() => setNewText(state => state + ' ')}
+        onFocus={() => setNewText((state) => state + ' ')}
       />
 
       <div>
@@ -92,4 +98,4 @@ export const EditReviewForm: FC<Props> = ({
       </div>
     </form>
   );
-}
+};

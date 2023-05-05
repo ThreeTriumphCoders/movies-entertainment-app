@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useThemeContext } from '~/contexts/useThemeContext';
 import { ThemeType } from '~/types/ThemeType';
-import { useThemeContext } from '~/utils/ThemeContext';
 import { SvgIcon } from './SvgIcon';
 
 type Props = {
