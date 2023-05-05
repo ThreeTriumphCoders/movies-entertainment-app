@@ -30,16 +30,19 @@ const MoviePage = () => {
     queryKey: [`${movieId}-movie`],
     queryFn: () => getMovie(movieId, Category.MOVIE),
     onSuccess: (data) => setMovie(data),
+    enabled: movieId !== 0,
   });
 
   const { data: trailerKey = '' } = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => getTrailerKey(movieId, Category.MOVIE),
+    enabled: movieId !== 0,
   });
 
   const { isError: isImagesError, data: moreImagePaths = [] } = useQuery({
     queryKey: [`${String(movieId)}-images`],
     queryFn: () => getImages(movieId, Category.MOVIE),
+    enabled: movieId !== 0,
   });
 
   const { data: sessionData } = useSession();
@@ -94,10 +97,11 @@ const MoviePage = () => {
 
           <div className="grid gap-x-12 lg:grid-cols-3">
             <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-              <MoviePoster poster_path={movie.poster_path} />
 
-              {moreImagePaths.length !== 0 && !isImagesError && (
+              {moreImagePaths.length !== 0 && !isImagesError ? (
                 <MovieSlider imagesPaths={...moreImagePaths} />
+                ) : (
+                <MoviePoster poster_path={movie.poster_path} />
               )}
             </div>
 

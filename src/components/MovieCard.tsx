@@ -158,12 +158,10 @@ export const MovieCard: FC<Props> = ({
             <div
               className={`absolute bottom-0 left-0 right-0 top-0 ${placeholderBgColor}`}
             >
-              <Image
-                className="object-contain"
+              <img
+                className="object-contain m-auto h-full"
                 alt="movie image"
                 onClick={() => onPlayingChange(movieId)}
-                fill
-                priority
                 sizes="(max-width: 640px) 50vw, 33vw"
                 src={`https://www.themoviedb.org/t/p/w500${imagePath}`}
               />
@@ -171,7 +169,7 @@ export const MovieCard: FC<Props> = ({
           )}
 
           {!isPlaying &&
-            moreImagePaths.length > 0 &&
+            moreImagePaths.length > 1 &&
             moreImagePaths.map((path, index) => (
               <Image
                 key={path}
