@@ -14,6 +14,9 @@ export const reviewRouter = createTRPCRouter({
         where: {
           movieId: input.movieId,
         },
+        orderBy: {
+          createdAt: 'desc',
+        }
       });
     }),
 

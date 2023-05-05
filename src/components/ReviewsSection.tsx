@@ -7,6 +7,7 @@ import { Loader } from './Loader';
 import { useThemeContext } from '~/utils/ThemeContext';
 import classNames from 'classnames';
 import { ThemeType } from '~/types/ThemeType';
+import { useSession } from 'next-auth/react';
 
 interface ReviewsSectionProps {
   reviews: Review[];
@@ -16,6 +17,10 @@ interface ReviewsSectionProps {
 export const ReviewsSection = ({ reviews, movieId }: ReviewsSectionProps) => {
   const [tempReview, setTempReview] = useState<Review | null>(null);
   const { themeType } = useThemeContext();
+  const { data: sessionData } = useSession();
+
+  const userIds = reviews.map(review => review.userId);
+  const currentId = sessionData?.user.id || '';
 
   return (
     <section>
@@ -28,7 +33,10 @@ export const ReviewsSection = ({ reviews, movieId }: ReviewsSectionProps) => {
         Reviews
       </h2>
 
-      <ReviewForm movieId={movieId} setTempReview={setTempReview} />
+      {!userIds.includes(currentId) && (
+        <ReviewForm movieId={movieId} setTempReview={setTempReview} />
+      )}
+
       <ReviewList reviews={reviews} />
       
       {tempReview && (

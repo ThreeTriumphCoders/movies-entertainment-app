@@ -11,6 +11,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getQueryKey } from '@trpc/react-query';
 import { Review } from '@prisma/client';
 import { string } from 'zod';
+import { SvgIcon } from './SvgIcon';
+import { IconName, getIconByName } from '~/utils/getIconByName';
 
 type Props = {
   movieId: number;
@@ -29,7 +31,7 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
 
   const queryClient = useQueryClient();
   const reviewListKey = getQueryKey(api.review.getAll);
-  const createReview = api.review.create.useMutation({
+  const { mutate: createReview, isLoading } = api.review.create.useMutation({
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: reviewListKey });
       setTempReview(null);
@@ -68,7 +70,7 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
         createdAt: new Date(),
       })
   
-      createReview.mutate({
+      createReview({
         movieId,
         text: query,
         rating: rate,
@@ -100,12 +102,13 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
           type="text"
           placeholder="Add a review"
           value={query}
+          disabled={isLoading}
           onChange={(event) => {
             setQuery(event.target.value);
             setIsInputError(false);
           }}
           className={classNames(
-            'caret-primary outline-none border-b bg-dark border-b-[#E84545] focus:border-b-[#E84545] placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-4/5 font-body font-light text-dark',
+            'mb-3 caret-primary outline-none border-b bg-dark border-b-[#E84545] focus:border-b-[#E84545] placeholder:text-sm pb-3 focus:pl-9 sm:focus:pl-14 sm:pb-3 transition-all w-3/4 lg:w-4/5 font-body font-light text-dark',
             { 
               'pl-9 sm:pl-14': query,
               'bg-light': themeType === ThemeType.Light,
@@ -129,6 +132,7 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
             }
           )}
           value={rate}
+          disabled={isLoading}
           onChange={(e) => {
             setRate(Number(e.target.value));
             setIsSelectError(false);
@@ -144,6 +148,16 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
           ))}
         </select>
       </label>
+
+      <button
+        type='submit'
+        className={classNames(
+          'block px-3 sm:px-5 py-1 font-light text-sm sm:text-base text-dark border border-grey rounded-lg hover:bg-primary transition',
+          { 'text-light border-light': themeType === ThemeType.Dark }
+        )}
+      >
+        Send
+      </button>
     </form>
   );
 }

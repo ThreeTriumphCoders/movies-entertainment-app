@@ -94,9 +94,10 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
       </div>
       <article
         className={classNames(
-          'bg-grey bg-opacity-40 w-4/5 sm:w-2/3 lg:w-3/4 rounded-lg px-3.5 py-4 sm:px-6 sm:py-5 relative text-dark',
+          'bg-grey bg-opacity-40 w-4/5 sm:w-2/3 lg:w-3/4 rounded-lg px-3.5 pt-5 sm:px-6 pb-5 sm:pt-6 relative text-dark',
           { 
-            'bg-semi-dark text-light': themeType === ThemeType.Dark
+            'bg-semi-dark text-light': themeType === ThemeType.Dark,
+            'bg-primary': review.userId === sessionData?.user.id
           }
         )}
         onMouseLeave={() => setSetting(false)}
@@ -118,14 +119,17 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
           )
           : (
             <>
-              <p className='font-light text-xs sm:text-sm'>
+              <h5 className='absolute left-3 top-1 sm:left-5 text-xs sm:text-sm'>
+                {userData?.name || 'Anonymus'}
+              </h5>
+              <p className='font-light text-xs sm:text-sm text-clip overflow-x-hidden'>
                 {text}
               </p>
 
               <button
                 className={classNames(
                   'absolute right-0 top-1 opacity-70 hover:opacity-100',
-                  { 'hidden': userData?.name !== sessionData?.user.name}
+                  { 'hidden': review.userId !== sessionData?.user.id}
                 )}
                 onClick={() => setSetting(true)}
               >

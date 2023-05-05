@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
 import { ThemeType } from "~/types/ThemeType";
 import { useThemeContext } from "~/utils/ThemeContext";
+import useAutosizeTextArea from "~/utils/useResizaTextArea";
 
 type Props = {
   handleUpdate: (e: React.FormEvent) => void;
@@ -30,7 +31,9 @@ export const EditReviewForm: FC<Props> = ({
 }) => {
   const { themeType } = useThemeContext();
 
-  const inputField = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useAutosizeTextArea(textAreaRef.current, newText);
 
   const disableEditing = () => {
     setIsEditing(false);
@@ -39,8 +42,8 @@ export const EditReviewForm: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (inputField.current !== null) {
-      inputField.current.focus();
+    if (textAreaRef.current !== null) {
+      textAreaRef.current.focus();
     }
 
     document.addEventListener('click', disableEditing);
@@ -52,27 +55,30 @@ export const EditReviewForm: FC<Props> = ({
 
   return (
     <form 
-      className='font-light' 
+      className='font-light flex items-end' 
       onSubmit={handleUpdate} 
       onClick={(e) => e.stopPropagation()}
     >
-      <input
+      <textarea
         value={newText}
-        ref={inputField}
+        rows={1}
+        ref={textAreaRef}
         onChange={(e) => {
           setNewText(e.target.value);
           setNewTextError(false);
         }}
         className={classNames(
-          'bg-semi-dark bg-opacity-0 w-4/5 border-b border-b-grey pb-1 mr-5 caret-primary outline-none focus:border-b-primary',
+          'bg-semi-dark bg-opacity-0 w-3/4 border-b border-b-grey mr-5 caret-primary outline-none resize-none overflow-hidden focus:border-b-primary',
           { 'border-b-[#E84545] focus:border-b-[#E84545]': newTextError }
         )}
+        onFocus={() => setNewText(state => state + ' ')}
       />
+
       <select
         value={newRate}
         onChange={(e) => setNewRate(Number(e.target.value))}
         className={classNames(
-          'bg-light bg-opacity-0 border-b border-b-grey pb-1 outline-none focus:border-b-primary',
+          'mr-5 bg-light bg-opacity-0 border-b border-b-grey pb-1 outline-none focus:border-b-primary',
         )}
       >
         {Array.from({ length: 10 }, (_, i) => i + 1).map(rate => (
@@ -84,6 +90,16 @@ export const EditReviewForm: FC<Props> = ({
           </option>
         ))}
       </select>
+
+      <button
+        type='submit'
+        className={classNames(
+          ' px-2 sm:px-3 py-1 font-light text-sm sm:text-base text-dark border border-dark rounded-lg hover:bg-primary transition',
+          { 'text-light border-light': themeType === ThemeType.Dark }
+        )}
+      >
+        Send
+      </button>
     </form>
   );
 }
