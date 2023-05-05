@@ -2,7 +2,7 @@
 
 :root {
   scroll-behavior: smooth;
-  --MyBackColor: #f5f5f5;
+  --MyBackColor: 'transparent';
 }
 
 ::-webkit-scrollbar {

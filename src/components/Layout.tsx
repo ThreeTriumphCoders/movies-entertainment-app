@@ -26,7 +26,7 @@ export const Layout: React.FC<Props> = ({ children }) => {
   return (
     <main
       className={classNames(
-        'min-h-screen px-4 pb-8 pt-16 font-body  selection:bg-primary selection:text-dark sm:px-6 sm:pt-[116px] lg:pl-40 lg:pt-0',
+        'font-body min-h-screen px-4 pb-8 pt-16  selection:bg-primary selection:text-dark sm:px-6 sm:pt-[116px] lg:pl-40 lg:pt-0',
         { 'bg-light text-dark': themeType === ThemeType.Light },
         { 'bg-dark text-light': themeType === ThemeType.Dark },
       )}
