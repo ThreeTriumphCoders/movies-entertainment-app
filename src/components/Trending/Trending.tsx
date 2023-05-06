@@ -14,19 +14,24 @@ import { TrendingCard } from './components/TrendingCard';
 export const Trending = () => {
   const { themeType } = useThemeContext();
 
-  const { isError: isMoviesError, data: trendingMovies = [] } = useQuery({
+  const trendingMoviesQuery = useQuery({
     queryKey: ['trendingMovies'],
     queryFn: () => MovieDB.getInstance().getTrending(Category.MOVIE),
   });
 
-  const { isError: isSeriesError, data: trendingSeries = [] } = useQuery({
+  const trendingTVsQuery = useQuery({
     queryKey: ['trendingSeries'],
     queryFn: () => MovieDB.getInstance().getTrending(Category.TV),
   });
 
-  const trendings: MoviesType = useMemo(() => {
-    return _.shuffle<MovieType>([...trendingMovies, ...trendingSeries]);
-  }, [trendingMovies, trendingSeries]);
+  const trendings: MoviesType | undefined = useMemo(() => {
+    if (trendingMoviesQuery.data && trendingTVsQuery.data) {
+      return _.shuffle<MovieType>([
+        ...trendingMoviesQuery.data,
+        ...trendingTVsQuery.data,
+      ]);
+    }
+  }, [trendingMoviesQuery.data, trendingTVsQuery.data]);
 
   const { bookmarks, isInBookmarks, addToBookmarks, deleteFromBookmarks } =
     useBookmarksContext();
@@ -149,66 +154,68 @@ export const Trending = () => {
 
   return (
     <>
-      {!isMoviesError && !isSeriesError && (
-        <section className="relative mb-10 sm:mb-16 lg:pl-0">
-          <h2 className="mb-6 text-xl font-light sm:text-[32px] lg:mb-10">
-            Trending last week
-          </h2>
+      {!trendingMoviesQuery.isError &&
+        !trendingTVsQuery.isError &&
+        trendings?.length && (
+          <section className="relative mb-10 sm:mb-16 lg:pl-0">
+            <h2 className="mb-6 text-xl font-light sm:text-[32px] lg:mb-10">
+              Trending last week
+            </h2>
 
-          <div
-            className="flex touch-pan-x snap-x snap-mandatory gap-4 overflow-x-scroll pb-2 sm:gap-10"
-            ref={scrollRef}
-          >
-            {trendings.length > 0
-              ? trendings.map((movie) => {
-                  const {
-                    id,
-                    backdrop_path,
-                    title,
-                    name,
-                    release_date,
-                    first_air_date,
-                    media_type,
-                    original_language,
-                    vote_average,
-                  } = movie;
-                  const isBookmarked = isInBookmarks(id);
+            <div
+              className="flex touch-pan-x snap-x snap-mandatory gap-4 overflow-x-scroll pb-2 sm:gap-10"
+              ref={scrollRef}
+            >
+              {trendings.length > 0
+                ? trendings.map((movie) => {
+                    const {
+                      id,
+                      backdrop_path,
+                      title,
+                      name,
+                      release_date,
+                      first_air_date,
+                      media_type,
+                      original_language,
+                      vote_average,
+                    } = movie;
+                    const isBookmarked = isInBookmarks(id);
 
-                  const type = isBookmarked
-                    ? bookmarks.find(({ movieId }) => movieId === id)?.type
-                    : media_type;
+                    const type = isBookmarked
+                      ? bookmarks.find(({ movieId }) => movieId === id)?.type
+                      : media_type;
 
-                  return (
-                    <TrendingCard
-                      key={id}
-                      movieId={id}
-                      imagePath={backdrop_path || ''}
-                      title={title || name}
-                      releaseDate={release_date || first_air_date}
-                      category={type as Category}
-                      language={original_language}
-                      rating={vote_average}
-                      categoryIcon={type as IconName}
-                      isBookmarkedInitial={isBookmarked}
-                      onBookmarksAdd={handleAddToBookmarks}
-                      onBookmarksRemove={handleRemoveFromBookmarks}
-                    />
-                  );
-                })
-              : [null, null, null, null, null].map((_, index) => (
-                  <TrendingCard key={index} />
-                ))}
-          </div>
+                    return (
+                      <TrendingCard
+                        key={id}
+                        movieId={id}
+                        imagePath={backdrop_path || ''}
+                        title={title || name}
+                        releaseDate={release_date || first_air_date}
+                        category={type as Category}
+                        language={original_language}
+                        rating={vote_average}
+                        categoryIcon={type as IconName}
+                        isBookmarkedInitial={isBookmarked}
+                        onBookmarksAdd={handleAddToBookmarks}
+                        onBookmarksRemove={handleRemoveFromBookmarks}
+                      />
+                    );
+                  })
+                : [null, null, null, null, null].map((_, index) => (
+                    <TrendingCard key={index} />
+                  ))}
+            </div>
 
-          <div
-            className={classNames(
-              'pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l to-0%',
-              { 'from-light': themeType === ThemeType.Light },
-              { 'from-dark': themeType === ThemeType.Dark },
-            )}
-          />
-        </section>
-      )}
+            <div
+              className={classNames(
+                'pointer-events-none absolute bottom-4 right-0 top-0 w-28 bg-gradient-to-l to-0%',
+                { 'from-light': themeType === ThemeType.Light },
+                { 'from-dark': themeType === ThemeType.Dark },
+              )}
+            />
+          </section>
+        )}
     </>
   );
 };

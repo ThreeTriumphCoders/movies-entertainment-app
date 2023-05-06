@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback,useEffect,useState } from 'react';
 import { BookmarkButton } from '~/components/Buttons/BookmarkButton';
+import { TrailerButton } from '~/components/Buttons/TrailerButton';
 import { Details } from '~/components/Details';
 import { Loader } from '~/components/Loader';
 import { MovieInfo } from '~/components/MovieInfo';
@@ -10,7 +11,6 @@ import { MoviePoster } from '~/components/MoviePoster';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
 import { Reviews } from '~/components/Reviews';
-import { TrailerButton } from '~/components/Buttons/TrailerButton';
 import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
@@ -24,20 +24,22 @@ const TVPage = () => {
   const [tv, setTv] = useState<MovieType | null>(null);
   const [isPlayerOpened, setPlayerOpened] = useState(false);
 
-  const { isError: isMovieLoadingError } = useQuery({
+  const tvQuery = useQuery({
     queryKey: [`${movieId}-tv`],
     queryFn: () => MovieDB.getInstance().getMovie(movieId, Category.TV),
     onSuccess: (data) => setTv(data),
   });
 
-  const { data: trailerKey = '' } = useQuery({
+  const trailerKeyQuery = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => MovieDB.getInstance().getTrailerKey(movieId, Category.TV),
+    enabled: movieId !== 0,
   });
 
-  const { isError: isImagesError, data: moreImagePaths = [] } = useQuery({
-    queryKey: [`${String(movieId)}-images`],
+  const moreImagesQuery = useQuery({
+    queryKey: [`${movieId}-images`],
     queryFn: () => MovieDB.getInstance().getImages(movieId, Category.TV),
+    enabled: movieId !== 0,
   });
 
   const { data: sessionData } = useSession();
@@ -84,7 +86,7 @@ const TVPage = () => {
 
   return (
     <>
-      {!isMovieLoadingError && tv ? (
+      {!tvQuery.isError && tv ? (
         <section>
           <h1 className="mb-2 text-xl font-light sm:mb-4 sm:text-3xl">
             {tv.name}
@@ -98,8 +100,8 @@ const TVPage = () => {
             <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
               <MoviePoster poster_path={tv.poster_path} />
 
-              {moreImagePaths.length !== 0 && !isImagesError && (
-                <MovieSlider imagesPaths={...moreImagePaths} />
+              {moreImagesQuery?.data?.length !== 0 && !moreImagesQuery.isError && (
+                <MovieSlider imagesPaths={...moreImagesQuery?.data ?? []} />
               )}
             </div>
 
@@ -117,7 +119,9 @@ const TVPage = () => {
                   movieId={movieId}
                 />
 
-                {trailerKey && <TrailerButton handlePopup={handlePopup} />}
+                {trailerKeyQuery.data && (
+                  <TrailerButton handlePopup={handlePopup} />
+                )}
               </div>
 
               <MovieInfo movie={tv} category={Category.TV} rating={rating} />
@@ -129,7 +133,10 @@ const TVPage = () => {
           </div>
 
           {isPlayerOpened && (
-            <MovieTrailerPopup trailerKey={trailerKey} onClose={handlePopup} />
+            <MovieTrailerPopup
+              trailerKey={trailerKeyQuery?.data ?? ''}
+              onClose={handlePopup}
+            />
           )}
         </section>
       ) : (

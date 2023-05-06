@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback,useEffect,useState } from 'react';
 import { BookmarkButton } from '~/components/Buttons/BookmarkButton';
+import { TrailerButton } from '~/components/Buttons/TrailerButton';
 import { Details } from '~/components/Details';
 import { Loader } from '~/components/Loader';
 import { MovieInfo } from '~/components/MovieInfo';
@@ -10,7 +11,6 @@ import { MoviePoster } from '~/components/MoviePoster';
 import { MovieSlider } from '~/components/MovieSlider';
 import { MovieTrailerPopup } from '~/components/MovieTrailerPopup';
 import { Reviews } from '~/components/Reviews';
-import { TrailerButton } from '~/components/Buttons/TrailerButton';
 import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { useThemeContext } from '~/contexts/useThemeContext';
 import { MovieDB } from '~/controllers/movieDB';
@@ -27,21 +27,20 @@ const MoviePage = () => {
   const [isPlayerOpened, setPlayerOpened] = useState(false);
   const { themeType } = useThemeContext();
 
-  const { isError: isMovieLoadingError } = useQuery({
-    queryKey: [`${movieId}-movie`],
+  const movieQuery = useQuery({
+    queryKey: [`${movieId}-tv`],
     queryFn: () => MovieDB.getInstance().getMovie(movieId, Category.MOVIE),
     onSuccess: (data) => setMovie(data),
-    enabled: movieId !== 0,
   });
 
-  const { data: trailerKey = '' } = useQuery({
+  const trailerKeyQuery = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => MovieDB.getInstance().getTrailerKey(movieId, Category.MOVIE),
     enabled: movieId !== 0,
   });
 
-  const { isError: isImagesError, data: moreImagePaths = [] } = useQuery({
-    queryKey: [`${String(movieId)}-images`],
+  const moreImagesQuery = useQuery({
+    queryKey: [`${movieId}-images`],
     queryFn: () => MovieDB.getInstance().getImages(movieId, Category.MOVIE),
     enabled: movieId !== 0,
   });
@@ -90,7 +89,7 @@ const MoviePage = () => {
 
   return (
     <>
-      {!isMovieLoadingError && movie ? (
+      {!movieQuery.isError && movie ? (
         <section>
           <h1
             className={`mb-2 text-xl font-light sm:mb-4 sm:text-3xl
@@ -105,8 +104,8 @@ const MoviePage = () => {
 
           <div className="grid gap-x-12 lg:grid-cols-3">
             <div className="relative mb-8 overflow-hidden rounded-xl pt-[56.25%] lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2">
-              {moreImagePaths.length !== 0 && !isImagesError ? (
-                <MovieSlider imagesPaths={...moreImagePaths} />
+              {moreImagesQuery?.data?.length !== 0 && !moreImagesQuery.isError ? (
+                <MovieSlider imagesPaths={...moreImagesQuery.data ?? []} />
               ) : (
                 <MoviePoster poster_path={movie.poster_path} />
               )}
@@ -126,7 +125,9 @@ const MoviePage = () => {
                   movieId={movieId}
                 />
 
-                {trailerKey && <TrailerButton handlePopup={handlePopup} />}
+                {trailerKeyQuery.data && (
+                  <TrailerButton handlePopup={handlePopup} />
+                )}
               </div>
 
               <MovieInfo
@@ -142,7 +143,10 @@ const MoviePage = () => {
           </div>
 
           {isPlayerOpened && (
-            <MovieTrailerPopup trailerKey={trailerKey} onClose={handlePopup} />
+            <MovieTrailerPopup
+              trailerKey={trailerKeyQuery.data ?? ''}
+              onClose={handlePopup}
+            />
           )}
         </section>
       ) : (

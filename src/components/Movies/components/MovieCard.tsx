@@ -4,13 +4,13 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState, type FC } from 'react';
+import { useEffect,useMemo,useRef,useState,type FC } from 'react';
 import { useBookmarksContext } from '~/contexts/useBookmarksContext';
 import { useThemeContext } from '~/contexts/useThemeContext';
 import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
 import { ThemeType } from '~/types/ThemeType';
-import { IconName, getIconByName } from '~/utils/getIconByName';
+import { IconName,getIconByName } from '~/utils/getIconByName';
 import { Details } from '../../Details';
 import { Loader } from '../../Loader/Loader';
 import { SvgIcon } from '../../SvgIcon/SvgIcon';
@@ -46,27 +46,22 @@ export const MovieCard: FC<Props> = ({
   onBookmarksAdd,
   onBookmarksRemove,
 }) => {
-  const {
-    data: trailerKey = '',
-    refetch: loadTrailerKey,
-    isSuccess: isTrailerKeyLoaded,
-  } = useQuery({
+
+  const trailerKeyQuery = useQuery({
     queryKey: [`${movieId}-trailerKey`],
     queryFn: () => MovieDB.getInstance().getTrailerKey(movieId, category),
     enabled: false,
   });
 
-  const {
-    isError: isImagesError,
-    data: moreImagePaths = imagePath ? [imagePath] : [],
-    refetch: loadMoreImages,
-    isSuccess: isImagesLoaded,
-  } = useQuery({
+  const moreImagesQuery = useQuery({
     queryKey: [`${movieId}-images`],
     queryFn: () => MovieDB.getInstance().getImages(movieId, category),
     enabled: false,
   });
 
+  const {
+    data: moreImagePaths = imagePath ? [imagePath] : [],
+  } = moreImagesQuery;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isPlaying = playingId === movieId;
   const intervalRef = useRef<NodeJS.Timer | null>(null);
@@ -79,12 +74,12 @@ export const MovieCard: FC<Props> = ({
   };
 
   const startSlidesAnimation = async () => {
-    if (!isImagesLoaded) {
-      await loadMoreImages();
-      await loadTrailerKey();
+    if (!moreImagesQuery.isSuccess) {
+      await moreImagesQuery.refetch();
+      await trailerKeyQuery.refetch();
     }
 
-    if (!isImagesError && moreImagePaths.length > 0) {
+    if (!moreImagesQuery.isError && moreImagePaths.length > 0) {
       setTimeout(() => {
         changeCurrentImageIndex();
       }, 500);
@@ -193,7 +188,7 @@ export const MovieCard: FC<Props> = ({
               bg-opacity-50 opacity-0 transition-opacity hover:opacity-100
             "
           >
-            {isTrailerKeyLoaded && trailerKey && (
+            {trailerKeyQuery.isSuccess && trailerKeyQuery.data && (
               <div
                 className="flex w-fit cursor-pointer gap-5 rounded-full bg-light bg-opacity-25 p-2 pr-6 text-lg transition hover:bg-opacity-50"
                 onClick={() => onPlayingChange(movieId)}
@@ -209,7 +204,7 @@ export const MovieCard: FC<Props> = ({
               </div>
             )}
 
-            {isTrailerKeyLoaded && !trailerKey && (
+            {trailerKeyQuery.isSuccess && !trailerKeyQuery.data && (
               <div className="flex w-fit justify-center rounded-full bg-light bg-opacity-25 px-4 py-2 text-lg">
                 <p className="text-medium  text-light">No trailer</p>
               </div>
@@ -244,10 +239,10 @@ export const MovieCard: FC<Props> = ({
             <div className="absolute top-0 w-full max-w-full pt-[56.25%]">
               <Loader />
 
-              {trailerKey ? (
+              {trailerKeyQuery.data ? (
                 <iframe
                   className="absolute left-0 top-0 h-full w-full"
-                  src={`https://www.youtube.com/embed/${trailerKey}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
+                  src={`https://www.youtube.com/embed/${trailerKeyQuery.data}?showinfo=0&autoplay=1&controls=0&enablejsapi=1&modestbranding=1`}
                   title="YouTube video player"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen

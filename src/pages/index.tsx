@@ -8,12 +8,12 @@ import { MovieDB } from '~/controllers/movieDB';
 import { Category } from '~/types/Category.enum';
 
 const Home: NextPage = () => {
-  const { data: popularMovies = [], isLoading: moviesLoading } = useQuery({
+  const popularMoviesQuery = useQuery({
     queryKey: ['popularMovies'],
     queryFn: () => MovieDB.getInstance().getPopular(1, Category.MOVIE),
   });
 
-  const { data: popularSeries = [], isLoading: seriesLoading } = useQuery({
+  const popularTVsQuery = useQuery({
     queryKey: ['popularSeries'],
     queryFn: () => MovieDB.getInstance().getPopular(1, Category.TV),
   });
@@ -31,21 +31,21 @@ const Home: NextPage = () => {
 
       <Trending />
 
-      {moviesLoading ? (
+      {popularMoviesQuery.isLoading ? (
         <MoviesMockup title="Popular movies" />
       ) : (
         <Movies
-          movies={popularMovies.slice(0, 12)}
+          movies={popularMoviesQuery?.data?.slice(0, 12) ?? []}
           title="Popular movies"
           category={Category.MOVIE}
         />
       )}
 
-      {seriesLoading ? (
+      {popularTVsQuery.isLoading ? (
         <MoviesMockup title="Popular series" />
       ) : (
         <Movies
-          movies={popularSeries.slice(0, 12)}
+          movies={popularTVsQuery?.data?.slice(0, 12) ?? []}
           title="Popular series"
           category={Category.TV}
         />
