@@ -34,10 +34,6 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
     },
   });
   
-  
-
-
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -47,7 +43,7 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
       return;
     }
 
-    if (!query) {
+    if (!query.trim()) {
       setIsInputError(true);
 
       return;
@@ -65,13 +61,13 @@ export const ReviewForm: FC<Props> = ({ movieId, setTempReview }) => {
         movieId,
         userId: sessionData.user.id,
         rating: rate,
-        text: query,
+        text: query.trim(),
         createdAt: new Date(),
       });
 
       createReview({
         movieId,
-        text: query,
+        text: query.trim(),
         rating: rate,
       });
 

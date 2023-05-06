@@ -4,7 +4,7 @@ import { getQueryKey } from '@trpc/react-query';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import avatar from '~/../public/images/avatar.svg';
 import { SvgIcon } from '~/components/SvgIcon';
 import { useThemeContext } from '~/contexts/useThemeContext';
@@ -32,7 +32,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
     api.user.getById.useQuery({ id: review.userId });
   const { data: sessionData } = useSession();
   const [isSetting, setSetting] = useState(false);
-  const [newText, setNewText] = useState(text);
+  const [newText, setNewText] = useState(text.trim());
   const [newRate, setNewRate] = useState(rating);
   const [isEditing, setIsEditing] = useState(false);
   const [newTextError, setNewTextError] = useState(false);
@@ -61,13 +61,13 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
     e.preventDefault();
     setSetting(false);
 
-    if (newText === text && newRate === rating) {
+    if (newText.trim() === text && newRate === rating) {
       setIsEditing(false);
 
       return;
     }
 
-    if (!newText) {
+    if (!newText.trim()) {
       setNewTextError(true);
 
       return;
@@ -75,10 +75,22 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
 
     changeReview({
       id,
-      text: newText,
+      text: newText.trim(),
       rating: newRate,
     });
   };
+
+  useEffect(() => {
+    const hideSettings = () => {
+      setSetting(false);
+    }
+
+    document.addEventListener('click', hideSettings);
+
+    return () => {
+      document.removeEventListener('click', hideSettings);
+    }
+  }, []);
 
   return (
     <section
@@ -97,7 +109,8 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
         className={classNames(
           'relative w-4/5 rounded-lg bg-grey bg-opacity-40 px-3.5 pb-7 pt-7 text-dark sm:w-2/3 sm:px-6 sm:pt-9 lg:w-3/4',
           {
-            'bg-semi-dark text-light': themeType === ThemeType.Dark,
+            'text-light': themeType === ThemeType.Dark,
+            'bg-semi-dark': themeType === ThemeType.Dark && review.userId !== sessionData?.user.id,
             'bg-primary': review.userId === sessionData?.user.id,
           },
         )}
@@ -129,7 +142,10 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
                 'absolute right-2 top-3 opacity-70 hover:opacity-100',
                 { hidden: review.userId !== sessionData?.user.id },
               )}
-              onClick={() => setSetting(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSetting(state => !state);
+              }}
             >
               <SvgIcon
                 className={classNames('h-5 w-5 fill-dark', {
@@ -164,7 +180,7 @@ export const ReviewItem: React.FC<Props> = ({ review }) => {
                   'absolute -top-14 right-0 flex w-max flex-col gap-1 rounded-lg bg-[#DADADA] px-5 py-1 text-center text-sm font-light sm:-right-[90px] sm:top-0',
                   { 'bg-semi-dark': themeType === ThemeType.Dark },
                 )}
-                onMouseLeave={() => setSetting(false)}
+                onClick={(e) => e.stopPropagation()}
               >
                 <p
                   className={classNames(
